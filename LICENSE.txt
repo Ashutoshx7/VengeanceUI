@@ -1,7 +1,0 @@
-Copyright (c) 2025 Aman Shakya  
-All rights reserved.  
-
-This repository is publicly available for learning and portfolio purposes only.  
-You may not copy, modify, distribute, or use this code, in whole or in part,  
-for any purpose — commercial or non-commercial — without prior written consent  
-from the author.  

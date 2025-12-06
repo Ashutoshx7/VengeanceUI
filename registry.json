@@ -1,0 +1,19 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "pixel-perfect",
+  "homepage": "https://pixel-perfect-01.vercel.app",
+  "items": [
+    {
+      "name": "navbar1",
+      "description": "cool nav bar",
+      "type": "registry:block",
+      "files": [
+        {
+          "type": "registry:component",
+          "path": "registry/new-york/navbars/navbar1.tsx",
+          "target": "components/pixel-perfect/navbar1.tsx"
+        }
+      ]
+    }
+  ]
+}

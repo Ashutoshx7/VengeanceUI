@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "button",
+  "type": "registry:block",
+  "description": "just a button",
+  "files": [
+    {
+      "path": "registry/new-york/button/button.tsx",
+      "content": "import { Button } from \"@/components/ui/button\";\r\n\r\nconst Button1 = () => {\r\n  return <Button>NININIGIIIA</Button>;\r\n};\r\n\r\nexport default Button1;\r\n",
+      "type": "registry:component",
+      "target": "components/pixel-perfect/button.tsx"
+    }
+  ]
+}

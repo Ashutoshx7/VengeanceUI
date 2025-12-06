@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "navbar1",
+  "type": "registry:block",
+  "description": "cool nav bar",
+  "files": [
+    {
+      "path": "registry/new-york/navbars/navbar1.tsx",
+      "content": "\"use client\";\r\nimport Link from \"next/link\";\r\nimport { useState } from \"react\";\r\nimport { motion, useScroll } from \"framer-motion\";\r\n\r\nconst navItems = [\r\n  { name: \"Home\", href: \"/\" },\r\n  { name: \"About\", href: \"/about\" },\r\n  { name: \"Contact\", href: \"/contact\" },\r\n];\r\n\r\nexport const Navbar1 = () => {\r\n  const { scrollY } = useScroll();\r\n  const [isDown, setisDown] = useState(false);\r\n\r\n  scrollY.on(\"change\", (latest) =>\r\n    latest > 20 ? setisDown(true) : setisDown(false)\r\n  );\r\n  return (\r\n    <motion.div\r\n      animate={\r\n        isDown\r\n          ? {\r\n              scaleX: 0.99,\r\n              boxShadow: `0 4px 15px rgba(0, 0, 0, 0.05)`,\r\n              y: 10,\r\n              border: \"1px solid rgba(255, 255, 255, 0.02)\",\r\n              borderRadius: \"16px\",\r\n            }\r\n          : { scaleX: 1 }\r\n      }\r\n      transition={{ duration: 0.2, ease: \"easeIn\" }}\r\n      className=\" fixed top-4 inset-x-[2vw] sm:inset-x-[10vw] h-15 flex items-center  justify-between px-8   bg-background backdrop-blur-lg  \"\r\n    >\r\n      <Link href={\"/\"}>\r\n        <img\r\n          src=\"/logo/bg-less.png\"\r\n          alt=\"PIXEL PERFECT\"\r\n          className=\"w-8 dark:hidden block \"\r\n        />\r\n        <img\r\n          src=\"/logo/final-dark.png\"\r\n          alt=\"PIXEL PERFECT\"\r\n          className=\"w-8 hidden dark:block \"\r\n        />\r\n      </Link>\r\n\r\n      <div className=\" flex  gap-8 \">\r\n        {navItems.map((item, index) => (\r\n          <Link key={index} href={item.href}>\r\n            <motion.div\r\n              whileHover={{\r\n                \"--w\": \"100%\",\r\n              }}\r\n              transition={{ duration: 0.2 }}\r\n              style={{\r\n                width: \"var(--w, 0%)\",\r\n              }}\r\n              className=\"  text-xs font-medium border-b-2 \"\r\n            >\r\n              {item.name}\r\n            </motion.div>\r\n          </Link>\r\n        ))}\r\n      </div>\r\n    </motion.div>\r\n  );\r\n};\r\n",
+      "type": "registry:component",
+      "target": "components/pixel-perfect/navbar1.tsx"
+    }
+  ]
+}

@@ -1,25 +1,10 @@
-# ⚡ Vengance UI
 
-## 📖 Introduction
 
-Vengance Ui is an animation-first React component library focused on building **rich, modern, and interactive UI components**. From animated forms to shimmer text and motion-enhanced cards, ForgeUI helps you drop in delightful, production-ready components with minimal setup.
+# Pixel Perfect
 
-Perfect for developers who care about UI, detail, and micro-interactions.
+Build beautiful, responsive interfaces in minutes.
+A pixel-perfect React component library for modern web apps.
 
-## 🛠️ Technologies Used
+![Pixel Perfect](https://vanshnagar.me/_next/image?url=https%3A%2F%2Fres.cloudinary.com%2Fdz12pywzs%2Fimage%2Fupload%2Fv1763353240%2FCopy_of_Copy_of_Webinar_Keynote_Presentation_1_prklcu.jpg\&w=1080\&q=75)
 
-- Next.js
-- TypeScript
-- Tailwind CSS
-- shadcn/ui
-- Framer Motion
-
-## 🌟 Highlights
-
-- Fully animated components (forms, OTP inputs, shimmers, cards)
-- Theme-aware and dark-mode compatible
-- Built for performance and visual delight
-- Developer-friendly and customizable
-
-Check out the [Contribution Guide](./CONTRIBUTING.md).
-
+> In Progress…
