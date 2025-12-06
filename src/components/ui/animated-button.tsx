@@ -1,9 +1,9 @@
 'use client'
 
 import React from 'react'
-import { motion } from 'framer-motion'
+import { motion, type MotionProps } from 'framer-motion'
 
-type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+type AnimatedButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & MotionProps & {
     children?: React.ReactNode
 }
 
@@ -12,22 +12,28 @@ type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
  * - theme-aware: uses Tailwind `dark:` classes so it works in both light and dark mode
  * - accepts all native button props (onClick, className, type, etc.)
  */
-const AnimatedButton: React.FC<Props> = ({ children = 'Browse Components', className = '', ...rest }) => {
+const AnimatedButton: React.FC<AnimatedButtonProps> = ({
+    children = 'Browse Components',
+    className = '',
+    whileTap = { scale: 0.97 },
+    transition = {
+        stiffness: 20,
+        damping: 15,
+        mass: 2,
+        scale: {
+            type: 'spring',
+            stiffness: 10,
+            damping: 5,
+            mass: 0.1,
+        },
+    },
+    ...rest
+}) => {
     return (
         <motion.button
-            {...(rest as any)}
-            whileTap={{ scale: 0.97 }}
-            transition={{
-                stiffness: 20,
-                damping: 15,
-                mass: 2,
-                scale: {
-                    type: 'spring',
-                    stiffness: 10,
-                    damping: 5,
-                    mass: 0.1,
-                },
-            }}
+            {...rest}
+            whileTap={whileTap}
+            transition={transition}
             // Set a CSS variable `--shine` that we override for dark mode via Tailwind.
             // Tailwind JIT allows arbitrary properties like `dark:[--shine:...]` if enabled.
             className={
