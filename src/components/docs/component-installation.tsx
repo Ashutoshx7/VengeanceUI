@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { Check, Copy, Terminal } from "lucide-react"
+import { Check, Copy, Terminal, Atom } from "lucide-react"
 import { useTheme } from "next-themes"
 import { Highlight, themes, PrismTheme } from "prism-react-renderer"
 import { motion } from "framer-motion"
@@ -114,9 +114,10 @@ interface CodeBlockProps {
     className?: string
     expandable?: boolean
     title?: string // Added title prop
+    hideCopy?: boolean
 }
 
-export function CodeBlock({ code, language = "bash", className, expandable = false, title }: CodeBlockProps) {
+export function CodeBlock({ code, language = "bash", className, expandable = false, title, hideCopy }: CodeBlockProps) {
     const { resolvedTheme } = useTheme()
     const { hasCopied, copy } = useCopy()
     const [isExpanded, setIsExpanded] = React.useState(false)
@@ -126,7 +127,7 @@ export function CodeBlock({ code, language = "bash", className, expandable = fal
             "relative group/code rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-100 dark:bg-[#161616] shadow-sm mb-4", // Added mb-4
             className
         )}>
-            {title ? (
+            {hideCopy ? null : title ? (
                 <div className="flex items-center justify-between px-3 py-2 border-b border-neutral-300 dark:border-neutral-800 bg-white dark:bg-black rounded-t-lg">
                     <div className="flex items-center gap-2">
                         {/* Green Triangle Icon */}
@@ -142,7 +143,7 @@ export function CodeBlock({ code, language = "bash", className, expandable = fal
                         {hasCopied ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
                     </button>
                 </div>
-            ) : (
+            ) : hideCopy ? null : (
                 <div className="absolute right-3 top-3 z-20 opacity-0 group-hover/code:opacity-100 transition-opacity duration-200">
                     <button
                         onClick={() => copy(code)}
@@ -209,19 +210,51 @@ interface DependenciesProps {
     step?: number
     title?: string
     children?: React.ReactNode
+    copyText?: string
 }
 
-export const Dependencies = ({ step, title, children }: DependenciesProps) => {
+export const Dependencies = ({ step, title, children, copyText }: DependenciesProps) => {
+    // Skip rendering step 4 entirely per request
+    if (step === 4) return null
+
+    const { hasCopied, copy } = useCopy()
+    const textToCopy = copyText ?? (typeof children === "string" ? children : "")
+
+    const processedChildren = React.Children.map(children, (child) => {
+        if (React.isValidElement(child) && child.type === CodeBlock) {
+            return React.cloneElement(child as React.ReactElement<any>, { hideCopy: true })
+        }
+        return child
+    })
+
+    const stepEmoji = step === 1 ? "🧰" : step === 2 ? "📦" : step === 3 ? "" : "⭐"
+    const stepIcon = step === 3 ? <Atom className="w-4 h-4 text-sky-400" /> : null
+    const titledWithEmoji = title ? `${stepEmoji}${stepEmoji ? " " : ""}${title}` : undefined
+
     return (
         <div className="relative w-full !border-[1px] !border-neutral-200 dark:!border-neutral-700 rounded-xl overflow-hidden bg-neutral-100 dark:bg-[#161616] border-b border-neutral-200 dark:border-neutral-800 mb-8">
-            <div className="flex items-center gap-3 px-4 py-3 border-b border-neutral-300 dark:border-neutral-800 bg-white dark:bg-black">
-                <div className="flex items-center justify-center w-6 h-6 rounded-md bg-neutral-100 dark:bg-neutral-800 ring-1 ring-neutral-200 dark:ring-neutral-700 font-mono text-xs font-medium text-foreground">
-                    {step}
+            <div className="flex items-center justify-between px-4 py-3 border-b border-neutral-300 dark:border-neutral-800 bg-white dark:bg-black">
+                <div className="flex items-center gap-3">
+                    <div className="flex items-center justify-center w-6 h-6 rounded-md bg-neutral-100 dark:bg-neutral-800 ring-1 ring-neutral-200 dark:ring-neutral-700 font-mono text-xs font-medium text-foreground">
+                        {step}
+                    </div>
+                    {titledWithEmoji && (
+                        <h2 className="font-medium text-sm text-foreground leading-none flex items-center gap-2">
+                            {stepIcon}
+                            <span>{titledWithEmoji}</span>
+                        </h2>
+                    )}
                 </div>
-                {title && <h2 className="font-medium text-sm text-foreground leading-none">{title}</h2>}
+                <button
+                    onClick={() => copy(textToCopy)}
+                    className="flex items-center justify-center w-8 h-8 rounded-md bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 text-neutral-500 hover:text-foreground transition-all active:scale-95"
+                    aria-label="Copy code"
+                >
+                    {hasCopied ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
+                </button>
             </div>
             <div className="p-4 bg-neutral-100 dark:bg-[#161616] [&_.group\/code]:border-0 [&_.group\/code]:shadow-none [&_.group\/code]:bg-transparent [&_.group\/code]:mb-0">
-                <div className="text-sm text-muted-foreground">{children}</div>
+                <div className="text-sm text-muted-foreground">{processedChildren}</div>
             </div>
         </div>
     )
@@ -254,8 +287,8 @@ export function ComponentInstallation({ cli, manual, className }: ComponentInsta
 
     return (
         <div className={cn("group relative my-8", className)}>
-            <div className="mb-10">
-                <h3 className="font-semibold text-2xl md:text-3xl mb-4 tracking-tight text-foreground">Install using CLI</h3>
+            <div className="mb-10" id="install-cli">
+                <h2 className="text-3xl md:text-4xl font-semibold text-foreground mb-6">Install using CLI</h2>
                 <Tabs value={installType} onValueChange={setInstallType} className="relative w-full !border-[1px] !border-neutral-200 dark:!border-neutral-700 rounded-xl overflow-hidden bg-neutral-100 dark:bg-[#161616] border-b border-neutral-200 dark:border-neutral-800">
                     <div className="flex items-center justify-between px-3 py-2 border-b border-neutral-300 dark:border-neutral-800 bg-white dark:bg-black">
                         <TabsList className="justify-start gap-6 bg-transparent p-0">
@@ -292,10 +325,10 @@ export function ComponentInstallation({ cli, manual, className }: ComponentInsta
                         </TabsList>
                         <button
                             onClick={copyCommand}
-                            className="flex items-center justify-center w-7 h-7 rounded-[9px] hover:bg-neutral-200 dark:hover:bg-neutral-800 text-neutral-400 hover:text-foreground transition-all mr-2 bg-neutral-200 dark:bg-neutral-800"
+                            className="flex items-center justify-center w-8 h-8 rounded-md bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 text-neutral-500 hover:text-foreground transition-all active:scale-95"
                             aria-label="Copy code"
                         >
-                            {hasCopied ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <div className="rounded-full border border-neutral-600 p-0.5"><Check className="w-2.5 h-2.5" /></div>}
+                            {hasCopied ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
                         </button>
                     </div>
                     <div className="bg-neutral-100 dark:bg-[#161616] p-0 [&_.group\/code]:border-0 [&_.group\/code]:shadow-none [&_.group\/code]:bg-transparent [&_.group\/code]:mb-0">
@@ -315,8 +348,8 @@ export function ComponentInstallation({ cli, manual, className }: ComponentInsta
                 </Tabs>
             </div>
             {manual && (
-                <div>
-                    <h3 className="font-semibold text-2xl md:text-3xl mb-4 tracking-tight text-foreground">Install Manually</h3>
+                <div className="space-y-3" id="install-manual">
+                    <h2 className="text-3xl md:text-4xl font-semibold text-foreground">Install Manually</h2>
                     {manual}
                 </div>
             )}
