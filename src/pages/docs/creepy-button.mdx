@@ -1,11 +1,12 @@
-import { CodeBlock, Dependencies } from '@/components/docs/component-installation'
+import { CodeBlock } from '@/components/docs/component-installation'
+import { CLIInstall, Installation, InstallHeading, ManualStep } from '@/components/docs/installation'
 import { PropsTable } from '@/components/docs/props-table'
 import CreepyButton from '@/components/ui/creepy-button'
 import { ComponentPreview } from '@/components/docs/component-preview'
 
 # Creepy Button
 
-A button that watches your cursor, perfect for adding character to your UI.
+A button that watches your cursor with animated eyes, perfect for adding character to your UI.
 
 <ComponentPreview
   component={<div className="flex items-center justify-center p-10"><CreepyButton>Hover Me</CreepyButton></div>}
@@ -26,42 +27,46 @@ export const CreepyButton = ({ children, ...props }: CreepyButtonProps) => {
 export default CreepyButton;`}
 />
 
-## Install using CLI
+## Installation
 
-<CodeBlock
-  code="npx shadcn@latest add https://vengeance-ui.vercel.app/registry/creepy-button.json"
+<Installation>
+
+<InstallHeading>Install using CLI</InstallHeading>
+
+<CLIInstall componentName="creepy-button" />
+
+<InstallHeading>Install Manually</InstallHeading>
+
+<ManualStep step={1} title="Install dependencies">
+<CodeBlock 
+    code="npm install framer-motion clsx tailwind-merge" 
+    language="bash"
 />
+</ManualStep>
 
-## Install Manually
-
-<Dependencies step={1} title="Install dependencies">
-    <CodeBlock 
-        code="npm install framer-motion clsx tailwind-merge" 
-    />
-</Dependencies>
-
-<Dependencies step={2} title="Add util file">
-    <p className="text-[13px] text-muted-foreground mt-2 mb-8">
-        <code className="text-foreground font-mono text-xs bg-neutral-100 dark:bg-[#161616] border border-neutral-200 dark:border-neutral-800 px-2 py-1 rounded-md">lib/utils.ts</code>
-    </p>
-    <CodeBlock 
-        language="tsx"
-        code={`import { ClassValue, clsx } from "clsx";
+<ManualStep step={2} title="Add util file">
+<p className="text-sm text-muted-foreground mb-3">
+    Create <code className="text-foreground font-mono text-xs bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 px-1.5 py-0.5 rounded">lib/utils.ts</code>
+</p>
+<CodeBlock 
+    language="tsx"
+    code={`import { ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }`}
-    />
-</Dependencies>
+/>
+</ManualStep>
 
-<Dependencies step={3} title="Copy the source code">
-    <p className="text-[13px] text-muted-foreground mt-2 mb-8">Copy the code below and paste it into <code className="text-foreground font-mono text-xs bg-neutral-100 dark:bg-[#161616] border border-neutral-200 dark:border-neutral-800 px-2 py-1 rounded-md mx-1">components/ui/creepy-button.tsx</code></p>
-    <CodeBlock
-        language="tsx"
-        title="components/ui/creepy-button.tsx"
-        expandable={true}
-        code={`'use client'
+<ManualStep step={3} title="Copy the source code">
+<p className="text-sm text-muted-foreground mb-3">
+    Copy and paste into <code className="text-foreground font-mono text-xs bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 px-1.5 py-0.5 rounded">components/ui/creepy-button.tsx</code>
+</p>
+<CodeBlock
+    language="tsx"
+    expandable={true}
+    code={`"use client";
 
 import React, { useRef, useState } from "react";
 import { motion } from "framer-motion";
@@ -87,9 +92,7 @@ export const CreepyButton = ({
     const [isHovered, setIsHovered] = useState(false);
 
     const updateEyes = (e: React.MouseEvent | React.TouchEvent) => {
-        const userEvent =
-            "touches" in e ? (e as React.TouchEvent).touches[0] : (e as React.MouseEvent);
-
+        const userEvent = "touches" in e ? (e as React.TouchEvent).touches[0] : (e as React.MouseEvent);
         if (!eyesRef.current) return;
 
         const eyesRect = eyesRef.current.getBoundingClientRect();
@@ -129,10 +132,7 @@ export const CreepyButton = ({
                 className
             )}
             onClick={onClick}
-            onMouseMove={(e) => {
-                updateEyes(e);
-                setIsHovered(true);
-            }}
+            onMouseMove={(e) => { updateEyes(e); setIsHovered(true); }}
             onTouchMove={updateEyes}
             onMouseLeave={resetEyes}
             {...props}
@@ -146,10 +146,14 @@ export const CreepyButton = ({
                     animate={{ height: ["0.75em", "0.75em", "0em", "0.75em"] }}
                     transition={{ duration: 3, times: [0, 0.92, 0.96, 1], repeat: Infinity }}
                 >
-                    <span
-                        className="absolute top-1/2 left-1/2 w-[0.375em] h-[0.375em] bg-black rounded-full"
-                        style={pupilStyle}
-                    />
+                    <span className="absolute top-1/2 left-1/2 w-[0.375em] h-[0.375em] bg-black rounded-full" style={pupilStyle} />
+                </motion.span>
+                <motion.span
+                    className="relative w-[0.75em] bg-white rounded-full overflow-hidden"
+                    animate={{ height: ["0.75em", "0.75em", "0em", "0.75em"] }}
+                    transition={{ duration: 3, times: [0, 0.92, 0.96, 1], repeat: Infinity }}
+                >
+                    <span className="absolute top-1/2 left-1/2 w-[0.375em] h-[0.375em] bg-black rounded-full" style={pupilStyle} />
                 </motion.span>
             </span>
 
@@ -165,16 +169,16 @@ export const CreepyButton = ({
                 {children}
             </motion.span>
 
-            <span className="block opacity-0 px-4 py-2 font-bold">
-                {children}
-            </span>
+            <span className="block opacity-0 px-4 py-2 font-bold">{children}</span>
         </button>
     );
 };
 
 export default CreepyButton;`}
-    />
-</Dependencies>
+/>
+</ManualStep>
+
+</Installation>
 
 ## Usage
 
