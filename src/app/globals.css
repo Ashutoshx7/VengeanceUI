@@ -181,14 +181,12 @@ body,
 }
 
 
-/* Sidebar & Layout: FORCE FULL LEFT ALIGNMENT */
+/* Sidebar & Layout: ANIMATE-UI STYLE */
 
-/* 1. Target the container wrapping the sidebar (Nextra usually centers this) */
-/* We remove max-width and margin-left to force it to the screen edge */
+/* 1. Target the container wrapping the sidebar */
 div:has(> aside),
 .nextra-container,
 .mx-auto {
-  /* Be careful with mx-auto global, but we need to override the centering */
   margin-left: 0 !important;
   padding-left: 0 !important;
   max-width: 100% !important;
@@ -199,12 +197,11 @@ aside,
 .nextra-sidebar-container,
 div[data-nextra-sidebar="true"] {
   padding-left: 0.5rem !important;
-  /* Minimal padding from edge */
   margin-left: 0 !important;
   left: 0 !important;
 }
 
-/* 3. Keep sidebar items flat (no tree indentation) */
+/* 3. Keep sidebar items flat */
 .nextra-sidebar-container ul,
 .nextra-sidebar-container li {
   padding-left: 0 !important;
@@ -212,70 +209,83 @@ div[data-nextra-sidebar="true"] {
   border: none !important;
 }
 
-/* 4. Formatting and Animation for links */
-/* 4. Formatting and Animation for links */
+/* 4. Sidebar Links - Animate UI Style */
 .nextra-sidebar-container a,
-.nextra-sidebar-container button {
-  padding-left: 0.75rem !important;
-  /* More breathing room */
-  padding-right: 0.75rem !important;
-  margin-left: 0 !important;
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  /* Premium Smooth Easing */
-  border-radius: 6px;
+.nextra-sidebar-container button:not([aria-label]) {
   position: relative;
-  opacity: 0.6;
-  backface-visibility: hidden;
-  /* Smoother rendering */
+  padding-left: 1.25rem !important;
+  padding-right: 0.75rem !important;
+  margin-left: 0.5rem !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 6px;
+  color: var(--muted-foreground);
 }
 
-/* TASTEFUL HOVER EFFECT */
+/* Vertical Line - runs along the left of all items */
+.nextra-sidebar-container a::before,
+.nextra-sidebar-container button:not([aria-label])::before {
+  content: "";
+  position: absolute;
+  left: 8px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background-color: var(--border);
+  transition: background-color 0.3s ease;
+}
+
+/* Active/Hover Indicator Bar - Now handled by SidebarHoverIndicator component */
+/* Remove CSS ::after indicators in favor of JS-based moving indicator */
+.nextra-sidebar-container a::after,
+.nextra-sidebar-container button:not([aria-label])::after {
+  display: none !important;
+}
+
+/* HOVER EFFECT - Text slide effect */
 .nextra-sidebar-container a:hover,
-.nextra-sidebar-container button:hover {
-  opacity: 1;
-  background-color: rgba(128, 128, 128, 0.05);
-  /* Even subtler background */
-  transform: translateX(4px) scale(1.015);
-  /* Slide + Micro-Pop */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
-  /* Faint Lift */
+.nextra-sidebar-container button:not([aria-label]):hover {
   color: var(--foreground) !important;
+  background-color: transparent !important;
+  /* Smooth text slide */
+  padding-left: 1.5rem !important;
+  transition: padding-left 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+    color 0.2s ease;
 }
 
-.dark .nextra-sidebar-container a:hover,
-.dark .nextra-sidebar-container button:hover {
-  background-color: rgba(255, 255, 255, 0.05);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  /* Dark mode lift */
-}
-
-/* Active/Selected State - Browser Tab Style */
+/* ACTIVE STATE - Text styling */
 .nextra-sidebar-container li.active>a,
 .nextra-sidebar-container a.active,
 .nextra-sidebar-container a[aria-current="page"] {
   color: var(--foreground) !important;
-  background-color: rgba(0, 0, 0, 0.08) !important;
+  font-weight: 500 !important;
+  background-color: transparent !important;
+  padding-left: 1.5rem !important;
+}
+
+/* Separator Headings */
+.nextra-sidebar-container li>span,
+.nextra-sidebar-container .nx-font-semibold {
+  font-size: 0.75rem !important;
   font-weight: 600 !important;
-  transform: none !important;
-  border-left: none !important;
-  border-radius: 8px !important;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  color: var(--muted-foreground) !important;
+  padding-left: 0.5rem !important;
+  margin-top: 1.5rem !important;
+  margin-bottom: 0.5rem !important;
 }
 
-.dark .nextra-sidebar-container li.active>a,
-.dark .nextra-sidebar-container a.active,
-.dark .nextra-sidebar-container a[aria-current="page"] {
-  color: #ffffff !important;
-  background-color: #262626 !important;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+/* First separator shouldn't have large top margin */
+.nextra-sidebar-container li:first-child>span {
+  margin-top: 0.5rem !important;
 }
 
-/* 5. Hide tree expanders */
+/* Hide tree expanders */
 svg.lucide-chevron-right {
   display: none !important;
 }
 
-/* 6. FORCE PURE BLACK MODE */
+/* FORCE PURE BLACK MODE */
 html.dark,
 .dark body,
 .dark .nextra-container,
@@ -288,7 +298,7 @@ html.dark,
   background: #000000 !important;
 }
 
-/* 7. FORCE PURE WHITE MODE */
+/* FORCE PURE WHITE MODE */
 html:not(.dark),
 html:not(.dark) body,
 html:not(.dark) .nextra-container,
@@ -300,11 +310,10 @@ html:not(.dark) main {
   background: #ffffff !important;
 }
 
-/* 8. FORCE HEADER STYLING OVERRIDES */
+/* FORCE HEADER STYLING OVERRIDES */
 #installation,
 .nextra-container h2 {
   font-weight: 700 !important;
   font-size: 1.875rem !important;
-  /* 3xl */
   letter-spacing: -0.025em !important;
 }

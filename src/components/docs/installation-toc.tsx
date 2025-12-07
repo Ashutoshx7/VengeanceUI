@@ -7,8 +7,35 @@ interface InstallationTOCProps {
     className?: string
 }
 
+const tocItems = [
+    { id: "install-nextjs", label: "Install Next.js" },
+    { id: "install-tailwind", label: "Install Tailwind CSS" },
+    { id: "add-utilities", label: "Add utilities" },
+    { id: "cli", label: "CLI", badge: "3.0" },
+]
+
 export function InstallationTOC({ className }: InstallationTOCProps) {
-    const [activeSection, setActiveSection] = React.useState("component")
+    const [activeSection, setActiveSection] = React.useState("")
+
+    React.useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        setActiveSection(entry.target.id)
+                    }
+                })
+            },
+            { rootMargin: "-100px 0px -66%" }
+        )
+
+        tocItems.forEach((item) => {
+            const element = document.getElementById(item.id)
+            if (element) observer.observe(element)
+        })
+
+        return () => observer.disconnect()
+    }, [])
 
     const scrollToSection = (sectionId: string) => {
         const element = document.getElementById(sectionId)
@@ -19,40 +46,27 @@ export function InstallationTOC({ className }: InstallationTOCProps) {
     }
 
     return (
-        <nav className={cn("space-y-3", className)}>
-            <button
-                onClick={() => scrollToSection("component")}
-                className={cn(
-                    "block w-full text-left text-sm transition-colors",
-                    activeSection === "component"
-                        ? "text-foreground font-medium"
-                        : "text-muted-foreground hover:text-foreground"
-                )}
-            >
-                Component
-            </button>
-            <button
-                onClick={() => scrollToSection("install-cli")}
-                className={cn(
-                    "block w-full text-left text-sm transition-colors",
-                    activeSection === "cli"
-                        ? "text-foreground font-medium"
-                        : "text-muted-foreground hover:text-foreground"
-                )}
-            >
-                Install using CLI
-            </button>
-            <button
-                onClick={() => scrollToSection("install-manual")}
-                className={cn(
-                    "block w-full text-left text-sm transition-colors",
-                    activeSection === "manual"
-                        ? "text-foreground font-medium"
-                        : "text-muted-foreground hover:text-foreground"
-                )}
-            >
-                Install Manually
-            </button>
+        <nav className={cn("space-y-1", className)}>
+            <h4 className="font-medium text-sm text-foreground mb-3">Installation</h4>
+            {tocItems.map((item) => (
+                <button
+                    key={item.id}
+                    onClick={() => scrollToSection(item.id)}
+                    className={cn(
+                        "flex items-center justify-between w-full text-left text-sm py-1 transition-colors",
+                        activeSection === item.id
+                            ? "text-foreground font-medium"
+                            : "text-muted-foreground hover:text-foreground"
+                    )}
+                >
+                    <span>{item.label}</span>
+                    {item.badge && (
+                        <span className="text-xs text-muted-foreground bg-neutral-100 dark:bg-neutral-800 px-1.5 py-0.5 rounded">
+                            {item.badge}
+                        </span>
+                    )}
+                </button>
+            ))}
         </nav>
     )
 }

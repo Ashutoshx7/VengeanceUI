@@ -211,9 +211,10 @@ interface DependenciesProps {
     title?: string
     children?: React.ReactNode
     copyText?: string
+    id?: string
 }
 
-export const Dependencies = ({ step, title, children, copyText }: DependenciesProps) => {
+export const Dependencies = ({ step, title, children, copyText, id }: DependenciesProps) => {
     // Skip rendering step 4 entirely per request
     if (step === 4) return null
 
@@ -232,7 +233,7 @@ export const Dependencies = ({ step, title, children, copyText }: DependenciesPr
     const titledWithEmoji = title ? `${stepEmoji}${stepEmoji ? " " : ""}${title}` : undefined
 
     return (
-        <div className="relative w-full !border-[1px] !border-neutral-200 dark:!border-neutral-700 rounded-xl overflow-hidden bg-neutral-100 dark:bg-[#161616] border-b border-neutral-200 dark:border-neutral-800 mb-8">
+        <div id={id} className="relative w-full !border-[1px] !border-neutral-200 dark:!border-neutral-700 rounded-xl overflow-hidden bg-neutral-100 dark:bg-[#161616] border-b border-neutral-200 dark:border-neutral-800 mb-8 scroll-mt-24">
             <div className="flex items-center justify-between px-4 py-3 border-b border-neutral-300 dark:border-neutral-800 bg-white dark:bg-black">
                 <div className="flex items-center gap-3">
                     <div className="flex items-center justify-center w-6 h-6 rounded-md bg-neutral-100 dark:bg-neutral-800 ring-1 ring-neutral-200 dark:ring-neutral-700 font-mono text-xs font-medium text-foreground">

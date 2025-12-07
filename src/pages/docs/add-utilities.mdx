@@ -1,0 +1,32 @@
+import { Dependencies, CodeBlock } from "@/components/docs/component-installation"
+
+# Add utilities
+
+Set up utility functions for Vengeance UI components.
+
+---
+
+<Dependencies step={1} title="Create cn Helper">
+Create a `cn` helper function in your utilities file (`lib/utils.ts` or `src/lib/utils.ts`):
+
+<CodeBlock 
+  code={`import { ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}`}
+  language="typescript"
+/>
+</Dependencies>
+
+<Dependencies step={2} title="Install Dependencies" copyText="npm install framer-motion clsx tailwind-merge lucide-react">
+Install the required packages:
+
+<CodeBlock 
+  code="npm install framer-motion clsx tailwind-merge lucide-react"
+  language="bash"
+/>
+
+This utility combines Tailwind CSS classes intelligently, handling conflicts and duplicates automatically.
+</Dependencies>

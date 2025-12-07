@@ -1,7 +1,14 @@
 export default {
     "index": "Introduction",
-    "installation": "Installation",
-    "---": {
+    "---1": {
+        "type": "separator",
+        "title": "Installation"
+    },
+    "installation": "Install Next.js",
+    "install-tailwind": "Install Tailwind CSS",
+    "add-utilities": "Add utilities",
+    "cli": "CLI",
+    "---2": {
         "type": "separator",
         "title": "Components"
     },
@@ -9,3 +16,6 @@ export default {
     "animated-button": "Animated Button",
     "creepy-button": "Creepy Button"
 }
+
+
+

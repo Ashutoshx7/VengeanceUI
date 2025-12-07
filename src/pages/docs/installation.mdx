@@ -1,34 +1,23 @@
+import { Dependencies, CodeBlock } from "@/components/docs/component-installation"
 
-# Installation
+# Install Next.js
 
-Get started with Vengeance UI in a few simple steps.
+Create a new Next.js project with TypeScript, Tailwind CSS, ESLint, and App Router.
 
-## Prerequisites
+---
 
-Ensure you have the following installed:
+<Dependencies step={1} title="Create Project" copyText="npx create-next-app@latest my-app --typescript --tailwind --eslint --app --src-dir --import-alias '@/*'">
+Run the following command to create a new Next.js project:
 
-- [Node.js](https://nodejs.org/) (version 16.8 or higher)
-- [Tailwind CSS](https://tailwindcss.com/) (version 3.0 or higher)
+<CodeBlock 
+  code="npx create-next-app@latest my-app --typescript --tailwind --eslint --app --src-dir --import-alias '@/*'"
+  language="bash"
+/>
 
-## Install Dependencies
+Navigate to your project directory:
 
-Run the following command to install the necessary dependencies:
-
-```bash
-npm install framer-motion clsx tailwind-merge lucide-react
-```
-
-## Utilities
-
-Add a `cn` helper to your utilities file (usually `lib/utils.ts`):
-
-```typescript
-import { ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
-
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
-```
-
-You are now ready to start using Vengeance UI components!
+<CodeBlock 
+  code="cd my-app"
+  language="bash"
+/>
+</Dependencies>

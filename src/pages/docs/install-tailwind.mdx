@@ -1,0 +1,38 @@
+import { Dependencies, CodeBlock } from "@/components/docs/component-installation"
+
+# Install Tailwind CSS
+
+Configure Tailwind CSS in your Next.js project.
+
+---
+
+<Dependencies step={1} title="Install Packages" copyText="npm install tailwindcss @tailwindcss/postcss postcss">
+If you already have a Next.js project without Tailwind CSS, install it:
+
+<CodeBlock 
+  code="npm install tailwindcss @tailwindcss/postcss postcss"
+  language="bash"
+/>
+</Dependencies>
+
+<Dependencies step={2} title="Configure PostCSS">
+Create or update your `postcss.config.mjs` file:
+
+<CodeBlock 
+  code={`export default {
+  plugins: {
+    "@tailwindcss/postcss": {},
+  },
+};`}
+  language="javascript"
+/>
+</Dependencies>
+
+<Dependencies step={3} title="Add CSS Import">
+Add the Tailwind CSS import to your global CSS file (`src/app/globals.css`):
+
+<CodeBlock 
+  code={`@import "tailwindcss";`}
+  language="css"
+/>
+</Dependencies>
