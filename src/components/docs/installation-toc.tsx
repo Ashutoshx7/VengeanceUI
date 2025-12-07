@@ -19,46 +19,41 @@ export function InstallationTOC({ className }: InstallationTOCProps) {
     }
 
     return (
-        <div className={cn("", className)}>
-            <div className="space-y-4">
-                <h3 className="font-semibold text-foreground">On This Page</h3>
-                <nav className="space-y-3">
-                    <button
-                        onClick={() => scrollToSection("component")}
-                        className={cn(
-                            "block w-full text-left text-sm transition-colors",
-                            activeSection === "component"
-                                ? "text-foreground font-medium"
-                                : "text-muted-foreground hover:text-foreground"
-                        )}
-                    >
-                        Component
-                    </button>
-                    <button
-                        onClick={() => scrollToSection("install-cli")}
-                        className={cn(
-                            "block w-full text-left text-sm transition-colors",
-                            activeSection === "cli"
-                                ? "text-foreground font-medium"
-                                : "text-muted-foreground hover:text-foreground"
-                        )}
-                    >
-                        Install using CLI
-                    </button>
-                    <button
-                        onClick={() => scrollToSection("install-manual")}
-                        className={cn(
-                            "block w-full text-left text-sm transition-colors",
-                            activeSection === "manual"
-                                ? "text-foreground font-medium"
-                                : "text-muted-foreground hover:text-foreground"
-                        )}
-                    >
-                        Install Manually
-                    </button>
-                </nav>
-            </div>
-        </div>
+        <nav className={cn("space-y-3", className)}>
+            <button
+                onClick={() => scrollToSection("component")}
+                className={cn(
+                    "block w-full text-left text-sm transition-colors",
+                    activeSection === "component"
+                        ? "text-foreground font-medium"
+                        : "text-muted-foreground hover:text-foreground"
+                )}
+            >
+                Component
+            </button>
+            <button
+                onClick={() => scrollToSection("install-cli")}
+                className={cn(
+                    "block w-full text-left text-sm transition-colors",
+                    activeSection === "cli"
+                        ? "text-foreground font-medium"
+                        : "text-muted-foreground hover:text-foreground"
+                )}
+            >
+                Install using CLI
+            </button>
+            <button
+                onClick={() => scrollToSection("install-manual")}
+                className={cn(
+                    "block w-full text-left text-sm transition-colors",
+                    activeSection === "manual"
+                        ? "text-foreground font-medium"
+                        : "text-muted-foreground hover:text-foreground"
+                )}
+            >
+                Install Manually
+            </button>
+        </nav>
     )
 }
 
