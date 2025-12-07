@@ -6,6 +6,7 @@ import { Check, Copy } from "lucide-react"
 import { useTheme } from "next-themes"
 import { Highlight, themes, PrismTheme } from "prism-react-renderer"
 import { motion } from "framer-motion"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 // Custom VS Code Dark+ inspired theme with subtle refinements (Darker Version)
 const vibrantDarkTheme: PrismTheme = {
@@ -237,7 +238,7 @@ interface ComponentInstallationProps {
     className?: string
 }
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+
 
 export function ComponentInstallation({ cli, manual, className }: ComponentInstallationProps) {
     const [installType, setInstallType] = React.useState("npm")
@@ -260,47 +261,49 @@ export function ComponentInstallation({ cli, manual, className }: ComponentInsta
         <div className={cn("group relative my-8", className)}>
             <div className="mb-10">
                 <h3 className="font-semibold text-2xl md:text-3xl mb-4 tracking-tight text-foreground">Install using CLI</h3>
-                <Tabs value={installType} onValueChange={setInstallType} className="relative w-full !border-[1px] !border-neutral-200 dark:!border-neutral-700 rounded-xl overflow-hidden bg-neutral-100 dark:bg-[#0A0A0A]">
-                    <div className="flex items-center justify-between px-3 py-2 border-b border-neutral-200 dark:border-neutral-800 bg-neutral-100 dark:bg-[#0A0A0A]">
-                        <TabsList className="justify-start gap-2 bg-transparent p-0">
-                            <TabsTrigger
-                                value="npm"
-                                className="h-8 px-3 rounded-md border border-transparent data-[state=active]:bg-white dark:data-[state=active]:bg-neutral-800 data-[state=active]:shadow-sm font-medium text-muted-foreground data-[state=active]:text-foreground gap-2 text-xs transition-all"
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="14" height="14" fill="none"><rect width="32" height="32" rx="2" fill="#CB3837" /><path d="M16 8v16h8V16h4V8H6v16h4V8h6z" fill="#fff" /></svg>
-                                npm
-                            </TabsTrigger>
-                            <TabsTrigger
-                                value="pnpm"
-                                className="h-8 px-3 rounded-md border border-transparent data-[state=active]:bg-white dark:data-[state=active]:bg-neutral-800 data-[state=active]:shadow-sm font-medium text-muted-foreground data-[state=active]:text-foreground gap-2 text-xs transition-all"
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="14" height="14" fill="none"><rect width="32" height="32" rx="2" fill="#F69220" /><path d="M7 7h18v18h-8V15h-2v10H7V7zm2 2v14h4V9H9zm10 0h4v4h-4V9z" fill="#fff" /></svg>
-                                pnpm
-                            </TabsTrigger>
-                            <TabsTrigger
-                                value="bun"
-                                className="h-8 px-3 rounded-md border border-transparent data-[state=active]:bg-white dark:data-[state=active]:bg-neutral-800 data-[state=active]:shadow-sm font-medium text-muted-foreground data-[state=active]:text-foreground gap-2 text-xs transition-all"
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12.79 16.58c.22-.05.44-.08.66-.08 1.96 0 3.63 1.3 4.1 3.09.28-.7 1.05-1.18 1.93-1.18 1.16 0 2.1.94 2.1 2.1 0 .14-.02.28-.06.41a3.07 3.07 0 0 1 1.76.54 9.17 9.17 0 0 0-1.22-3.15c-1.3-2.3-3.6-3.8-6.1-4.2-1.9-.3-3.9.1-5.6 1.1-.3-.3-.7-.5-1.1-.5-1 0-1.8.8-1.8 1.8 0 .2.03.4.1.6-.9.6-1.5 1.6-1.5 2.8 0 1.2.6 2.2 1.5 2.8-.07-.2-.1-.4-.1-.6 0-1 .8-1.8 1.8-1.8.4 0 .8.2 1.1.5 2.1-1.3 4.6-1.6 7.02-.93zM18.8 3.85c-1.4 1.1-2.4 2.7-2.7 4.5l-2.1.8c.8-2.6 2.6-4.7 4.9-5.9.2.2.3.4.5.6H17.8l1 .01zm-9.6 0c2.3 1.2 4.1 3.3 4.9 5.9l-2.1-.8c-.3-1.8-1.3-3.4-2.7-4.5l-.6.6h-.01c.2-.2.3-.4.51-.61zm-4.3 10.9c.7 1.6 2.1 2.8 3.8 3.3l1-2c-1.2-.4-2.2-1.2-2.7-2.3l-2.1 1zm14.2 0l-2.1-1c-.5 1.1-1.5 1.9-2.7 2.3l1 2c1.7-.5 3.1-1.7 3.8-3.3zM6.2 9.5c.3 1.8 1.3 3.4 2.7 4.5l.6-.6h.01c-.2.2-.3.4-.5.6-2.3-1.2-4.1-3.3-4.9-5.9l2.1.8zm11.6 0l2.1-.8c-.8 2.6-2.6 4.7-4.9 5.9-.2-.2-.3-.4-.5-.6h1.6l-1-.01c1.4-1.1 2.4-2.7 2.7-4.48z" /></svg>
-                                bun
-                            </TabsTrigger>
-                            <TabsTrigger
-                                value="yarn"
-                                className="h-8 px-3 rounded-md border border-transparent data-[state=active]:bg-white dark:data-[state=active]:bg-neutral-800 data-[state=active]:shadow-sm font-medium text-muted-foreground data-[state=active]:text-foreground gap-2 text-xs transition-all"
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="14" height="14" fill="none"><path d="M16 2C8.3 2 2 8.3 2 16s6.3 14 14 14 14-6.3 14-14S23.7 2 16 2zm0 25.5c-6.4 0-11.5-5.1-11.5-11.5S9.6 4.5 16 4.5 27.5 9.6 27.5 16 22.4 27.5 16 27.5z" fill="#2C8EBB" /><path d="M16 9c-3.9 0-7 3.1-7 7s3.1 7 7 7 7-3.1 7-7-3.1-7-7-7zm0 11.5c-2.5 0-4.5-2-4.5-4.5s2-4.5 4.5-4.5 4.5 2 4.5 4.5-2 4.5-4.5 4.5z" fill="#2C8EBB" /></svg>
-                                yarn
-                            </TabsTrigger>
+                <Tabs value={installType} onValueChange={setInstallType} className="relative w-full !border-[1px] !border-neutral-200 dark:!border-neutral-700 rounded-xl overflow-hidden bg-neutral-100 dark:bg-[#0e0e0e] border-b border-neutral-200 dark:border-neutral-800">
+                    <div className="flex items-center justify-between px-3 py-2 border-b border-neutral-300 dark:border-neutral-800 bg-white dark:bg-black">
+                        <TabsList className="justify-start gap-6 bg-transparent p-0">
+                            {["npm", "pnpm", "bun", "yarn"].map((tab) => {
+                                const isActive = installType === tab
+                                return (
+                                    <TabsTrigger
+                                        key={tab}
+                                        value={tab}
+                                        className={cn(
+                                            "relative h-9 px-6 min-w-20 justify-center rounded-full border border-transparent font-medium text-sm transition-all outline-none cursor-pointer select-none",
+                                            isActive ? "text-foreground" : "text-muted-foreground hover:text-foreground",
+                                            "bg-transparent data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:bg-transparent dark:hover:bg-transparent"
+                                        )}
+                                    >
+                                        {isActive && (
+                                            <motion.div
+                                                layoutId="active-tab-pill"
+                                                className="absolute inset-0 bg-neutral-200 dark:bg-neutral-800 rounded-full"
+                                                initial={false}
+                                                transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                                            />
+                                        )}
+                                        <span className="relative z-10 flex items-center gap-2">
+                                            {tab === "npm" && <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="14" height="14" fill="none"><rect width="32" height="32" rx="2" fill="#CB3837" /><path d="M16 8v16h8V16h4V8H6v16h4V8h6z" fill="#fff" /></svg>}
+                                            {tab === "pnpm" && <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="14" height="14" fill="none"><rect width="32" height="32" rx="2" fill="#F69220" /><path d="M7 7h18v18h-8V15h-2v10H7V7zm2 2v14h4V9H9zm10 0h4v4h-4V9z" fill="#fff" /></svg>}
+                                            {tab === "bun" && <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12.79 16.58c.22-.05.44-.08.66-.08 1.96 0 3.63 1.3 4.1 3.09.28-.7 1.05-1.18 1.93-1.18 1.16 0 2.1.94 2.1 2.1 0 .14-.02.28-.06.41a3.07 3.07 0 0 1 1.76.54 9.17 9.17 0 0 0-1.22-3.15c-1.3-2.3-3.6-3.8-6.1-4.2-1.9-.3-3.9.1-5.6 1.1-.3-.3-.7-.5-1.1-.5-1 0-1.8.8-1.8 1.8 0 .2.03.4.1.6-.9.6-1.5 1.6-1.5 2.8 0 1.2.6 2.2 1.5 2.8-.07-.2-.1-.4-.1-.6 0-1 .8-1.8 1.8-1.8.4 0 .8.2 1.1.5 2.1-1.3 4.6-1.6 7.02-.93zM18.8 3.85c-1.4 1.1-2.4 2.7-2.7 4.5l-2.1.8c.8-2.6 2.6-4.7 4.9-5.9.2.2.3.4.5.6H17.8l1 .01zm-9.6 0c2.3 1.2 4.1 3.3 4.9 5.9l-2.1-.8c-.3-1.8-1.3-3.4-2.7-4.5l-.6.6h-.01c.2-.2.3-.4.51-.61zm-4.3 10.9c.7 1.6 2.1 2.8 3.8 3.3l1-2c-1.2-.4-2.2-1.2-2.7-2.3l-2.1 1zm14.2 0l-2.1-1c-.5 1.1-1.5 1.9-2.7 2.3l1 2c1.7-.5 3.1-1.7 3.8-3.3zM6.2 9.5c.3 1.8 1.3 3.4 2.7 4.5l.6-.6h.01c-.2.2-.3.4-.5.6-2.3-1.2-4.1-3.3-4.9-5.9l2.1.8zm11.6 0l2.1-.8c-.8 2.6-2.6 4.7-4.9 5.9-.2-.2-.3-.4-.5-.6h1.6l-1-.01c1.4-1.1 2.4-2.7 2.7-4.48z" /></svg>}
+                                            {tab === "yarn" && <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="14" height="14" fill="none"><path d="M16 2C8.3 2 2 8.3 2 16s6.3 14 14 14 14-6.3 14-14S23.7 2 16 2zm0 25.5c-6.4 0-11.5-5.1-11.5-11.5S9.6 4.5 16 4.5 27.5 9.6 27.5 16 22.4 27.5 16 27.5z" fill="#2C8EBB" /><path d="M16 9c-3.9 0-7 3.1-7 7s3.1 7 7 7 7-3.1 7-7-3.1-7-7-7zm0 11.5c-2.5 0-4.5-2-4.5-4.5s2-4.5 4.5-4.5 4.5 2 4.5 4.5-2 4.5-4.5 4.5z" fill="#2C8EBB" /></svg>}
+                                            {tab}
+                                        </span>
+                                    </TabsTrigger>
+                                )
+                            })}
                         </TabsList>
                         <button
                             onClick={copyCommand}
-                            className="flex items-center justify-center w-7 h-7 rounded-[9px] hover:bg-neutral-200 dark:hover:bg-neutral-800 text-neutral-400 hover:text-foreground transition-all mr-2"
+                            className="flex items-center justify-center w-7 h-7 rounded-[9px] hover:bg-neutral-200 dark:hover:bg-neutral-800 text-neutral-400 hover:text-foreground transition-all mr-2 bg-neutral-200 dark:bg-neutral-800"
                             aria-label="Copy code"
                         >
                             {hasCopied ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <div className="rounded-full border border-neutral-600 p-0.5"><Check className="w-2.5 h-2.5" /></div>}
                         </button>
                     </div>
-                    <div className="bg-neutral-100 dark:bg-[#0A0A0A] p-0 [&_.group\/code]:border-0 [&_.group\/code]:shadow-none [&_.group\/code]:bg-transparent [&_.group\/code]:mb-0">
+                    <div className="bg-neutral-100 dark:bg-[#0e0e0e] p-0 [&_.group\/code]:border-0 [&_.group\/code]:shadow-none [&_.group\/code]:bg-transparent [&_.group\/code]:mb-0">
                         <TabsContent value="npm" className="!mt-0">
                             <CodeBlock code={cli} className="border-0 shadow-none bg-transparent dark:bg-transparent rounded-none" />
                         </TabsContent>
