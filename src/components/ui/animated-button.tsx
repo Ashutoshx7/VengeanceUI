@@ -2,8 +2,9 @@
 
 import React from 'react'
 import { motion, MotionProps } from 'framer-motion'
+import { cn } from '@/lib/utils'
 
-type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & MotionProps & {
+type AnimatedButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & MotionProps & {
     children?: React.ReactNode
     as?: any
 }
@@ -13,8 +14,14 @@ type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & MotionProps & {
  * - theme-aware: uses Tailwind `dark:` classes so it works in both light and dark mode
  * - accepts all native button props (onClick, className, type, etc.)
  */
-const AnimatedButton: React.FC<Props> = ({ children = 'Browse Components', className = '', as = 'button', ...rest }) => {
+const AnimatedButton: React.FC<AnimatedButtonProps> = ({
+    children = 'Browse Components',
+    className = '',
+    as = 'button',
+    ...rest
+}) => {
     const Component = (motion as any)[as] || motion.button
+
     return (
         <Component
             {...rest}
@@ -32,10 +39,12 @@ const AnimatedButton: React.FC<Props> = ({ children = 'Browse Components', class
             }}
             // Set a CSS variable `--shine` that we override for dark mode via Tailwind.
             // Tailwind JIT allows arbitrary properties like `dark:[--shine:...]` if enabled.
-            className={
-                `group inline-flex items-center justify-center px-6 py-6 rounded-md relative overflow-hidden bg-neutral-50 dark:bg-black border border-neutral-200 dark:border-neutral-800 ` +
-                `text-neutral-900 dark:text-neutral-100 font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-950 disabled:pointer-events-none disabled:opacity-50 ${className} [--shine:rgba(0,0,0,.66)] dark:[--shine:rgba(255,255,255,.66)]`
-            }
+            className={cn(
+                "group inline-flex items-center justify-center px-6 py-6 rounded-md relative overflow-hidden bg-neutral-50 dark:bg-black border border-neutral-200 dark:border-neutral-800",
+                "text-neutral-900 dark:text-neutral-100 font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-950 disabled:pointer-events-none disabled:opacity-50",
+                "[--shine:rgba(0,0,0,.66)] dark:[--shine:rgba(255,255,255,.66)]",
+                className
+            )}
         >
             {/* Text with shine mask */}
             <motion.span

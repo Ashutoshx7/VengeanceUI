@@ -13,7 +13,6 @@ const ThemeToggle = () => {
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true)
   }, [])
 
@@ -48,10 +47,7 @@ const MobileThemeToggle = () => {
   const { theme, setTheme, resolvedTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
 
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setMounted(true)
-  }, [])
+  useEffect(() => setMounted(true), [])
 
   if (!mounted) return <div className="w-9 h-9" />
 
@@ -88,7 +84,7 @@ const Navbar = ({ className, ...props }: React.HTMLAttributes<HTMLElement> & { l
       <header className={cn("fixed top-0 inset-x-0 z-50 h-16 flex px-0", className)} {...props}>
 
         {/* Left Side Bar - Flexible width */}
-        <div className="flex-1 h-10 bg-background dark:bg-black z-20 relative min-w-0">
+        <div className="flex-1 h-10 bg-white dark:bg-black z-20 relative min-w-0">
           <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none">
             <line x1="0" y1="39.5" x2="100%" y2="39.5" stroke="currentColor" strokeOpacity={0.2} strokeWidth={0.5} className="text-foreground" />
             <line x1="0" y1="36.5" x2="100%" y2="36.5" stroke="currentColor" strokeOpacity={0.2} strokeWidth={0.5} className="text-foreground" />
@@ -101,7 +97,7 @@ const Navbar = ({ className, ...props }: React.HTMLAttributes<HTMLElement> & { l
           {/* Left Slice (Corner) */}
           <div className="w-[50px] h-full relative shrink-0">
             {/* Glass Background */}
-            <div className="absolute inset-0 bg-background dark:bg-black" style={{ clipPath: "path('M0 0 H50 V64 C25 64 25 40 0 40 Z')" }} />
+            <div className="absolute inset-0 bg-white dark:bg-black" style={{ clipPath: "path('M0 0 H50 V64 C25 64 25 40 0 40 Z')" }} />
             {/* Outlines */}
             <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 50 64">
               <path d="M0 39.5 C25 39.5 25 63.5 50 63.5" fill="none" stroke="currentColor" strokeOpacity={0.2} strokeWidth={0.5} className="text-foreground" />
@@ -112,7 +108,7 @@ const Navbar = ({ className, ...props }: React.HTMLAttributes<HTMLElement> & { l
           {/* Center Slice (Flexible Content Area) */}
           <div className="flex-1 h-full relative min-w-0 -ml-px">
             {/* Background & Lines Layer */}
-            <div className="absolute inset-0 bg-background dark:bg-black">
+            <div className="absolute inset-0 bg-white dark:bg-black">
               <svg className="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none">
                 <line x1="0" y1="63.5" x2="100%" y2="63.5" stroke="currentColor" strokeOpacity={0.2} strokeWidth={0.5} className="text-foreground" />
                 <line x1="0" y1="60.5" x2="100%" y2="60.5" stroke="currentColor" strokeOpacity={0.2} strokeWidth={0.5} className="text-foreground" />
@@ -185,7 +181,7 @@ const Navbar = ({ className, ...props }: React.HTMLAttributes<HTMLElement> & { l
           {/* Right Slice (Corner) */}
           <div className="w-[50px] h-full relative shrink-0 -ml-px">
             {/* Glass Background */}
-            <div className="absolute inset-0 bg-background dark:bg-black" style={{ clipPath: "path('M0 0 H50 V40 C25 40 25 64 0 64 Z')" }} />
+            <div className="absolute inset-0 bg-white dark:bg-black" style={{ clipPath: "path('M0 0 H50 V40 C25 40 25 64 0 64 Z')" }} />
             {/* Outlines */}
             <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 50 64">
               <path d="M0 63.5 C25 63.5 25 39.5 50 39.5" fill="none" stroke="currentColor" strokeOpacity={0.2} strokeWidth={0.5} className="text-foreground" />
@@ -196,7 +192,7 @@ const Navbar = ({ className, ...props }: React.HTMLAttributes<HTMLElement> & { l
         </div>
 
         {/* Right Side Bar - Flexible width */}
-        <div className="flex-1 h-10 bg-background/80 dark:bg-neutral-950/80 backdrop-blur-md z-20 relative min-w-0 -ml-px">
+        <div className="flex-1 h-10 bg-white dark:bg-black z-20 relative min-w-0 -ml-px">
           <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none">
             <line x1="0" y1="39.5" x2="100%" y2="39.5" stroke="currentColor" strokeOpacity={0.2} strokeWidth={0.5} className="text-foreground" />
             <line x1="0" y1="36.5" x2="100%" y2="36.5" stroke="currentColor" strokeOpacity={0.2} strokeWidth={0.5} className="text-foreground" />
@@ -228,23 +224,6 @@ const Navbar = ({ className, ...props }: React.HTMLAttributes<HTMLElement> & { l
                   <span className="font-medium text-foreground/90">{item.label}</span>
                 </Link>
               ))}
-              <div className="h-px bg-foreground/10 my-2" />
-              <div className="flex flex-col gap-2">
-                <Link
-                  href="/login"
-                  className="flex items-center gap-3 p-3 rounded-lg hover:bg-foreground/5 transition-colors font-medium text-foreground/90"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  Log in
-                </Link>
-                <Link
-                  href="/signup"
-                  className="flex items-center justify-center gap-2 p-3 rounded-lg bg-foreground text-background font-medium mt-2"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  Sign up
-                </Link>
-              </div>
             </nav>
           </motion.div>
         )}

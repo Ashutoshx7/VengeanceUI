@@ -113,9 +113,9 @@ export function SpotlightNavbar({
                 ref={navRef}
                 className={cn(
                     "relative h-11 rounded-full overflow-hidden transition-all duration-300",
-                    "border border-neutral-200 dark:border-neutral-700",
-                    "bg-white/80 dark:bg-black/80",
-                    "backdrop-blur-md"
+                    "border-2 border-black/20 dark:border-white/20",
+                    "bg-white dark:bg-black",
+                    "shadow-lg shadow-black/10 dark:shadow-white/10"
                 )}
             >
                 {/* Content */}
