@@ -1,10 +1,11 @@
 'use client'
 
 import React from 'react'
-import { motion } from 'framer-motion'
+import { motion, MotionProps } from 'framer-motion'
 
-type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & MotionProps & {
     children?: React.ReactNode
+    as?: any
 }
 
 /**
@@ -12,10 +13,11 @@ type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
  * - theme-aware: uses Tailwind `dark:` classes so it works in both light and dark mode
  * - accepts all native button props (onClick, className, type, etc.)
  */
-const AnimatedButton: React.FC<Props> = ({ children = 'Browse Components', className = '', ...rest }) => {
+const AnimatedButton: React.FC<Props> = ({ children = 'Browse Components', className = '', as = 'button', ...rest }) => {
+    const Component = (motion as any)[as] || motion.button
     return (
-        <motion.button
-            {...(rest as any)}
+        <Component
+            {...rest}
             whileTap={{ scale: 0.97 }}
             transition={{
                 stiffness: 20,
@@ -66,7 +68,7 @@ const AnimatedButton: React.FC<Props> = ({ children = 'Browse Components', class
                 animate={{ backgroundPosition: ['100% 0', '0% 0'], opacity: [0, 1, 0] }}
                 transition={{ duration: 1, repeat: Infinity, ease: 'linear', repeatDelay: 1 }}
             />
-        </motion.button>
+        </Component>
     )
 }
 
