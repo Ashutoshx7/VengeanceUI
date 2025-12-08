@@ -4,10 +4,39 @@ import React, { useMemo } from "react";
 import { cn } from "@/lib/utils";
 
 interface FlipTextProps {
+    /**
+     * Additional CSS classes for the wrapper
+     */
     className?: string;
+
+    /**
+     * The text content to animate (will be split by spaces)
+     */
     children: string;
+
+    /**
+     * Duration of the flip animation in seconds
+     * @default 2.2
+     */
     duration?: number;
+
+    /**
+     * Initial delay before animation starts in seconds
+     * @default 0
+     */
     delay?: number;
+
+    /**
+     * Whether the animation should loop infinitely
+     * @default true
+     */
+    loop?: boolean;
+
+    /**
+     * Custom separator for splitting text (default is space)
+     * @default " "
+     */
+    separator?: string;
 }
 
 export function FlipText({
@@ -15,21 +44,32 @@ export function FlipText({
     children,
     duration = 2.2,
     delay = 0,
+    loop = true,
+    separator = " ",
 }: FlipTextProps) {
-    const words = useMemo(() => children.split(" "), [children]);
+    const words = useMemo(() => children.split(separator), [children, separator]);
     const totalChars = children.length;
 
-    let charIndexCounter = 0;
+    // Calculate character index for each position
+    const getCharIndex = (wordIndex: number, charIndex: number) => {
+        let index = 0;
+        for (let i = 0; i < wordIndex; i++) {
+            index += words[i].length + (separator === " " ? 1 : separator.length);
+        }
+        return index + charIndex;
+    };
 
     return (
         <div
             className={cn(
-                "flip-text-wrapper inline-block leading-none perspective-[1000px]",
+                "flip-text-wrapper inline-block leading-none",
                 className
             )}
+            style={{ perspective: "1000px" }}
         >
             {words.map((word, wordIndex) => {
                 const chars = word.split("");
+
                 return (
                     <span
                         key={wordIndex}
@@ -37,11 +77,9 @@ export function FlipText({
                         style={{ transformStyle: "preserve-3d" }}
                     >
                         {chars.map((char, charIndex) => {
-                            const currentGlobalIndex = charIndexCounter;
-                            charIndexCounter++;
+                            const currentGlobalIndex = getCharIndex(wordIndex, charIndex);
 
-                            // Calculate delay in JS to mimic the CSS sin() logic
-                            // CSS: sin((var(--char-index) / var(--char-total)) * 90deg) * (var(--duration) * 0.25)
+                            // Calculate delay based on character position
                             const normalizedIndex = currentGlobalIndex / totalChars;
                             const sineValue = Math.sin(normalizedIndex * (Math.PI / 2));
                             const calculatedDelay = sineValue * (duration * 0.25) + delay;
@@ -49,12 +87,13 @@ export function FlipText({
                             return (
                                 <span
                                     key={charIndex}
-                                    className="char inline-block relative"
+                                    className="flip-char inline-block relative"
                                     data-char={char}
                                     style={
                                         {
-                                            "--duration": `${duration}s`,
-                                            "--delay": `${calculatedDelay}s`,
+                                            "--flip-duration": `${duration}s`,
+                                            "--flip-delay": `${calculatedDelay}s`,
+                                            "--flip-iteration": loop ? "infinite" : "1",
                                             transformStyle: "preserve-3d",
                                         } as React.CSSProperties
                                     }
@@ -63,63 +102,17 @@ export function FlipText({
                                 </span>
                             );
                         })}
-                        {wordIndex < words.length - 1 && (
+                        {separator === " " && wordIndex < words.length - 1 && (
                             <span className="whitespace inline-block">&nbsp;</span>
+                        )}
+                        {separator !== " " && wordIndex < words.length - 1 && (
+                            <span className="separator inline-block">{separator}</span>
                         )}
                     </span>
                 );
             })}
-
-            <style dangerouslySetInnerHTML={{
-                __html: `
-        .char {
-          color: inherit;
-          -webkit-text-fill-color: transparent;
-          height: 1.2em;
-          line-height: 1.2em;
-          vertical-align: middle;
-          animation: flip var(--duration) var(--delay) infinite ease;
-        }
-
-        .char::before,
-        .char::after {
-          color: inherit;
-          -webkit-text-fill-color: currentColor;
-          content: attr(data-char);
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          height: 100%;
-          width: 100%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          backface-visibility: hidden;
-          animation: fade var(--duration) var(--delay) infinite ease;
-        }
-
-        /* Front Face (Initial) */
-        .char::after {
-          transform: translate(-50%, -50%) translateZ(0.6em);
-        }
-
-        /* Bottom Face (Rotates in) */
-        .char::before {
-          transform: translate(-50%, -50%) rotateX(-90deg) translateZ(0.6em);
-          opacity: 0;
-          --opacity: 1;
-        }
-
-        @keyframes flip {
-          0% { transform: rotateX(0deg); }
-          25%, 100% { transform: rotateX(90deg); }
-        }
-
-        @keyframes fade {
-          0% { opacity: 1; }
-          30%, 100% { opacity: var(--opacity, 0); }
-        }
-      `}} />
         </div>
     );
 }
+
+export default FlipText;

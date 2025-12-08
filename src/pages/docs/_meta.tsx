@@ -14,6 +14,7 @@ export default {
     },
     "components-overview": "Overview",
     "animated-button": "Animated Button",
+    "flip-text": "Flip Text",
     "creepy-button": "Creepy Button",
     "masked-avatars": "Masked Avatars",
     "glass-dock": "Dock",
