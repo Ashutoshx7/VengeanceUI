@@ -4,6 +4,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import imagesLoaded from 'imagesloaded'
 import { cn } from '@/lib/utils'
+import Link from 'next/link'
 
 // Import ACTUAL UI components from the library
 import AnimatedButton from '@/components/ui/animated-button'
@@ -425,10 +426,13 @@ export function LandingPageGrid({
 
                         return (
                             <figure key={`${item.id}-${i}`} className="grid__item m-0 relative z-10 [perspective:800px] will-change-[transform,opacity] group cursor-pointer">
-                                <a href={item.docPath} className="block w-full h-full">
+                                <Link href={item.docPath} className="absolute inset-0 z-30 opacity-0">
+                                    <span className="sr-only">View {item.name}</span>
+                                </Link>
+                                <div className="block w-full h-full">
                                     <div className="grid__item-img w-full h-full [backface-visibility:hidden] will-change-transform rounded-xl overflow-hidden shadow-sm border border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-900 transition-all duration-500 ease-out group-hover:scale-105 group-hover:shadow-xl group-hover:border-zinc-300 dark:group-hover:border-zinc-700">
                                         {/* Full-size preview container */}
-                                        <div className="absolute inset-0 flex items-center justify-center p-2 overflow-hidden">
+                                        <div className="absolute inset-0 flex items-center justify-center p-2 overflow-hidden pointer-events-none">
                                             {item.preview ? (
                                                 <div className="w-full h-full flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
                                                     {item.preview}
@@ -440,15 +444,15 @@ export function LandingPageGrid({
                                             )}
                                         </div>
                                         {/* Gradient overlay on hover */}
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 rounded-xl" />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 rounded-xl pointer-events-none" />
                                         {/* Label at bottom */}
-                                        <div className="absolute bottom-0 left-0 right-0 p-2 z-20">
+                                        <div className="absolute bottom-0 left-0 right-0 p-2 z-20 pointer-events-none">
                                             <span className="text-[9px] font-medium text-zinc-500 dark:text-zinc-400 group-hover:text-white transition-colors uppercase tracking-wider text-center block">
                                                 {item.name}
                                             </span>
                                         </div>
                                     </div>
-                                </a>
+                                </div>
                             </figure>
                         )
                     })}
