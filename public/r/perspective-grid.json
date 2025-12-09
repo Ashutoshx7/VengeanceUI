@@ -1,0 +1,14 @@
+{
+    "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+    "name": "perspective-grid",
+    "type": "registry:ui",
+    "dependencies": [],
+    "files": [
+        {
+            "path": "components/ui/perspective-grid.tsx",
+            "content": "\"use client\";\r\n\r\nimport React, { useEffect, useState } from \"react\";\r\nimport { cn } from \"@/lib/utils\";\r\n\r\ninterface PerspectiveGridProps {\r\n  className?: string;\r\n}\r\n\r\nexport function PerspectiveGrid({ className }: PerspectiveGridProps) {\r\n  const [mounted, setMounted] = useState(false);\r\n\r\n  useEffect(() => {\r\n    setMounted(true);\r\n  }, []);\r\n\r\n  // 40x40 grid = 1600 tiles\r\n  const tiles = Array.from({ length: 1600 });\r\n\r\n  return (\r\n    <div\r\n      className={cn(\r\n        \"relative w-full h-full overflow-hidden bg-white dark:bg-black\",\r\n        \"[--fade-stop:#ffffff] dark:[--fade-stop:#000000]\",\r\n        className\r\n      )}\r\n      style={{\r\n        perspective: \"2000px\",\r\n        transformStyle: \"preserve-3d\",\r\n      }}\r\n    >\r\n      <div\r\n        className=\"absolute w-[80rem] aspect-square grid origin-center\"\r\n        style={{\r\n          left: \"50%\",\r\n          top: \"50%\",\r\n          transform:\r\n            \"translate(-50%, -50%) rotateX(30deg) rotateY(-5deg) rotateZ(20deg) scale(2)\",\r\n          transformStyle: \"preserve-3d\",\r\n          gridTemplateColumns: \"repeat(40, 1fr)\",\r\n          gridTemplateRows: \"repeat(40, 1fr)\",\r\n        }}\r\n      >\r\n        {/* Tiles */}\r\n        {mounted &&\r\n          tiles.map((_, i) => (\r\n            <div\r\n              key={i}\r\n              className=\"tile min-h-[1px] min-w-[1px] border border-gray-300 dark:border-gray-700 bg-transparent transition-colors duration-[1500ms] hover:duration-0\"\r\n            />\r\n          ))}\r\n      </div>\r\n\r\n      {/* Radial Gradient Mask (Overlay) */}\r\n      <div\r\n        className=\"absolute inset-0 pointer-events-none z-10\"\r\n        style={{\r\n          background: \"radial-gradient(circle, transparent 25%, var(--fade-stop) 80%)\",\r\n        }}\r\n      />\r\n    </div>\r\n  );\r\n}\r\n\r\nexport default PerspectiveGrid;",
+            "type": "registry:ui",
+            "target": "components/ui/perspective-grid.tsx"
+        }
+    ]
+}

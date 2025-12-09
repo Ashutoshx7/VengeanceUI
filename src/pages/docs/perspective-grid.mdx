@@ -1,0 +1,232 @@
+import { CodeBlock, Dependencies } from '@/components/docs/component-installation'
+import { CLICommand } from '@/components/docs/cli-command'
+import { PropsTable } from '@/components/docs/props-table'
+import { PerspectiveGridDemo } from '@/components/docs/perspective-grid'
+import { ComponentPreview } from '@/components/docs/component-preview'
+
+# Perspective Grid
+
+A stunning 3D perspective grid with colorful hover effects that responds to mouse movement.
+
+<ComponentPreview
+  component={<PerspectiveGridDemo />}
+  code={`"use client";
+
+import { PerspectiveGrid } from "@/components/ui/perspective-grid";
+
+export function PerspectiveGridDemo() {
+  return (
+    <div className="relative flex h-[500px] w-full items-center justify-center overflow-hidden rounded-lg border bg-background">
+      <PerspectiveGrid />
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
+        <span className="pointer-events-none whitespace-pre-wrap bg-gradient-to-b from-black to-gray-300/80 bg-clip-text text-center text-6xl font-semibold leading-none text-transparent dark:from-white dark:to-slate-900/10">
+          Perspective Grid
+        </span>
+      </div>
+    </div>
+  );
+}`}
+/>
+
+## Install using CLI
+
+<CLICommand componentName="perspective-grid" />
+
+## Install Manually
+
+<Dependencies step={1} title="Install dependencies">
+    <CodeBlock 
+        code="npm install clsx tailwind-merge" 
+    />
+</Dependencies>
+
+<Dependencies step={2} title="Add util file">
+    <p className="text-[13px] text-muted-foreground mt-2 mb-8">
+        <code className="text-foreground font-mono text-xs bg-neutral-100 dark:bg-[#161616] border border-neutral-200 dark:border-neutral-800 px-2 py-1 rounded-md">lib/utils.ts</code>
+    </p>
+    <CodeBlock 
+        language="tsx"
+        code={`import { ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}`}
+    />
+</Dependencies>
+
+<Dependencies step={3} title="Add styles to global CSS">
+    <p className="text-[13px] text-muted-foreground mt-2 mb-8">Add the following styles to your <code className="text-foreground font-mono text-xs bg-neutral-100 dark:bg-[#161616] border border-neutral-200 dark:border-neutral-800 px-2 py-1 rounded-md mx-1">app/globals.css</code> file</p>
+    <CodeBlock 
+        language="css"
+        code={`/* PerspectiveGrid Component Styles */
+
+/* Base tile styles - ensure visibility */
+.tile {
+  min-width: 1px;
+  min-height: 1px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgba(0, 0, 0, 0.2);
+  background-color: transparent;
+  box-sizing: border-box;
+}
+
+.dark .tile {
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Hover colors */
+.tile:nth-child(4n):hover {
+  background-color: rgb(248 113 113);
+}
+.tile:nth-child(4n + 1):hover {
+  background-color: rgb(56 189 248);
+}
+.tile:nth-child(4n + 2):hover {
+  background-color: rgb(74 222 128);
+}
+.tile:nth-child(4n + 3):hover {
+  background-color: rgb(253 224 71);
+}
+.tile:nth-child(7n):hover {
+  background-color: rgb(56 189 248);
+}
+.tile:nth-child(7n + 3):hover {
+  background-color: rgb(74 222 128);
+}
+.tile:nth-child(7n + 5):hover {
+  background-color: rgb(253 224 71);
+}
+.tile:nth-child(7n + 6):hover {
+  background-color: rgb(248 113 113);
+}
+.tile:nth-child(11n + 1):hover {
+  background-color: rgb(248 113 113);
+}
+.tile:nth-child(11n + 4):hover {
+  background-color: rgb(56 189 248);
+}
+.tile:nth-child(11n + 7):hover {
+  background-color: rgb(74 222 128);
+}
+.tile:nth-child(11n + 10):hover {
+  background-color: rgb(253 224 71);
+}`}
+    />
+</Dependencies>
+
+<Dependencies step={4} title="Copy the source code">
+    <p className="text-[13px] text-muted-foreground mt-2 mb-8">Copy the code below and paste it into <code className="text-foreground font-mono text-xs bg-neutral-100 dark:bg-[#161616] border border-neutral-200 dark:border-neutral-800 px-2 py-1 rounded-md mx-1">components/ui/perspective-grid.tsx</code></p>
+    <CodeBlock
+        language="tsx"
+        title="components/ui/perspective-grid.tsx"
+        expandable={true}
+        code={`"use client";
+
+import React, { useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
+
+interface PerspectiveGridProps {
+  className?: string;
+}
+
+export function PerspectiveGrid({ className }: PerspectiveGridProps) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // 40x40 grid = 1600 tiles
+  const tiles = Array.from({ length: 1600 });
+
+  return (
+    <div
+      className={cn(
+        "relative w-full h-full overflow-hidden bg-white dark:bg-black",
+        "[--fade-stop:#ffffff] dark:[--fade-stop:#000000]",
+        className
+      )}
+      style={{
+        perspective: "2000px",
+        transformStyle: "preserve-3d",
+      }}
+    >
+      <div
+        className="absolute w-[80rem] aspect-square grid origin-center"
+        style={{
+          left: "50%",
+          top: "50%",
+          transform:
+            "translate(-50%, -50%) rotateX(30deg) rotateY(-5deg) rotateZ(20deg) scale(2)",
+          transformStyle: "preserve-3d",
+          gridTemplateColumns: "repeat(40, 1fr)",
+          gridTemplateRows: "repeat(40, 1fr)",
+        }}
+      >
+        {/* Tiles */}
+        {mounted &&
+          tiles.map((_, i) => (
+            <div
+              key={i}
+              className="tile min-h-[1px] min-w-[1px] border border-gray-300 dark:border-gray-700 bg-transparent transition-colors duration-[1500ms] hover:duration-0"
+            />
+          ))}
+      </div>
+
+      {/* Radial Gradient Mask (Overlay) */}
+      <div
+        className="absolute inset-0 pointer-events-none z-10"
+        style={{
+          background: "radial-gradient(circle, transparent 25%, var(--fade-stop) 80%)",
+        }}
+      />
+    </div>
+  );
+}
+
+export default PerspectiveGrid;`}
+    />
+</Dependencies>
+
+## Usage
+
+<CodeBlock 
+    language="tsx" 
+    code={`import { PerspectiveGrid } from "@/components/ui/perspective-grid"
+
+export function Example() {
+  return (
+    <div className="relative h-[500px] w-full">
+      <PerspectiveGrid />
+      {/* Add your content on top */}
+      <div className="absolute inset-0 flex items-center justify-center z-20">
+        <h1>Your Content Here</h1>
+      </div>
+    </div>
+  );
+}`} 
+/>
+
+## Props
+
+<PropsTable
+  data={[
+    {
+      prop: "className",
+      type: "string",
+      defaultValue: "-",
+      description: "Additional CSS classes for the grid container."
+    },
+  ]}
+/>
+
+## Features
+
+- **3D Perspective**: Realistic 3D grid with customizable perspective transform
+- **Colorful Hover Effects**: Tiles change to vibrant colors (red, cyan, green, yellow) on hover
+- **Dark Mode Support**: Seamlessly adapts to light and dark themes
+- **Smooth Transitions**: 1500ms transition duration with instant hover response
+- **Gradient Fade**: Radial gradient overlay for a polished look
+- **Client-Side Rendering**: Uses mounting state to prevent hydration issues

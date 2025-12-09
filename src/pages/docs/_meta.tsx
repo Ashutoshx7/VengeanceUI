@@ -18,6 +18,7 @@ export default {
     "creepy-button": "Creepy Button",
     "masked-avatars": "Masked Avatars",
     "glass-dock": "Dock",
+    "perspective-grid": "Perspective Grid",
     "social-flip-button": "Social Flip Button",
     "interactive-book": "Interactive Book",
     "spotlight-navbar": "Spotlight Navbar"

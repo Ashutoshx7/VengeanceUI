@@ -367,6 +367,14 @@
     ]
   },
   {
+    "name": "perspective-grid",
+    "dependencies": [],
+    "type": "registry:ui",
+    "files": [
+      "public/r/perspective-grid.json"
+    ]
+  },
+  {
     "name": "popover",
     "dependencies": [
       "@radix-ui/react-popover"

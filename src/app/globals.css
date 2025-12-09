@@ -452,3 +452,70 @@ footer,
     opacity: var(--opacity, 0);
   }
 }
+
+/* ============================================
+   PerspectiveGrid Component Styles
+   ============================================ */
+
+/* Base tile styles - ensure visibility */
+.tile {
+  min-width: 1px;
+  min-height: 1px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgba(0, 0, 0, 0.2);
+  background-color: transparent;
+  box-sizing: border-box;
+}
+
+.dark .tile {
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.tile:nth-child(4n):hover {
+  background-color: rgb(248 113 113);
+}
+
+.tile:nth-child(4n + 1):hover {
+  background-color: rgb(56 189 248);
+}
+
+.tile:nth-child(4n + 2):hover {
+  background-color: rgb(74 222 128);
+}
+
+.tile:nth-child(4n + 3):hover {
+  background-color: rgb(253 224 71);
+}
+
+.tile:nth-child(7n):hover {
+  background-color: rgb(56 189 248);
+}
+
+.tile:nth-child(7n + 3):hover {
+  background-color: rgb(74 222 128);
+}
+
+.tile:nth-child(7n + 5):hover {
+  background-color: rgb(253 224 71);
+}
+
+.tile:nth-child(7n + 6):hover {
+  background-color: rgb(248 113 113);
+}
+
+.tile:nth-child(11n + 1):hover {
+  background-color: rgb(248 113 113);
+}
+
+.tile:nth-child(11n + 4):hover {
+  background-color: rgb(56 189 248);
+}
+
+.tile:nth-child(11n + 7):hover {
+  background-color: rgb(74 222 128);
+}
+
+.tile:nth-child(11n + 10):hover {
+  background-color: rgb(253 224 71);
+}
