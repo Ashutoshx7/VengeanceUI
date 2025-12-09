@@ -38,6 +38,17 @@
     ]
   },
   {
+    "name": "testimonials-card",
+    "dependencies": [
+      "framer-motion",
+      "lucide-react"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/testimonials-card.json"
+    ]
+  },
+  {
     "name": "breadcrumb",
     "dependencies": [
       "lucide-react",
