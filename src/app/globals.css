@@ -957,8 +957,24 @@ footer,
       transparent calc((var(--blur-index) + 3) * calc((100 / var(--blurs)) * 1%)));
   backdrop-filter: blur(calc((var(--blur-index, 0) * var(--blur, 0)) * 1px));
   -webkit-backdrop-filter: blur(calc((var(--blur-index, 0) * var(--blur, 0)) * 1px));
-  background: inherit;
-  will-change: backdrop-filter;
+}
+
+/* Glow effect overlay for edges - dark mode */
+.dark .logo-slider__blur::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* Light mode - subtle shadow instead of glow */
+.logo-slider__blur::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.05) 0%, transparent 70%);
+  pointer-events: none;
 }
 
 /* Per-Item Animation (keyframes and calc-based animation) */
