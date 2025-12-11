@@ -15,6 +15,7 @@ export default {
     "components-overview": "Overview",
     "animated-button": "Animated Button",
     "animated-hero": "Animated Hero",
+    "glow-border-card": "Glow Border Card",
     "gradient-tiles": "Gradient Tiles",
     "liquid-text": "3D Displacement Text",
     "testimonials-card": "Testimonials Card",

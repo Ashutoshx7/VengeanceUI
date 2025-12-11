@@ -1,0 +1,346 @@
+import { CodeBlock, Dependencies } from '@/components/docs/component-installation'
+import { CLICommand } from '@/components/docs/cli-command'
+import { PropsTable } from '@/components/docs/props-table'
+import { GlowBorderCardDemo, GlowBorderCardPresets, GlowBorderCardCustom } from '@/components/docs/glow-border-card'
+import { ComponentPreview } from '@/components/docs/component-preview'
+
+# Glow Border Card
+
+A stunning animated card with a rotating conic gradient that creates a beautiful inner glow effect. The animation runs continuously without requiring hover.
+
+<ComponentPreview
+  component={<GlowBorderCardDemo />}
+  code={`"use client";
+
+import { GlowBorderCard } from "@/components/ui/glow-border-card";
+
+export function GlowBorderCardDemo() {
+  return (
+    <div className="flex items-center justify-center h-[400px] w-full">
+      <GlowBorderCard
+        width="280px"
+        aspectRatio="1"
+        colorPreset="aurora"
+        animationDuration={4}
+      />
+    </div>
+  );
+}`}
+/>
+
+## Install using CLI
+
+<CLICommand componentName="glow-border-card" />
+
+## Install Manually
+
+<Dependencies step={1} title="Install dependencies">
+    <CodeBlock 
+        code="npm install clsx tailwind-merge" 
+    />
+</Dependencies>
+
+<Dependencies step={2} title="Add util file">
+    <p className="text-[13px] text-muted-foreground mt-2 mb-8">
+        <code className="text-foreground font-mono text-xs bg-neutral-100 dark:bg-[#161616] border border-neutral-200 dark:border-neutral-800 px-2 py-1 rounded-md">lib/utils.ts</code>
+    </p>
+    <CodeBlock 
+        language="tsx"
+        code={`import { ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}`}
+    />
+</Dependencies>
+
+<Dependencies step={3} title="Add styles to global CSS">
+    <p className="text-[13px] text-muted-foreground mt-2 mb-8">Add the following styles to your <code className="text-foreground font-mono text-xs bg-neutral-100 dark:bg-[#161616] border border-neutral-200 dark:border-neutral-800 px-2 py-1 rounded-md mx-1">app/globals.css</code> file</p>
+    <CodeBlock 
+        language="css"
+        code={`/* GlowBorderCard Animation Utilities */
+
+@property --glow-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes glow-angle-rotate {
+  to { --glow-angle: 1turn; }
+}
+
+.glow-conic {
+  border-image: conic-gradient(
+    from var(--glow-angle),
+    var(--glow-color-1, #669900),
+    var(--glow-color-2, #99cc33),
+    var(--glow-color-3, #ccee66),
+    var(--glow-color-4, #006699),
+    var(--glow-color-5, #3399cc),
+    var(--glow-color-6, #990066),
+    var(--glow-color-7, #cc3399),
+    var(--glow-color-8, #ff6600),
+    var(--glow-color-9, #ff9900),
+    var(--glow-color-10, #ffcc00),
+    var(--glow-color-1, #669900)
+  ) 1;
+  animation: glow-angle-rotate var(--glow-animation-duration, 4s) linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glow-conic { animation: none; }
+}`}
+    />
+</Dependencies>
+
+<Dependencies step={4} title="Copy the source code">
+    <p className="text-[13px] text-muted-foreground mt-2 mb-8">Copy the code below and paste it into <code className="text-foreground font-mono text-xs bg-neutral-100 dark:bg-[#161616] border border-neutral-200 dark:border-neutral-800 px-2 py-1 rounded-md mx-1">components/ui/glow-border-card.tsx</code></p>
+    <CodeBlock
+        language="tsx"
+        title="components/ui/glow-border-card.tsx"
+        expandable={true}
+        code={`'use client';
+
+import React from 'react';
+import { cn } from '@/lib/utils';
+
+export interface GlowBorderCardProps extends React.HTMLAttributes<HTMLDivElement> {
+  children?: React.ReactNode;
+  width?: string;
+  height?: string;
+  aspectRatio?: string;
+  borderRadius?: string;
+  animationDuration?: number;
+  gradientColors?: string[];
+  borderWidth?: string;
+  blurAmount?: string;
+  inset?: string;
+  colorPreset?: 'nature' | 'ocean' | 'sunset' | 'aurora' | 'custom';
+  paused?: boolean;
+}
+
+const colorPresets: Record<string, string[]> = {
+  nature: ['#669900', '#88bb22', '#99cc33', '#aaddaa', '#ccee66', '#006699', '#228888', '#3399cc', '#55aacc', '#669900'],
+  ocean: ['#006699', '#1177aa', '#2288bb', '#3399cc', '#44aadd', '#55bbee', '#66ccff', '#44bbee', '#2299cc', '#006699'],
+  sunset: ['#ff6600', '#ff7711', '#ff8822', '#ff9900', '#ffaa22', '#ffbb44', '#ffcc00', '#ff9933', '#ff7722', '#ff6600'],
+  aurora: ['#00ff87', '#22ffaa', '#44ffcc', '#60efff', '#88ddff', '#bb99ff', '#dd77ee', '#ff68f0', '#ff55cc', '#00ff87'],
+  custom: ['#669900', '#99cc33', '#ccee66', '#006699', '#3399cc', '#990066', '#cc3399', '#ff6600', '#ff9900', '#ffcc00'],
+};
+
+export const GlowBorderCard = React.forwardRef<HTMLDivElement, GlowBorderCardProps>(
+  (
+    {
+      children,
+      className,
+      width = '320px',
+      height,
+      aspectRatio = '1',
+      borderRadius = '0.75rem',
+      animationDuration = 4,
+      gradientColors,
+      borderWidth = '1.25em',
+      blurAmount = '0.75em',
+      inset = '-1em',
+      colorPreset = 'custom',
+      paused = false,
+      style,
+      ...props
+    },
+    ref
+  ) => {
+    const colors = gradientColors || colorPresets[colorPreset] || colorPresets.custom;
+    
+    const colorVars: Record<string, string> = {};
+    for (let i = 0; i < 10; i++) {
+      colorVars[\`--glow-color-\${i + 1}\`] = colors[i % colors.length];
+    }
+
+    return (
+      <div
+        ref={ref}
+        className={cn(
+          "relative overflow-hidden grid place-content-center isolate",
+          "bg-zinc-50/50 dark:bg-neutral-900/60 backdrop-blur-md",
+          className
+        )}
+        style={{
+          width,
+          height: height || 'auto',
+          aspectRatio: height ? 'unset' : aspectRatio,
+          borderRadius,
+          '--glow-animation-duration': \`\${animationDuration}s\`,
+          ...colorVars,
+          ...style,
+        } as React.CSSProperties}
+        {...props}
+      >
+        <div 
+          className={cn(
+            "absolute -z-10 border-solid rounded-[inherit] glow-conic",
+            paused && "[animation-play-state:paused]"
+          )}
+          style={{ inset, borderWidth, filter: \`blur(\${blurAmount})\` }}
+        />
+        <div className="relative z-10 w-full h-full bg-transparent flex items-center justify-center p-4">
+          {children}
+        </div>
+      </div>
+    );
+  }
+);
+
+GlowBorderCard.displayName = 'GlowBorderCard';
+
+export default GlowBorderCard;`}
+    />
+</Dependencies>
+
+## Color Presets
+
+Choose from built-in color themes or create your own custom gradient.
+
+<ComponentPreview
+  component={<GlowBorderCardPresets />}
+  code={`"use client";
+
+import { GlowBorderCard } from "@/components/ui/glow-border-card";
+
+export function GlowBorderCardPresets() {
+  return (
+    <div className="flex flex-wrap gap-6 justify-center">
+      <GlowBorderCard width="180px" colorPreset="aurora" />
+      <GlowBorderCard width="180px" colorPreset="ocean" />
+      <GlowBorderCard width="180px" colorPreset="sunset" />
+      <GlowBorderCard width="180px" colorPreset="nature" />
+    </div>
+  );
+}`}
+/>
+
+## Custom Gradient
+
+Pass your own array of colors to create unique effects.
+
+<ComponentPreview
+  component={<GlowBorderCardCustom />}
+  code={`"use client";
+
+import { GlowBorderCard } from "@/components/ui/glow-border-card";
+
+export function GlowBorderCardCustom() {
+  return (
+    <GlowBorderCard
+      width="220px"
+      gradientColors={['#ff0080', '#ff8c00', '#40e0d0', '#7b68ee', '#ff0080']}
+      animationDuration={3}
+    />
+  );
+}`}
+/>
+
+## Usage
+
+<CodeBlock 
+    language="tsx" 
+    code={`import { GlowBorderCard } from "@/components/ui/glow-border-card";
+
+export function MyComponent() {
+  return (
+    <GlowBorderCard
+      width="300px"
+      aspectRatio="1"
+      colorPreset="aurora"
+      animationDuration={4}
+    >
+      <p className="text-white text-center">Your content here</p>
+    </GlowBorderCard>
+  );
+}`} 
+/>
+
+## Props
+
+<PropsTable
+  data={[
+    {
+      prop: "children",
+      type: "ReactNode",
+      defaultValue: "-",
+      description: "Content to display inside the card."
+    },
+    {
+      prop: "width",
+      type: "string",
+      defaultValue: "\"320px\"",
+      description: "Width of the card."
+    },
+    {
+      prop: "height",
+      type: "string",
+      defaultValue: "-",
+      description: "Height of the card. If not set, aspectRatio is used."
+    },
+    {
+      prop: "aspectRatio",
+      type: "string",
+      defaultValue: "\"1\"",
+      description: "Aspect ratio (e.g., \"1\", \"16/9\", \"4/3\")."
+    },
+    {
+      prop: "borderRadius",
+      type: "string",
+      defaultValue: "\"0.75rem\"",
+      description: "Corner radius of the card."
+    },
+    {
+      prop: "animationDuration",
+      type: "number",
+      defaultValue: "4",
+      description: "Rotation speed in seconds."
+    },
+    {
+      prop: "colorPreset",
+      type: "\"aurora\" | \"ocean\" | \"sunset\" | \"nature\" | \"custom\"",
+      defaultValue: "\"custom\"",
+      description: "Preset color theme."
+    },
+    {
+      prop: "gradientColors",
+      type: "string[]",
+      defaultValue: "-",
+      description: "Custom array of colors. Overrides colorPreset."
+    },
+    {
+      prop: "borderWidth",
+      type: "string",
+      defaultValue: "\"1.25em\"",
+      description: "Thickness of the glow border."
+    },
+    {
+      prop: "blurAmount",
+      type: "string",
+      defaultValue: "\"0.75em\"",
+      description: "Blur intensity for the glow."
+    },
+    {
+      prop: "inset",
+      type: "string",
+      defaultValue: "\"-1em\"",
+      description: "How far the glow extends inward."
+    },
+    {
+      prop: "paused",
+      type: "boolean",
+      defaultValue: "false",
+      description: "Pause the rotation animation."
+    },
+    {
+      prop: "className",
+      type: "string",
+      defaultValue: "-",
+      description: "Additional classes for the container."
+    },
+  ]}
+/>
