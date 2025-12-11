@@ -30,5 +30,6 @@ export default {
     "expandable-bento-grid": "Expandable Bento Grid",
     "flip-fade-text": "Flip Fade Text",
     "folder-preview": "Folder Preview",
-    "light-lines": "Light Lines"
+    "light-lines": "Light Lines",
+    "line-hover-link": "Line Hover Link"
 }

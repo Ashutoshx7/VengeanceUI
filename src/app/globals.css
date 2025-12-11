@@ -567,3 +567,354 @@ footer,
 .animate-aurora-blink {
   animation: aurora-blink 2s ease-in-out infinite;
 }
+
+/* ============================================
+   Line Hover Link Component Styles
+   ============================================ */
+
+.link-hover {
+  cursor: pointer;
+  position: relative;
+  white-space: nowrap;
+  color: currentColor;
+  text-decoration: none;
+}
+
+.link-hover::before,
+.link-hover::after {
+  position: absolute;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  top: 100%;
+  left: 0;
+  pointer-events: none;
+}
+
+.link-hover::before {
+  content: '';
+}
+
+/* Slide - Simple slide from right to left */
+.link-hover--slide::before {
+  transform-origin: 100% 50%;
+  transform: scale3d(0, 1, 1);
+  transition: transform 0.3s;
+}
+
+.link-hover--slide:hover::before {
+  transform-origin: 0% 50%;
+  transform: scale3d(1, 1, 1);
+}
+
+/* Double - Double line slide with different timings */
+.link-hover--double::before {
+  transform-origin: 100% 50%;
+  transform: scale3d(0, 1, 1);
+  transition: transform 0.3s cubic-bezier(0.7, 0, 0.2, 1);
+}
+
+.link-hover--double:hover::before {
+  transform-origin: 0% 50%;
+  transform: scale3d(1, 1, 1);
+  transition-timing-function: cubic-bezier(0.4, 1, 0.8, 1);
+}
+
+.link-hover--double::after {
+  content: '';
+  top: calc(100% + 4px);
+  transform-origin: 0% 50%;
+  transform: scale3d(0, 1, 1);
+  transition: transform 0.3s cubic-bezier(0.7, 0, 0.2, 1);
+}
+
+.link-hover--double:hover::after {
+  transform-origin: 100% 50%;
+  transform: scale3d(1, 1, 1);
+  transition-timing-function: cubic-bezier(0.4, 1, 0.8, 1);
+}
+
+/* Grow - Line with thickness change + second line */
+.link-hover--grow::before {
+  transform-origin: 100% 50%;
+  transform: scale3d(0, 1, 1);
+  transition: transform 0.3s cubic-bezier(0.2, 1, 0.8, 1);
+}
+
+.link-hover--grow:hover::before {
+  transform-origin: 0% 50%;
+  transform: scale3d(1, 2, 1);
+  transition-timing-function: cubic-bezier(0.7, 0, 0.2, 1);
+}
+
+.link-hover--grow::after {
+  content: '';
+  top: calc(100% + 4px);
+  transform-origin: 100% 50%;
+  transform: scale3d(0, 1, 1);
+  transition: transform 0.4s 0.1s cubic-bezier(0.2, 1, 0.8, 1);
+}
+
+.link-hover--grow:hover::after {
+  transform-origin: 0% 50%;
+  transform: scale3d(1, 1, 1);
+  transition-timing-function: cubic-bezier(0.7, 0, 0.2, 1);
+}
+
+/* Strike - Strikethrough with text scale */
+.link-hover--strike {
+  padding: 0 10px;
+}
+
+.link-hover--strike::before {
+  top: 50%;
+  height: 2px;
+  transform-origin: 100% 50%;
+  transform: scale3d(0, 1, 1);
+  transition: transform 0.3s cubic-bezier(0.4, 1, 0.8, 1);
+}
+
+.link-hover--strike:hover::before {
+  transform-origin: 0% 50%;
+  transform: scale3d(1, 1, 1);
+}
+
+.link-hover--strike span {
+  display: inline-block;
+  transition: transform 0.3s cubic-bezier(0.4, 1, 0.8, 1);
+}
+
+.link-hover--strike:hover span {
+  transform: scale3d(1.1, 1.1, 1.1);
+}
+
+/* Fade - Double lines with staggered fade-up */
+.link-hover--fade::before,
+.link-hover--fade::after {
+  opacity: 0;
+  transform-origin: 50% 0%;
+  transform: translate3d(0, 3px, 0);
+  transition-property: transform, opacity;
+  transition-duration: 0.3s;
+  transition-timing-function: cubic-bezier(0.2, 1, 0.8, 1);
+}
+
+.link-hover--fade:hover::before,
+.link-hover--fade:hover::after {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  transition-timing-function: cubic-bezier(0.2, 0, 0.3, 1);
+}
+
+.link-hover--fade::after {
+  content: '';
+  top: calc(100% + 4px);
+  width: 70%;
+  left: 15%;
+}
+
+.link-hover--fade::before,
+.link-hover--fade:hover::after {
+  transition-delay: 0.1s;
+}
+
+.link-hover--fade:hover::before {
+  transition-delay: 0s;
+}
+
+/* Pulse - Animated line that expands and contracts */
+.link-hover--pulse::before {
+  height: 10px;
+  top: 100%;
+  opacity: 0;
+}
+
+.link-hover--pulse:hover::before {
+  opacity: 1;
+  animation: lineUp 0.3s ease forwards;
+}
+
+@keyframes lineUp {
+  0% {
+    transform-origin: 50% 100%;
+    transform: scale3d(1, 0.045, 1);
+  }
+
+  50% {
+    transform-origin: 50% 100%;
+    transform: scale3d(1, 1, 1);
+  }
+
+  51% {
+    transform-origin: 50% 0%;
+    transform: scale3d(1, 1, 1);
+  }
+
+  100% {
+    transform-origin: 50% 0%;
+    transform: scale3d(1, 0.045, 1);
+  }
+}
+
+.link-hover--pulse::after {
+  content: '';
+  transition: opacity 0.3s;
+  opacity: 0;
+  transition-delay: 0s;
+}
+
+.link-hover--pulse:hover::after {
+  opacity: 1;
+  transition-delay: 0.3s;
+}
+
+/* Swap - Two lines going opposite directions */
+.link-hover--swap::before {
+  transform-origin: 0% 50%;
+  transform: scale3d(0, 1, 1);
+  transition: transform 0.3s;
+}
+
+.link-hover--swap:hover::before {
+  transform: scale3d(1, 1, 1);
+}
+
+.link-hover--swap::after {
+  content: '';
+  top: calc(100% + 4px);
+  transition: transform 0.3s;
+  transform-origin: 100% 50%;
+}
+
+.link-hover--swap:hover::after {
+  transform: scale3d(0, 1, 1);
+}
+
+/* Sweep - Cover sweep animation */
+.link-hover--sweep::before {
+  height: 100%;
+  top: 0;
+  opacity: 0;
+}
+
+.link-hover--sweep:hover::before {
+  opacity: 1;
+  animation: coverUp 0.3s ease forwards;
+}
+
+@keyframes coverUp {
+  0% {
+    transform-origin: 50% 100%;
+    transform: scale3d(1, 0.045, 1);
+  }
+
+  50% {
+    transform-origin: 50% 100%;
+    transform: scale3d(1, 1, 1);
+  }
+
+  51% {
+    transform-origin: 50% 0%;
+    transform: scale3d(1, 1, 1);
+  }
+
+  100% {
+    transform-origin: 50% 0%;
+    transform: scale3d(1, 0.045, 1);
+  }
+}
+
+.link-hover--sweep::after {
+  content: '';
+  transition: opacity 0.3s;
+}
+
+.link-hover--sweep:hover::after {
+  opacity: 0;
+}
+
+/* Bounce - Bouncy squish effect */
+.link-hover--bounce::before {
+  height: 7px;
+  border-radius: 20px;
+  transform: scale3d(1, 1, 1);
+  transition: transform 0.2s, opacity 0.2s;
+  transition-timing-function: cubic-bezier(0.2, 0.57, 0.67, 1.53);
+}
+
+.link-hover--bounce:hover::before {
+  transition-timing-function: cubic-bezier(0.8, 0, 0.1, 1);
+  transition-duration: 0.4s;
+  opacity: 1;
+  transform: scale3d(1.2, 0.1, 1);
+}
+
+.link-hover--bounce span {
+  transform: translate3d(0, -4px, 0);
+  display: inline-block;
+  transition: transform 0.2s 0.05s cubic-bezier(0.2, 0.57, 0.67, 1.53);
+}
+
+.link-hover--bounce:hover span {
+  transform: translate3d(0, 0, 0);
+  transition-timing-function: cubic-bezier(0.8, 0, 0.1, 1);
+  transition-duration: 0.4s;
+  transition-delay: 0s;
+}
+
+/* SVG Graphics Base */
+.link-hover__graphic {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1px;
+}
+
+.link-hover__graphic--stroke path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+
+.link-hover:hover .link-hover__graphic--stroke path {
+  stroke-dashoffset: 0;
+}
+
+/* Arc - SVG arc stroke draw */
+.link-hover--arc::before {
+  display: none;
+}
+
+.link-hover__graphic--arc {
+  top: 73%;
+  left: -23%;
+}
+
+.link-hover__graphic--arc path {
+  transition: stroke-dashoffset 0.4s cubic-bezier(0.7, 0, 0.3, 1);
+}
+
+.link-hover:hover .link-hover__graphic--arc path {
+  transition-timing-function: cubic-bezier(0.8, 1, 0.7, 1);
+  transition-duration: 0.3s;
+}
+
+/* Scribble - SVG scribble stroke draw */
+.link-hover--scribble::before {
+  display: none;
+}
+
+.link-hover__graphic--scribble {
+  top: 100%;
+}
+
+.link-hover__graphic--scribble path {
+  transition: stroke-dashoffset 0.6s cubic-bezier(0.7, 0, 0.3, 1);
+}
+
+.link-hover:hover .link-hover__graphic--scribble path {
+  transition-timing-function: cubic-bezier(0.8, 1, 0.7, 1);
+  transition-duration: 0.3s;
+}

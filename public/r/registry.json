@@ -383,6 +383,14 @@
     ]
   },
   {
+    "name": "line-hover-link",
+    "dependencies": [],
+    "type": "registry:ui",
+    "files": [
+      "public/r/line-hover-link.json"
+    ]
+  },
+  {
     "name": "liquid-text",
     "dependencies": [],
     "type": "registry:ui",

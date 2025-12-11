@@ -1,0 +1,140 @@
+import { CLICommand } from '@/components/docs/cli-command'
+import { PropsTable } from '@/components/docs/props-table'
+import { ComponentPreview } from '@/components/docs/component-preview'
+import LineHoverLinkDemo, { LineHoverLinkSingle, LineHoverLinkNavigation, LineHoverLinkSVG } from '@/components/docs/line-hover-link'
+
+# Line Hover Link
+
+Subtle and elegant underline hover animations for links. Easy-to-remember variant names!
+
+<ComponentPreview
+  component={<LineHoverLinkDemo />}
+  code={`import { LineHoverLink } from "@/components/ui/line-hover-link"
+
+export function AllVariants() {
+  return (
+    <div className="flex flex-wrap gap-6">
+      <LineHoverLink variant="slide">Slide</LineHoverLink>
+      <LineHoverLink variant="double">Double</LineHoverLink>
+      <LineHoverLink variant="grow">Grow</LineHoverLink>
+      <LineHoverLink variant="strike">Strike</LineHoverLink>
+      <LineHoverLink variant="fade">Fade</LineHoverLink>
+      <LineHoverLink variant="pulse">Pulse</LineHoverLink>
+      <LineHoverLink variant="swap">Swap</LineHoverLink>
+      <LineHoverLink variant="sweep">Sweep</LineHoverLink>
+      <LineHoverLink variant="bounce">Bounce</LineHoverLink>
+      <LineHoverLink variant="arc">Arc</LineHoverLink>
+      <LineHoverLink variant="scribble">Scribble</LineHoverLink>
+    </div>
+  )
+}`}
+/>
+
+## Features
+
+- **11 Animation Variants**: Easy-to-remember names like slide, double, grow, bounce
+- **Pure CSS Animations**: Maximum performance, no JavaScript overhead
+- **Dark Mode Ready**: Uses `currentColor` for automatic theming
+- **Accessible**: Standard anchor element with proper semantics
+
+## Installation
+
+<CLICommand componentName="line-hover-link" />
+
+## Usage
+
+### Basic Usage
+
+<ComponentPreview
+  component={<LineHoverLinkSingle />}
+  code={`import { LineHoverLink } from "@/components/ui/line-hover-link"
+
+export function MyComponent() {
+  return (
+    <LineHoverLink variant="slide" href="/about">
+      Learn more
+    </LineHoverLink>
+  )
+}`}
+/>
+
+### Navigation Example
+
+<ComponentPreview
+  component={<LineHoverLinkNavigation />}
+  code={`import { LineHoverLink } from "@/components/ui/line-hover-link"
+
+export function Navigation() {
+  return (
+    <nav className="flex gap-8">
+      <LineHoverLink variant="slide" href="/">Home</LineHoverLink>
+      <LineHoverLink variant="slide" href="/about">About</LineHoverLink>
+      <LineHoverLink variant="slide" href="/services">Services</LineHoverLink>
+      <LineHoverLink variant="slide" href="/contact">Contact</LineHoverLink>
+    </nav>
+  )
+}`}
+/>
+
+### SVG-Based Effects
+
+<ComponentPreview
+  component={<LineHoverLinkSVG />}
+  code={`import { LineHoverLink } from "@/components/ui/line-hover-link"
+
+export function SVGEffects() {
+  return (
+    <div className="flex gap-8">
+      <LineHoverLink variant="arc">Sign up</LineHoverLink>
+      <LineHoverLink variant="scribble">Writings</LineHoverLink>
+    </div>
+  )
+}`}
+/>
+
+## Props
+
+<PropsTable
+  data={[
+    {
+      prop: "variant",
+      type: "LineHoverVariant",
+      defaultValue: "'slide'",
+      description: "The animation variant. See Variant Guide below."
+    },
+    {
+      prop: "children",
+      type: "React.ReactNode",
+      defaultValue: "-",
+      description: "The link content."
+    },
+    {
+      prop: "href",
+      type: "string",
+      defaultValue: "-",
+      description: "The URL the link points to."
+    },
+    {
+      prop: "className",
+      type: "string",
+      defaultValue: "-",
+      description: "Additional CSS classes to apply."
+    }
+  ]}
+/>
+
+## Variant Guide
+
+| Variant | Effect | Best For |
+|---------|--------|----------|
+| **slide** | Line slides in from right | Navigation links |
+| **double** | Two lines animate together | Bold statements |
+| **grow** | Line grows thicker on hover | Emphasis |
+| **strike** | Strikethrough + text scales | Call to action |
+| **fade** | Lines fade up with stagger | Elegant effect |
+| **pulse** | Line pulses up and down | Dynamic feel |
+| **swap** | Lines go opposite directions | Unique style |
+| **sweep** | Full background sweep | Strong emphasis |
+| **bounce** | Bouncy squish animation | Playful effect |
+| **arc** | SVG arc stroke draws in | Sign-up CTAs |
+| **scribble** | SVG scribble draws in | Handwritten feel |
