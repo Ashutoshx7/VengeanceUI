@@ -21,7 +21,7 @@ const variants: { variant: FolderVariant; label: string }[] = [
 
 export function FolderPreviewDemo() {
     return (
-        <div className="grid grid-cols-3 gap-8 p-8 bg-black rounded-xl">
+        <div className="grid grid-cols-3 gap-8 p-8 bg-white dark:bg-black rounded-xl border border-neutral-200 dark:border-neutral-800">
             {variants.map(({ variant, label }) => (
                 <div
                     key={variant}
@@ -40,7 +40,7 @@ export function FolderPreviewDemo() {
 
 export function FolderPreviewSingle() {
     return (
-        <div className="flex items-center justify-center min-h-[350px] bg-black rounded-xl p-16 overflow-visible">
+        <div className="flex items-center justify-center min-h-[350px] bg-white dark:bg-black rounded-xl p-16 overflow-visible border border-neutral-200 dark:border-neutral-800">
             <FolderPreview
                 variant="devi"
                 label="Shared Files"
@@ -63,7 +63,7 @@ export function FolderPreviewSingle() {
 
 export function FolderPreviewCustom() {
     return (
-        <div className="flex items-center justify-center gap-16 min-h-[300px] bg-black rounded-xl p-12">
+        <div className="flex items-center justify-center gap-16 min-h-[300px] bg-white dark:bg-black rounded-xl p-12 border border-neutral-200 dark:border-neutral-800">
             <FolderPreview
                 variant="ardra"
                 label="Photos"
@@ -100,7 +100,7 @@ export function FolderPreviewCustom() {
 
 export function FolderPreviewFiles() {
     return (
-        <div className="flex items-center justify-center gap-16 min-h-[350px] bg-black rounded-xl p-12">
+        <div className="flex items-center justify-center gap-16 min-h-[350px] bg-white dark:bg-black rounded-xl p-12 border border-neutral-200 dark:border-neutral-800">
             <FolderPreview
                 variant="durga"
                 label="Project"
@@ -143,7 +143,7 @@ export function FolderPreviewFiles() {
 
 export function FolderPreviewSizes() {
     return (
-        <div className="flex items-end justify-center gap-12 min-h-[300px] bg-black rounded-xl p-12">
+        <div className="flex items-end justify-center gap-12 min-h-[300px] bg-white dark:bg-black rounded-xl p-12 border border-neutral-200 dark:border-neutral-800">
             <FolderPreview variant="devi" label="Small" size="sm" />
             <FolderPreview variant="devi" label="Medium" size="md" />
             <FolderPreview variant="devi" label="Large" size="lg" />

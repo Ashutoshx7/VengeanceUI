@@ -73,6 +73,13 @@ const StaggeredGridDemo = dynamic(() => import('@/components/docs/staggered-grid
 const FlipFadeText = dynamic(() => import('@/components/ui/flip-fade-text').then(mod => mod.FlipFadeText), { ssr: false, loading: () => <LoadingPlaceholder /> })
 const LightLines = dynamic(() => import('@/components/ui/light-lines').then(mod => mod.LightLines), { ssr: false, loading: () => <LoadingPlaceholder /> })
 
+const ExpandableBentoGridDemo = dynamic(() => import('@/components/docs/expandable-bento-grid').then(mod => mod.ExpandableBentoGridDemo), { ssr: false, loading: () => <LoadingPlaceholder /> })
+const FolderPreviewDemo = dynamic(() => import('@/components/docs/folder-preview').then(mod => mod.FolderPreviewDemo), { ssr: false, loading: () => <LoadingPlaceholder /> })
+const GlowBorderCardDemo = dynamic(() => import('@/components/docs/glow-border-card').then(mod => mod.GlowBorderCardDemo), { ssr: false, loading: () => <LoadingPlaceholder /> })
+const LineHoverLinkDemo = dynamic(() => import('@/components/docs/line-hover-link').then(mod => mod.LineHoverLinkDemo), { ssr: false, loading: () => <LoadingPlaceholder /> })
+const LogoSliderDemo = dynamic(() => import('@/components/docs/logo-slider').then(mod => mod.LogoSliderDemo), { ssr: false, loading: () => <LoadingPlaceholder /> })
+const StackedLogosDemo = dynamic(() => import('@/components/docs/stacked-logos').then(mod => mod.StackedLogosDemo), { ssr: false, loading: () => <LoadingPlaceholder /> })
+
 
 const components = [
     {
@@ -261,6 +268,59 @@ const components = [
             </div>
         )
     },
+    // New Components
+    {
+        title: "Expandable Bento",
+        description: "Interactive Grid",
+        category: "Layouts",
+        href: "/docs/expandable-bento-grid",
+        icon: Grid2X2,
+        component: (
+            <div className="scale-[0.4] origin-top">
+                <ExpandableBentoGridDemo />
+            </div>
+        )
+    },
+    {
+        title: "Folder Preview",
+        description: "MacOS-style folder",
+        category: "Components",
+        href: "/docs/folder-preview",
+        icon: LayoutTemplate,
+        component: <div className="scale-[0.5]"><FolderPreviewDemo /></div>
+    },
+    {
+        title: "Glow Border Card",
+        description: "Neon border effect",
+        category: "Components",
+        href: "/docs/glow-border-card",
+        icon: LayoutTemplate,
+        component: <div className="scale-[0.6]"><GlowBorderCardDemo /></div>
+    },
+    {
+        title: "Line Hover Link",
+        description: "Underline animations",
+        category: "Animations",
+        href: "/docs/line-hover-link",
+        icon: MousePointerClick,
+        component: <div className="scale-[0.65] origin-center w-[120%] -ml-[10%] h-full flex items-center justify-center"><LineHoverLinkDemo /></div>
+    },
+    {
+        title: "Logo Slider",
+        description: "Infinite Marquee",
+        category: "Components",
+        href: "/docs/logo-slider",
+        icon: LayoutTemplate,
+        component: <div className="scale-[0.55] w-[180%] -ml-[40%] origin-top mt-8"><LogoSliderDemo /></div>
+    },
+    {
+        title: "Stacked Logos",
+        description: "Overlapping logos",
+        category: "Components",
+        href: "/docs/stacked-logos",
+        icon: Users,
+        component: <div className="scale-[0.8]"><StackedLogosDemo /></div>
+    },
 ]
 
 export const ComponentsGrid = () => {
@@ -284,7 +344,7 @@ export const ComponentsGrid = () => {
                         {/* Preview Area */}
                         <div className="
                             relative w-full aspect-[4/3] rounded-[18px] overflow-hidden
-                            bg-neutral-50 dark:bg-[#161616]
+                            bg-neutral-50 dark:bg-black
                             border border-neutral-100 dark:border-white/5
                             group-hover:border-neutral-200 dark:group-hover:border-white/10
                             transition-colors
