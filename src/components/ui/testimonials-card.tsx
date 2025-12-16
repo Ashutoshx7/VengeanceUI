@@ -83,18 +83,18 @@ export function TestimonialsCard({
     return (
         <div className={cn("flex items-center justify-center p-8", className)}>
             <div
-                className="relative grid grid-cols-[1fr_1fr] grid-rows-[auto_auto_auto] gap-x-8 gap-y-2 w-full"
+                className="relative grid  grid-cols-[1fr]  md:grid-cols-[1fr_1fr] md:grid-rows-[auto_auto_auto] gap-x-8 gap-y-2 w-full "
                 style={{ perspective: "1400px", maxWidth: `${width}px` }}
             >
                 {/* Counter */}
                 {showCounter && (
-                    <div className="col-start-2 row-start-1 text-right font-mono text-sm text-neutral-500 dark:text-neutral-400">
+                    <div className="row-start-1 md:col-start-2 md:row-start-1 text-right font-mono text-sm text-neutral-500 dark:text-neutral-400">
                         {activeIndex + 1} / {items.length}
                     </div>
                 )}
 
                 {/* Image Card Stack */}
-                <div className="col-start-1 row-start-1 row-span-3 relative w-full aspect-square">
+                <div className="row-start-2  col-start-1 md:row-start-1 row-span-3 relative w-full aspect-square">
                     <AnimatePresence custom={direction}>
                         {items.map((item, index) => {
                             const isActive = index === activeIndex;
@@ -159,7 +159,7 @@ export function TestimonialsCard({
                 </div>
 
                 {/* Text Area */}
-                <div className="col-start-2 row-start-2 flex flex-col justify-center min-h-[120px]">
+                <div className="col-start-1 md:col-start-2   md:row-start-1 flex flex-col justify-center min-h-[120px]">
                     <AnimatePresence mode="wait">
                         <motion.div
                             key={activeItem.id}
@@ -180,7 +180,7 @@ export function TestimonialsCard({
 
                 {/* Navigation Controls */}
                 {showNavigation && items.length > 1 && (
-                    <div className="col-start-2 row-start-3 flex gap-2 mt-4">
+                    <div className="col-start-1 md:col-start-2 md:row-start-3 flex gap-2  m-auto -mt-2 md:mt-4  md:m-0">
                         <button
                             disabled={activeIndex === 0}
                             onClick={handlePrev}
