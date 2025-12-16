@@ -62,8 +62,8 @@ export function PixelatedImageTrail({
     images = [],
     config: configOverride = {},
     slices = 10,
-    spawnThreshold = 12,
-    smoothing = 0.35,
+    spawnThreshold = 60,
+    smoothing = 0.15,
 }: PixelatedImageTrailProps) {
     const [mounted, setMounted] = useState(false);
     const trailContainerRef = useRef<HTMLDivElement>(null);
@@ -71,7 +71,6 @@ export function PixelatedImageTrail({
     const mousePosRef = useRef({ x: 0, y: 0 });
     const lastMousePosRef = useRef({ x: 0, y: 0 });
     const interpolatedMousePosRef = useRef({ x: 0, y: 0 });
-    const isDesktopRef = useRef(false);
     const animationFrameRef = useRef<number | null>(null);
 
     useEffect(() => {
@@ -81,16 +80,16 @@ export function PixelatedImageTrail({
     useEffect(() => {
         if (!mounted) return;
 
-        // Default configuration optimized for snappy, responsive feel
+        // Default configuration - smooth continuous flow like GSAP reference
         const defaultConfig: TrailConfig = {
-            imageLifespan: 700,
-            inDuration: 400,
-            outDuration: 500,
-            staggerIn: 18,
-            staggerOut: 12,
-            slideDuration: 450,
-            slideEasing: "cubic-bezier(0.22, 1, 0.36, 1)", // Snappy expo-out
-            easing: "cubic-bezier(0.25, 1, 0.5, 1)", // Smooth quad-out
+            imageLifespan: 900,
+            inDuration: 350,
+            outDuration: 400,
+            staggerIn: 15,
+            staggerOut: 10,
+            slideDuration: 400,
+            slideEasing: "cubic-bezier(0.25, 0.1, 0.25, 1)", // Similar to GSAP power1
+            easing: "cubic-bezier(0.25, 1, 0.5, 1)",
         };
 
         const config = { ...defaultConfig, ...configOverride };
@@ -110,8 +109,6 @@ export function PixelatedImageTrail({
 
         const trailContainer = trailContainerRef.current;
         if (!trailContainer) return;
-
-        isDesktopRef.current = window.innerWidth > 768;
 
         // Math utilities for smooth interpolation
         const MathUtils = {

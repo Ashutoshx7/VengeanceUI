@@ -19,16 +19,15 @@ export function PixelatedImageTrailDemo() {
                 images={[
                     "/trail-images/image1.jpg",
                     "/trail-images/image2.jpg",
-                    "/trail-images/image3.jpg",
                     "/trail-images/image4.jpg",
                     "/trail-images/image5.jpg",
-                    "/trail-images/image6.jpg",
+                    "/trail-images/image11.jpg",
                 ]}
-                smoothing={0.4}
-                spawnThreshold={10}
+                smoothing={0.15}
+                spawnThreshold={60}
                 config={{
                     staggerIn: 15,
-                    inDuration: 380,
+                    inDuration: 350,
                 }}
             />
             <div className="text-center z-10 pointer-events-none">
@@ -53,13 +52,13 @@ export function PixelatedImageTrailFastDemo() {
                 ]}
                 config={{
                     imageLifespan: 600,
-                    inDuration: 350,
-                    outDuration: 400,
-                    staggerIn: 15,
-                    staggerOut: 10,
+                    inDuration: 300,
+                    outDuration: 350,
+                    staggerIn: 12,
+                    staggerOut: 8,
                 }}
-                spawnThreshold={8}
-                smoothing={0.4}
+                spawnThreshold={50}
+                smoothing={0.15}
             />
             <div className="text-center z-10 pointer-events-none">
                 <h2 className="text-4xl font-bold text-white mb-2">Fast Mode</h2>
@@ -82,12 +81,12 @@ export function PixelatedImageTrailFineDemo() {
                     "/trail-images/image1.jpg",
                 ]}
                 slices={20}
-                smoothing={0.3}
-                spawnThreshold={10}
+                smoothing={0.12}
+                spawnThreshold={55}
                 config={{
-                    staggerIn: 12,
-                    staggerOut: 8,
-                    inDuration: 450,
+                    staggerIn: 10,
+                    staggerOut: 6,
+                    inDuration: 380,
                 }}
             />
             <div className="text-center z-10 pointer-events-none">
@@ -111,12 +110,12 @@ export function PixelatedImageTrailCoarseDemo() {
                     "/trail-images/image4.jpg",
                 ]}
                 slices={5}
-                smoothing={0.25}
-                spawnThreshold={18}
+                smoothing={0.18}
+                spawnThreshold={70}
                 config={{
-                    staggerIn: 60,
-                    staggerOut: 45,
-                    inDuration: 500,
+                    staggerIn: 40,
+                    staggerOut: 30,
+                    inDuration: 450,
                 }}
             />
             <div className="text-center z-10 pointer-events-none">
