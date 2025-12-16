@@ -18,16 +18,15 @@ export function PixelatedImageTrailDemo() {
             <PixelatedImageTrail
                 images={[
                     "/trail-images/image1.jpg",
-                    "/trail-images/image2.jpg",
                     "/trail-images/image4.jpg",
                     "/trail-images/image5.jpg",
-                    "/trail-images/image11.jpg",
                 ]}
-                smoothing={0.15}
-                spawnThreshold={60}
+                slices={6}
+                smoothing={0.12}
+                spawnThreshold={80}
                 config={{
-                    staggerIn: 15,
-                    inDuration: 350,
+                    staggerIn: 12,
+                    inDuration: 280,
                 }}
             />
             <div className="text-center z-10 pointer-events-none">

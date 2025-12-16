@@ -1169,7 +1169,7 @@ footer,
   pointer-events: none;
   /* Force GPU layer with 3D transform */
   transform: translate3d(0, 0, 0);
-  will-change: transform, left, top;
+  will-change: transform, left, top, opacity;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   /* Prevent layout thrashing */
@@ -1178,6 +1178,8 @@ footer,
   filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15));
   /* Smooth opacity for tasteful appearance */
   opacity: 0.98;
+  /* Smooth exit transition */
+  transition: opacity 300ms ease-out, transform 300ms ease-out;
 }
 
 .pixelated-mask-layer {

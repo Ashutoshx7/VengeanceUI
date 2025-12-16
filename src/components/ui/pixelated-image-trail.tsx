@@ -61,9 +61,9 @@ export function PixelatedImageTrail({
     className,
     images = [],
     config: configOverride = {},
-    slices = 10,
-    spawnThreshold = 60,
-    smoothing = 0.15,
+    slices = 4,
+    spawnThreshold = 100,
+    smoothing = 0.25,
 }: PixelatedImageTrailProps) {
     const [mounted, setMounted] = useState(false);
     const trailContainerRef = useRef<HTMLDivElement>(null);
@@ -80,21 +80,21 @@ export function PixelatedImageTrail({
     useEffect(() => {
         if (!mounted) return;
 
-        // Default configuration - smooth continuous flow like GSAP reference
+        // Default configuration - ultra snappy
         const defaultConfig: TrailConfig = {
-            imageLifespan: 900,
-            inDuration: 350,
-            outDuration: 400,
-            staggerIn: 15,
-            staggerOut: 10,
-            slideDuration: 400,
-            slideEasing: "cubic-bezier(0.25, 0.1, 0.25, 1)", // Similar to GSAP power1
-            easing: "cubic-bezier(0.25, 1, 0.5, 1)",
+            imageLifespan: 600,
+            inDuration: 200,
+            outDuration: 250,
+            staggerIn: 8,
+            staggerOut: 5,
+            slideDuration: 300,
+            slideEasing: "cubic-bezier(0.4, 0, 0.2, 1)",
+            easing: "cubic-bezier(0.4, 0, 0.2, 1)",
         };
 
         const config = { ...defaultConfig, ...configOverride };
 
-        const trailImageCount = 5;
+        const trailImageCount = 3;
         // Use passed images if available, otherwise fallback to local images
         const finalImages = images.length > 0 ? images : Array.from(
             { length: trailImageCount },
@@ -146,9 +146,9 @@ export function PixelatedImageTrail({
             const targetX = startX + dx * 0.5;
             const targetY = startY + dy * 0.5;
 
-            // Add subtle random rotation for organic feel (reduced for tasteful look)
-            const rotation = Math.random() * 12 - 6;
-            imgContainer.style.transform = `rotate(${rotation}deg) translate3d(0, 0, 0)`;
+            // Minimal rotation for clean look
+            const rotation = Math.random() * 8 - 4;
+            imgContainer.style.transform = `rotate(${rotation}deg) translate3d(0, 0, 0) scale(0.95)`;
 
             imgContainer.style.left = `${startX}px`;
             imgContainer.style.top = `${startY}px`;
@@ -202,30 +202,17 @@ export function PixelatedImageTrail({
                 });
             });
 
-            // Animate out after lifespan
+            // Animate out after lifespan - simple opacity fade (no pixelation for performance)
             setTimeout(() => {
-                if (config.outDuration > 0) {
-                    maskLayers.forEach((layer, i) => {
-                        const distanceFromMiddle = Math.abs(i - (slices - 1) / 2);
-                        const delay = distanceFromMiddle * config.staggerOut;
-                        setTimeout(() => {
-                            const sliceSize = 100 / slices;
-                            const startClipY = i * sliceSize;
-                            const endClipY = (i + 1) * sliceSize;
-                            layer.style.clipPath = `polygon(50% ${startClipY}%, 50% ${startClipY}%, 50% ${endClipY}%, 50% ${endClipY}%)`;
-                        }, delay);
-                    });
+                imgContainer.style.opacity = "0";
+                imgContainer.style.transform = `rotate(${rotation}deg) translate3d(0, 0, 0) scale(0.9)`;
 
-                    setTimeout(() => {
-                        if (imgContainer.parentElement === trailContainer) {
-                            trailContainer.removeChild(imgContainer);
-                        }
-                    }, config.outDuration + (slices * config.staggerOut) + 100);
-                } else {
+                // Remove from DOM after fade completes
+                setTimeout(() => {
                     if (imgContainer.parentElement === trailContainer) {
                         trailContainer.removeChild(imgContainer);
                     }
-                }
+                }, config.outDuration);
             }, config.imageLifespan);
         };
 
