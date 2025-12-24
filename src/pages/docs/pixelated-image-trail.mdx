@@ -1,0 +1,565 @@
+import { CodeBlock, Dependencies } from '@/components/docs/component-installation'
+import { CLICommand } from '@/components/docs/cli-command'
+import { PropsTable } from '@/components/docs/props-table'
+import { PixelatedImageTrailDemo, PixelatedImageTrailFastDemo, PixelatedImageTrailFineDemo, PixelatedImageTrailCoarseDemo } from '@/components/docs/pixelated-image-trail'
+import { ComponentPreview } from '@/components/docs/component-preview'
+
+# Pixelated Image Trail
+
+A stunning hover effect that creates a trail of images following the cursor with a sliced, pixelated reveal animation. Perfect for creative portfolios, galleries, and immersive landing pages.
+
+<ComponentPreview
+  component={<PixelatedImageTrailDemo />}
+  code={`"use client";
+
+import { PixelatedImageTrail } from "@/components/ui/pixelated-image-trail";
+
+export function Demo() {
+  return (
+    <div className="relative w-full h-screen">
+      <PixelatedImageTrail
+        images={[
+          "/trail-images/image1.jpg",
+          "/trail-images/image2.jpg",
+          "/trail-images/image3.jpg",
+          "/trail-images/image4.jpg",
+          "/trail-images/image5.jpg",
+        ]}
+      />
+      <h1 className="text-4xl font-bold text-center">
+        Move Your Mouse
+      </h1>
+    </div>
+  );
+}`}
+/>
+
+## Install using CLI
+
+<CLICommand componentName="pixelated-image-trail" />
+
+## Install Manually
+
+<Dependencies step={1} title="Install dependencies">
+    <CodeBlock 
+        code="npm install clsx tailwind-merge" 
+    />
+</Dependencies>
+
+<Dependencies step={2} title="Add util file">
+    <p className="text-[13px] text-muted-foreground mt-2 mb-8">
+        <code className="text-foreground font-mono text-xs bg-neutral-100 dark:bg-[#161616] border border-neutral-200 dark:border-neutral-800 px-2 py-1 rounded-md">lib/utils.ts</code>
+    </p>
+    <CodeBlock 
+        language="tsx"
+        code={`import { ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}`}
+    />
+</Dependencies>
+
+<Dependencies step={3} title="Add the required CSS styles">
+    <p className="text-[13px] text-muted-foreground mt-2 mb-8">Add these styles to your <code className="text-foreground font-mono text-xs bg-neutral-100 dark:bg-[#161616] border border-neutral-200 dark:border-neutral-800 px-2 py-1 rounded-md mx-1">globals.css</code></p>
+    <CodeBlock
+        language="css"
+        title="globals.css"
+        code={`/* Pixelated Image Trail Component Styles
+   Premium, buttery-smooth 60fps animations */
+
+.pixelated-trail-container {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 9999;
+    overflow: hidden;
+    transform: translate3d(0, 0, 0);
+    contain: strict;
+    perspective: 1000px;
+}
+
+.pixelated-trail-img {
+    position: absolute;
+    width: 175px;
+    height: 175px;
+    pointer-events: none;
+    transform: translate3d(0, 0, 0);
+    will-change: transform, left, top;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    contain: layout style paint;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15));
+    opacity: 0.98;
+}
+
+.pixelated-mask-layer {
+    position: absolute;
+    inset: 0;
+    transform: translate3d(0, 0, 0);
+    will-change: clip-path;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    isolation: isolate;
+    contain: layout style;
+}
+
+.pixelated-image-layer {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    border-radius: 10px;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    image-rendering: auto;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pixelated-trail-container {
+        display: none;
+    }
+}`}
+    />
+</Dependencies>
+
+<Dependencies step={4} title="Copy the source code">
+    <p className="text-[13px] text-muted-foreground mt-2 mb-8">Copy the code below and paste it into <code className="text-foreground font-mono text-xs bg-neutral-100 dark:bg-[#161616] border border-neutral-200 dark:border-neutral-800 px-2 py-1 rounded-md mx-1">components/ui/pixelated-image-trail.tsx</code></p>
+    <CodeBlock
+        language="tsx"
+        title="components/ui/pixelated-image-trail.tsx"
+        expandable={true}
+        code={`"use client";
+
+import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { cn } from "@/lib/utils";
+
+interface TrailConfig {
+    imageLifespan: number;
+    inDuration: number;
+    outDuration: number;
+    staggerIn: number;
+    staggerOut: number;
+    slideDuration: number;
+    slideEasing: string;
+    easing: string;
+}
+
+export interface PixelatedImageTrailProps {
+    className?: string;
+    images?: string[];
+    config?: Partial<TrailConfig>;
+    slices?: number;
+    spawnThreshold?: number;
+    smoothing?: number;
+}
+
+export function PixelatedImageTrail({
+    className,
+    images = [],
+    config: configOverride = {},
+    slices = 4,
+    spawnThreshold = 100,
+    smoothing = 0.1,
+}: PixelatedImageTrailProps) {
+    const [mounted, setMounted] = useState(false);
+    const trailContainerRef = useRef<HTMLDivElement>(null);
+    const currentImageIndexRef = useRef(0);
+    const mousePosRef = useRef({ x: 0, y: 0 });
+    const lastMousePosRef = useRef({ x: 0, y: 0 });
+    const interpolatedMousePosRef = useRef({ x: 0, y: 0 });
+    const animationFrameRef = useRef<number | null>(null);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    useEffect(() => {
+        if (!mounted) return;
+
+        const defaultConfig: TrailConfig = {
+            imageLifespan: 400,
+            inDuration: 150,
+            outDuration: 300,
+            staggerIn: 6,
+            staggerOut: 4,
+            slideDuration: 900,
+            slideEasing: "cubic-bezier(0.16, 1, 0.3, 1)",
+            easing: "cubic-bezier(0.16, 1, 0.3, 1)",
+        };
+
+        const config = { ...defaultConfig, ...configOverride };
+        const trailImageCount = 5;
+        const finalImages = images.length > 0 ? images : Array.from(
+            { length: trailImageCount },
+            (_, i) => \`/trail-images/image\${i + 1}.jpg\`
+        );
+
+        // Preload images for instant display
+        finalImages.forEach(src => {
+            const img = new Image();
+            img.src = src;
+        });
+
+        const trailContainer = trailContainerRef.current;
+        if (!trailContainer) return;
+
+        const MathUtils = {
+            lerp: (a: number, b: number, n: number) => (1 - n) * a + n * b,
+            distance: (x1: number, y1: number, x2: number, y2: number) =>
+                Math.hypot(x2 - x1, y2 - y1),
+        };
+
+        const getMouseDistance = () =>
+            MathUtils.distance(
+                interpolatedMousePosRef.current.x,
+                interpolatedMousePosRef.current.y,
+                lastMousePosRef.current.x,
+                lastMousePosRef.current.y
+            );
+
+        const createTrailImage = () => {
+            const imgContainer = document.createElement("div");
+            imgContainer.classList.add("pixelated-trail-img");
+
+            const imgSrc = finalImages[currentImageIndexRef.current];
+            currentImageIndexRef.current =
+                (currentImageIndexRef.current + 1) % finalImages.length;
+
+            const rect = trailContainer.getBoundingClientRect();
+            const startX = interpolatedMousePosRef.current.x - rect.left - 87.5;
+            const startY = interpolatedMousePosRef.current.y - rect.top - 87.5;
+
+            const dx = mousePosRef.current.x - interpolatedMousePosRef.current.x;
+            const dy = mousePosRef.current.y - interpolatedMousePosRef.current.y;
+
+            const targetX = startX + dx * 0.5;
+            const targetY = startY + dy * 0.5;
+
+            const rotation = Math.random() * 12 - 6;
+            imgContainer.style.transform = \`rotate(\${rotation}deg) translate3d(0, 0, 0)\`;
+            imgContainer.style.left = \`\${startX}px\`;
+            imgContainer.style.top = \`\${startY}px\`;
+            imgContainer.style.transition = \`left \${config.slideDuration}ms \${config.slideEasing}, top \${config.slideDuration}ms \${config.slideEasing}, opacity 200ms ease-out\`;
+
+            const maskLayers: HTMLDivElement[] = [];
+
+            for (let i = 0; i < slices; i++) {
+                const layer = document.createElement("div");
+                layer.classList.add("pixelated-mask-layer");
+
+                const imageLayer = document.createElement("div");
+                imageLayer.classList.add("pixelated-image-layer");
+                imageLayer.style.backgroundImage = \`url(\${imgSrc})\`;
+
+                const sliceSize = 100 / slices;
+                const startClipY = i * sliceSize;
+                const endClipY = (i + 1) * sliceSize;
+
+                layer.style.clipPath = \`polygon(50% \${startClipY}%, 50% \${startClipY}%, 50% \${endClipY}%, 50% \${endClipY}%)\`;
+                layer.style.transition = \`clip-path \${config.inDuration}ms \${config.easing}\`;
+                layer.style.transform = "translate3d(0, 0, 0)";
+                layer.style.backfaceVisibility = "hidden";
+
+                layer.appendChild(imageLayer);
+                imgContainer.appendChild(layer);
+                maskLayers.push(layer);
+            }
+
+            trailContainer.appendChild(imgContainer);
+
+            requestAnimationFrame(() => {
+                imgContainer.style.left = \`\${targetX}px\`;
+                imgContainer.style.top = \`\${targetY}px\`;
+
+                maskLayers.forEach((layer, i) => {
+                    const sliceSize = 100 / slices;
+                    const startClipY = i * sliceSize;
+                    const endClipY = (i + 1) * sliceSize;
+                    const distanceFromMiddle = Math.abs(i - (slices - 1) / 2);
+                    const delay = distanceFromMiddle * config.staggerIn;
+
+                    setTimeout(() => {
+                        layer.style.clipPath = \`polygon(0% \${startClipY}%, 100% \${startClipY}%, 100% \${endClipY}%, 0% \${endClipY}%)\`;
+                    }, delay);
+                });
+            });
+
+            setTimeout(() => {
+                if (config.outDuration > 0) {
+                    maskLayers.forEach((layer, i) => {
+                        const distanceFromMiddle = Math.abs(i - (slices - 1) / 2);
+                        const delay = distanceFromMiddle * config.staggerOut;
+                        setTimeout(() => {
+                            const sliceSize = 100 / slices;
+                            const startClipY = i * sliceSize;
+                            const endClipY = (i + 1) * sliceSize;
+                            layer.style.clipPath = \`polygon(50% \${startClipY}%, 50% \${startClipY}%, 50% \${endClipY}%, 50% \${endClipY}%)\`;
+                        }, delay);
+                    });
+
+                    setTimeout(() => {
+                        if (imgContainer.parentElement === trailContainer) {
+                            trailContainer.removeChild(imgContainer);
+                        }
+                    }, config.outDuration + (slices * config.staggerOut) + 100);
+                } else {
+                    if (imgContainer.parentElement === trailContainer) {
+                        trailContainer.removeChild(imgContainer);
+                    }
+                }
+            }, config.imageLifespan);
+        };
+
+        const handleMouseMove = (e: MouseEvent) => {
+            mousePosRef.current = { x: e.clientX, y: e.clientY };
+        };
+
+        const render = () => {
+            interpolatedMousePosRef.current.x = MathUtils.lerp(
+                interpolatedMousePosRef.current.x,
+                mousePosRef.current.x,
+                smoothing
+            );
+            interpolatedMousePosRef.current.y = MathUtils.lerp(
+                interpolatedMousePosRef.current.y,
+                mousePosRef.current.y,
+                smoothing
+            );
+
+            if (getMouseDistance() > spawnThreshold) {
+                lastMousePosRef.current = { ...interpolatedMousePosRef.current };
+                createTrailImage();
+            }
+
+            animationFrameRef.current = requestAnimationFrame(render);
+        };
+
+        window.addEventListener("mousemove", handleMouseMove);
+        animationFrameRef.current = requestAnimationFrame(render);
+
+        const initMouse = (e: MouseEvent) => {
+            mousePosRef.current = { x: e.clientX, y: e.clientY };
+            interpolatedMousePosRef.current = { x: e.clientX, y: e.clientY };
+            lastMousePosRef.current = { x: e.clientX, y: e.clientY };
+            window.removeEventListener("mousemove", initMouse);
+        }
+        window.addEventListener("mousemove", initMouse, { once: true });
+
+        return () => {
+            window.removeEventListener("mousemove", handleMouseMove);
+            if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
+        };
+    }, [mounted, configOverride, slices, spawnThreshold, smoothing, JSON.stringify(images)]);
+
+    if (!mounted) return null;
+
+    return createPortal(
+        <div className={cn("pixelated-trail-container", className)} ref={trailContainerRef}></div>,
+        document.body
+    );
+}
+
+export default PixelatedImageTrail;`}
+    />
+</Dependencies>
+
+## Usage
+
+<CodeBlock 
+    language="tsx" 
+    code={`import { PixelatedImageTrail } from "@/components/ui/pixelated-image-trail"
+
+export function HeroSection() {
+  return (
+    <div className="relative w-full h-screen">
+      <PixelatedImageTrail 
+        images={[
+          "/images/photo1.jpg",
+          "/images/photo2.jpg",
+          "/images/photo3.jpg",
+        ]}
+      />
+      <h1 className="text-6xl font-bold">
+        Welcome
+      </h1>
+    </div>
+  );
+}`} 
+/>
+
+## Examples
+
+### Fast Animation
+
+Reduced lifespan and quicker transitions for a more dynamic feel.
+
+<ComponentPreview
+  component={<PixelatedImageTrailFastDemo />}
+  code={`<PixelatedImageTrail
+  images={["/img1.jpg", "/img2.jpg", "/img3.jpg"]}
+  config={{
+    imageLifespan: 600,
+    inDuration: 350,
+    outDuration: 400,
+    staggerIn: 15,
+    staggerOut: 10,
+  }}
+  spawnThreshold={8}
+  smoothing={0.4}
+/>`}
+/>
+
+### Fine Slices (20)
+
+More slices create a smoother, finer pixelation effect.
+
+<ComponentPreview
+  component={<PixelatedImageTrailFineDemo />}
+  code={`<PixelatedImageTrail
+  images={["/img1.jpg", "/img2.jpg", "/img3.jpg"]}
+  slices={20}
+  smoothing={0.3}
+  spawnThreshold={10}
+  config={{
+    staggerIn: 12,
+    staggerOut: 8,
+    inDuration: 450,
+  }}
+/>`}
+/>
+
+### Coarse Slices (5)
+
+Fewer slices create a more dramatic, blocky pixelation effect.
+
+<ComponentPreview
+  component={<PixelatedImageTrailCoarseDemo />}
+  code={`<PixelatedImageTrail
+  images={["/img1.jpg", "/img2.jpg", "/img3.jpg"]}
+  slices={5}
+  smoothing={0.25}
+  spawnThreshold={18}
+  config={{
+    staggerIn: 60,
+    staggerOut: 45,
+    inDuration: 500,
+  }}
+/>`}
+/>
+
+## Props
+
+<PropsTable
+  data={[
+    {
+      prop: "images",
+      type: "string[]",
+      defaultValue: "[]",
+      description: "Array of image URLs to cycle through in the trail."
+    },
+    {
+      prop: "slices",
+      type: "number",
+      defaultValue: "10",
+      description: "Number of horizontal slices for the pixelation effect."
+    },
+    {
+      prop: "spawnThreshold",
+      type: "number",
+      defaultValue: "12",
+      description: "Distance threshold (px) before spawning a new trail image."
+    },
+    {
+      prop: "smoothing",
+      type: "number",
+      defaultValue: "0.35",
+      description: "Interpolation factor for mouse smoothing (0-1). Higher = snappier."
+    },
+    {
+      prop: "config.imageLifespan",
+      type: "number",
+      defaultValue: "700",
+      description: "Duration (ms) before an image starts fading out."
+    },
+    {
+      prop: "config.inDuration",
+      type: "number",
+      defaultValue: "400",
+      description: "Duration (ms) of the reveal animation."
+    },
+    {
+      prop: "config.outDuration",
+      type: "number",
+      defaultValue: "500",
+      description: "Duration (ms) of the hide animation."
+    },
+    {
+      prop: "config.staggerIn",
+      type: "number",
+      defaultValue: "18",
+      description: "Stagger delay (ms) for slices during reveal."
+    },
+    {
+      prop: "config.staggerOut",
+      type: "number",
+      defaultValue: "12",
+      description: "Stagger delay (ms) for slices during hide."
+    },
+    {
+      prop: "config.slideDuration",
+      type: "number",
+      defaultValue: "450",
+      description: "Duration (ms) of the slide animation."
+    },
+    {
+      prop: "config.slideEasing",
+      type: "string",
+      defaultValue: '"cubic-bezier(0.22, 1, 0.36, 1)"',
+      description: "CSS easing function for slide animation (snappy expo-out)."
+    },
+    {
+      prop: "config.easing",
+      type: "string",
+      defaultValue: '"cubic-bezier(0.25, 1, 0.5, 1)"',
+      description: "CSS easing function for mask animations (smooth quad-out)."
+    },
+    {
+      prop: "className",
+      type: "string",
+      defaultValue: '""',
+      description: "Additional CSS classes for the container."
+    },
+  ]}
+/>
+
+## Features
+
+**Pixelated Reveal Effect**: Images reveal through sliced horizontal layers creating a unique pixelated animation
+
+**Smooth Cursor Following**: Mouse position is interpolated for buttery-smooth trailing
+
+**Customizable Slices**: Control the number of slices from coarse (5) to fine (20+) for different visual styles
+
+**Configurable Timing**: Full control over animation durations, stagger delays, and easing functions
+
+**Portal Rendering**: Uses React Portal to render above all content without z-index issues
+
+**Auto Cleanup**: Proper memory management with automatic cleanup of trail images
+
+**GPU Optimized**: Uses translate3d and contain for 60fps performance
+
+**Image Preloading**: Images are preloaded for instant display without loading delays
+
+## Notes
+
+- The component uses `createPortal` to render the trail at the root level, ensuring it appears above all other content
+- For best performance, limit the number of concurrent trail images by adjusting `spawnThreshold`
+- The effect is optimized for mouse interactions on desktop devices
+- Images should be square (or close to it) for the best visual effect
+- Place your trail images in `/public/trail-images/` for the default fallback

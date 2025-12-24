@@ -1,0 +1,225 @@
+.tab-bar {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 24px 36px 36px 36px;
+    background-color: #151519;
+    box-shadow: inset 0 1.5px 0 0 #212126;
+    border-radius: 31px 31px 41px 41px;
+}
+
+.tab-bar button {
+    cursor: pointer;
+    display: block;
+    position: relative;
+    background-color: transparent;
+    border: 0;
+    padding: 12px;
+    margin: 0;
+    color: #656472;
+    transition: color 0.35s;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.tab-bar button.active {
+    color: #7EE9F2;
+}
+
+.tab-bar button.home {
+    --tab-bar-home-scale: 0.7;
+    --tab-bar-home-opacity: 1;
+}
+
+.tab-bar button.home:before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    box-shadow: inset 0 0 0 2px currentColor;
+    transform: translateX(-50%) scale(var(--tab-bar-home-scale)) translateZ(0);
+    opacity: var(--tab-bar-home-opacity);
+    position: absolute;
+    left: 50%;
+    top: 42.5%;
+}
+
+.tab-bar button.chart {
+    --tab-bar-chart-1-offset: 6px;
+    --tab-bar-chart-2-offset: 18px;
+    --tab-bar-chart-3-offset: 10px;
+    --tab-bar-chart-4-offset: 17px;
+}
+
+.tab-bar button.chart svg g path:nth-child(1) {
+    stroke-dasharray: 3px;
+    stroke-dashoffset: var(--tab-bar-chart-1-offset);
+}
+
+.tab-bar button.chart svg g path:nth-child(2) {
+    stroke-dasharray: 9px;
+    stroke-dashoffset: var(--tab-bar-chart-2-offset);
+}
+
+.tab-bar button.chart svg g path:nth-child(3) {
+    stroke-dasharray: 5px;
+    stroke-dashoffset: var(--tab-bar-chart-3-offset);
+}
+
+.tab-bar button.chart svg g path:nth-child(4) {
+    stroke-dasharray: 10px;
+    stroke-dashoffset: var(--tab-bar-chart-4-offset);
+}
+
+.tab-bar button.marker {
+    --tab-bar-marker-scale: 0.7;
+    --tab-bar-marker-opacity: 1;
+}
+
+.tab-bar button.marker:before {
+    content: '';
+    width: 11px;
+    height: 11px;
+    border-radius: 6px;
+    box-shadow: inset 0 0 0 2px currentColor;
+    transform: translateX(-50%) scale(var(--tab-bar-marker-scale)) translateZ(0);
+    opacity: var(--tab-bar-marker-opacity);
+    position: absolute;
+    left: 50%;
+    top: 34.5%;
+}
+
+.tab-bar button.trophy {
+    --tab-bar-trophy-x: 0px;
+    --tab-bar-trophy-scale: 0.75;
+}
+
+.tab-bar button.trophy:before,
+.tab-bar button.trophy:after {
+    content: '';
+    position: absolute;
+    background-color: currentColor;
+    left: 50%;
+}
+
+.tab-bar button.trophy:before {
+    width: 2px;
+    transform: translateX(-50%) scaleX(0.75) translateZ(0);
+    top: 28px;
+    bottom: 15px;
+}
+
+.tab-bar button.trophy:after {
+    height: 2px;
+    width: 10px;
+    border-radius: 1px;
+    transform: translateX(-50%) scaleX(var(--tab-bar-trophy-scale)) scaleY(0.75) translateZ(0);
+    top: 32px;
+}
+
+.tab-bar button.trophy .left,
+.tab-bar button.trophy .right {
+    position: absolute;
+    top: 12px;
+    height: 14px;
+    width: 7px;
+    overflow: hidden;
+}
+
+.tab-bar button.trophy .left svg,
+.tab-bar button.trophy .right svg {
+    display: block;
+    position: absolute;
+    top: 0;
+}
+
+.tab-bar button.trophy .left {
+    left: 12px;
+}
+
+.tab-bar button.trophy .left svg {
+    left: 0;
+    transform: translateX(var(--tab-bar-trophy-x));
+}
+
+.tab-bar button.trophy .right {
+    right: 12px;
+}
+
+.tab-bar button.trophy .right svg {
+    right: 0;
+    transform: translateX(calc(var(--tab-bar-trophy-x) * -1));
+}
+
+.tab-bar button.user {
+    --tab-bar-user-y: 0px;
+    --tab-bar-user-scale: 0.7;
+    --tab-bar-user-opacity: 1;
+}
+
+.tab-bar button.user:before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    box-shadow: inset 0 0 0 2px currentColor;
+    transform: translateX(-50%) scale(var(--tab-bar-user-scale)) translateZ(0);
+    opacity: var(--tab-bar-user-opacity);
+    position: absolute;
+    left: 50%;
+    top: 35%;
+}
+
+.tab-bar button.user .circle {
+    width: 18px;
+    height: 18px;
+    position: absolute;
+    top: 15px;
+    left: 50%;
+    border-radius: 50%;
+    overflow: hidden;
+    transform: translateX(-50%);
+}
+
+.tab-bar button.user .circle svg {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, calc(-50% + var(--tab-bar-user-y))) translateZ(0);
+}
+
+.tab-bar button svg {
+    width: 24px;
+    height: 24px;
+    fill: none;
+    display: block;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke: currentColor;
+    will-change: transform;
+}
+
+/* Phone Container */
+.phone {
+    position: relative;
+    max-width: 390px;
+    width: 100%;
+    display: flex;
+    background-color: #111113;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, .1), 0 4px 12px rgba(0, 0, 0, .1), 0 8px 24px rgba(0, 0, 0, .1);
+    border-radius: 0 0 41px 41px;
+    min-height: 100px;
+}
+
+.phone:before {
+    content: '';
+    height: 4px;
+    bottom: 8px;
+    width: 88px;
+    left: 50%;
+    transform: translateX(-50%) scaleY(0.75);
+    position: absolute;
+    background-color: #2D2D34;
+    border-radius: 2px;
+    z-index: 1;
+}

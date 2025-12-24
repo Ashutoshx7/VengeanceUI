@@ -23,6 +23,7 @@ export default {
     "creepy-button": "Creepy Button",
     "masked-avatars": "Masked Avatars",
     "glass-dock": "Dock",
+    "animated-tab-bar": "Animated Tab Bar",
     "perspective-grid": "Perspective Grid",
     "social-flip-button": "Social Flip Button",
     "interactive-book": "Interactive Book",
@@ -36,4 +37,5 @@ export default {
     "logo-slider": "Logo Slider",
     "stacked-logos": "Stacked Logos",
     "scroll-effect":"Scroll Effect"
+    "pixelated-image-trail": "Pixelated Image Trail"
 }

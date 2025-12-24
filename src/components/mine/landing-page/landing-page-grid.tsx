@@ -21,7 +21,7 @@ import TestimonialsCard from '@/components/ui/testimonials-card'
 import {
     Sparkles, Book, Grid3X3, Users,
     Layers, Type, MousePointer2, Palette, Dock, PanelTop, Image,
-    Home, Settings, User, Mail, Search
+    Home, Settings, User, Mail, Search, MousePointerClick
 } from 'lucide-react'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -218,6 +218,12 @@ const documentedComponents: ComponentPreview[] = [
         name: 'Animated Hero',
         icon: <Sparkles className="w-8 h-8" />,
         docPath: '/docs/animated-hero'
+    },
+    {
+        id: 'pixelated-image-trail',
+        name: 'Image Trail',
+        icon: <MousePointerClick className="w-8 h-8" />,
+        docPath: '/docs/pixelated-image-trail'
     },
 ]
 
