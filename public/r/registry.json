@@ -29,6 +29,14 @@
     ]
   },
   {
+    "name": "animated-tab-bar",
+    "dependencies": [],
+    "type": "registry:ui",
+    "files": [
+      "public/r/animated-tab-bar.json"
+    ]
+  },
+  {
     "name": "avatar",
     "dependencies": [
       "@radix-ui/react-avatar"
@@ -281,6 +289,14 @@
     ]
   },
   {
+    "name": "glow-border-card",
+    "dependencies": [],
+    "type": "registry:ui",
+    "files": [
+      "public/r/glow-border-card.json"
+    ]
+  },
+  {
     "name": "gradient-tiles",
     "dependencies": [],
     "type": "registry:ui",
@@ -391,6 +407,14 @@
     ]
   },
   {
+    "name": "liquid-ocean",
+    "dependencies": [],
+    "type": "registry:ui",
+    "files": [
+      "public/r/liquid-ocean.json"
+    ]
+  },
+  {
     "name": "liquid-text",
     "dependencies": [],
     "type": "registry:ui",
@@ -454,6 +478,14 @@
     "type": "registry:ui",
     "files": [
       "public/r/perspective-grid.json"
+    ]
+  },
+  {
+    "name": "pixelated-image-trail",
+    "dependencies": [],
+    "type": "registry:ui",
+    "files": [
+      "public/r/pixelated-image-trail.json"
     ]
   },
   {

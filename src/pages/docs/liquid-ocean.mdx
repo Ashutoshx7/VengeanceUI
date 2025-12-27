@@ -1,0 +1,336 @@
+import { CodeBlock, Dependencies } from '@/components/docs/component-installation'
+import { CLICommand } from '@/components/docs/cli-command'
+import { PropsTable } from '@/components/docs/props-table'
+import { LiquidOceanDemo, LiquidOceanMinimal, LiquidOceanCyan, LiquidOceanPurple, LiquidOceanHighDetail, LiquidOceanCalm, LiquidOceanMatrix, LiquidOceanSunset } from '@/components/docs/liquid-ocean'
+import { ComponentPreview } from '@/components/docs/component-preview'
+
+# Liquid Ocean
+
+A mesmerizing Three.js animated ocean scene featuring flowing waves, floating boxes, and a rotating camera. Built with React Three Fiber, replicating the "Little Boxes" experiment.
+
+<ComponentPreview
+  component={<LiquidOceanDemo />}
+  code={`"use client";
+
+import { LiquidOcean } from "@/components/ui/liquid-ocean";
+
+export function LiquidOceanDemo() {
+  return (
+    <div className="relative h-[600px] w-full bg-black">
+      <LiquidOcean>
+        <div className="flex flex-col items-center justify-center h-full text-center text-white">
+          <h1 className="text-[60px] font-light">
+            <strong>Liquid</strong>
+          </h1>
+          <p className="mt-4 text-gray-400">– Little Boxes –</p>
+        </div>
+      </LiquidOcean>
+    </div>
+  );
+}`}
+/>
+
+## Install using CLI
+
+<CLICommand componentName="liquid-ocean" />
+
+## Install Manually
+
+<Dependencies step={1} title="Install dependencies">
+    <CodeBlock 
+        code="npm install three @react-three/fiber @react-three/drei clsx tailwind-merge" 
+    />
+</Dependencies>
+
+<Dependencies step={2} title="Add util file">
+    <p className="text-[13px] text-muted-foreground mt-2 mb-8">
+        <code className="text-foreground font-mono text-xs bg-neutral-100 dark:bg-[#161616] border border-neutral-200 dark:border-neutral-800 px-2 py-1 rounded-md">lib/utils.ts</code>
+    </p>
+    <CodeBlock 
+        language="tsx"
+        code={`import { ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}`}
+    />
+</Dependencies>
+
+<Dependencies step={3} title="Copy the source code">
+    <p className="text-[13px] text-muted-foreground mt-2 mb-8">Copy the code below and paste it into <code className="text-foreground font-mono text-xs bg-neutral-100 dark:bg-[#161616] border border-neutral-200 dark:border-neutral-800 px-2 py-1 rounded-md mx-1">components/ui/liquid-ocean.tsx</code></p>
+    <CodeBlock
+        language="tsx"
+        title="components/ui/liquid-ocean.tsx"
+        expandable={true}
+        code={`"use client";
+
+import React, { useRef, useMemo, useEffect } from "react";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { RectAreaLightUniformsLib } from "three/examples/jsm/lights/RectAreaLightUniformsLib.js";
+import * as THREE from "three";
+import { cn } from "@/lib/utils";
+
+// Initialize RectAreaLight uniforms
+if (typeof window !== "undefined") {
+  RectAreaLightUniformsLib.init();
+}
+
+// ... Full component source available via CLI install
+`}
+    />
+</Dependencies>
+
+## Usage
+
+<CodeBlock 
+    language="tsx" 
+    code={`import { LiquidOcean } from "@/components/ui/liquid-ocean"
+
+// Basic usage - exact original appearance
+export function Example() {
+  return (
+    <div className="relative h-[500px] w-full">
+      <LiquidOcean>
+        <h1 className="text-white text-6xl">Liquid</h1>
+      </LiquidOcean>
+    </div>
+  );
+}
+
+// Custom theme colors
+export function CustomColors() {
+  return (
+    <LiquidOcean
+      backgroundColor={0x0a1a1a}
+      accentColor={0x00ffff}
+      boatCount={7}
+    />
+  );
+}`} 
+/>
+
+## Examples
+
+### Minimal Ocean (No Boats, No Grid)
+
+<ComponentPreview
+  component={<LiquidOceanMinimal />}
+  code={`<LiquidOcean
+  showBoats={false}
+  showGrid={false}
+  oceanFragments={30}
+  waveAmplitude={0.15}
+  rotationSpeed={0.0005}
+/>`}
+/>
+
+### Cyan Theme
+
+<ComponentPreview
+  component={<LiquidOceanCyan />}
+  code={`<LiquidOcean
+  backgroundColor={0x0a1a1a}
+  accentColor={0x00ffff}
+  boatCount={3}
+>
+  <h1 className="text-cyan-400">Cyber Ocean</h1>
+</LiquidOcean>`}
+/>
+
+### Purple Theme
+
+<ComponentPreview
+  component={<LiquidOceanPurple />}
+  code={`<LiquidOcean
+  backgroundColor={0x0a0a1a}
+  accentColor={0x9933ff}
+  boatCount={7}
+  rotationSpeed={0.002}
+>
+  <h1 className="text-purple-400">Neon Dreams</h1>
+</LiquidOcean>`}
+/>
+
+### Sunset Theme
+
+<ComponentPreview
+  component={<LiquidOceanSunset />}
+  code={`<LiquidOcean
+  backgroundColor={0x1a0a0a}
+  accentColor={0xff6600}
+  boatCount={4}
+  waveSpeed={0.08}
+>
+  <h1 className="text-orange-400">Sunset Waves</h1>
+</LiquidOcean>`}
+/>
+
+### Matrix Theme
+
+<ComponentPreview
+  component={<LiquidOceanMatrix />}
+  code={`<LiquidOcean
+  backgroundColor={0x0a1a0a}
+  accentColor={0x00ff66}
+  boatCount={6}
+  waveAmplitude={0.3}
+  oceanFragments={40}
+>
+  <h1 className="text-green-400 font-mono">MATRIX</h1>
+</LiquidOcean>`}
+/>
+
+### Calm Waters
+
+<ComponentPreview
+  component={<LiquidOceanCalm />}
+  code={`<LiquidOcean
+  backgroundColor={0x0a1a1a}
+  accentColor={0x00ffff}
+  rotationSpeed={0.0003}
+  waveAmplitude={0.08}
+  waveSpeed={0.02}
+  showBoats={false}
+>
+  <h1 className="text-cyan-300 tracking-widest">CALM WATERS</h1>
+</LiquidOcean>`}
+/>
+
+### High Detail Mode
+
+<ComponentPreview
+  component={<LiquidOceanHighDetail />}
+  code={`<LiquidOcean
+  oceanFragments={50}
+  boatCount={10}
+  boatSpread={8}
+  waveAmplitude={0.15}
+  showGrid={false}
+>
+  <h1 className="text-pink-500">High Detail Mode</h1>
+</LiquidOcean>`}
+/>
+
+## Props
+
+<PropsTable
+  data={[
+    {
+      prop: "className",
+      type: "string",
+      defaultValue: "-",
+      description: "Additional CSS classes for the container."
+    },
+    {
+      prop: "backgroundColor",
+      type: "number",
+      defaultValue: "0x000000",
+      description: "Background color as hex number (e.g., 0x000000 for black)."
+    },
+    {
+      prop: "accentColor",
+      type: "number",
+      defaultValue: "0xF00589",
+      description: "Accent color for ocean, boats, and lights (original pink)."
+    },
+    {
+      prop: "gridColor",
+      type: "number",
+      defaultValue: "0x333333",
+      description: "Grid helper line color."
+    },
+    {
+      prop: "fov",
+      type: "number",
+      defaultValue: "20",
+      description: "Camera field of view."
+    },
+    {
+      prop: "rotationSpeed",
+      type: "number",
+      defaultValue: "0.001",
+      description: "Scene rotation speed per frame."
+    },
+    {
+      prop: "showGrid",
+      type: "boolean",
+      defaultValue: "true",
+      description: "Show the grid helper."
+    },
+    {
+      prop: "showBoats",
+      type: "boolean",
+      defaultValue: "true",
+      description: "Show floating boxes/boats."
+    },
+    {
+      prop: "boatCount",
+      type: "number",
+      defaultValue: "5",
+      description: "Number of floating boxes."
+    },
+    {
+      prop: "boatSpread",
+      type: "number",
+      defaultValue: "5",
+      description: "Spread range for floating boxes."
+    },
+    {
+      prop: "oceanSize",
+      type: "number",
+      defaultValue: "25",
+      description: "Ocean plane size."
+    },
+    {
+      prop: "oceanFragments",
+      type: "number",
+      defaultValue: "25",
+      description: "Ocean geometry subdivisions. Higher = more detail."
+    },
+    {
+      prop: "waveAmplitude",
+      type: "number",
+      defaultValue: "0.2",
+      description: "Maximum wave height."
+    },
+    {
+      prop: "waveSpeed",
+      type: "number",
+      defaultValue: "0.05",
+      description: "Wave animation speed multiplier."
+    },
+    {
+      prop: "showWireframe",
+      type: "boolean",
+      defaultValue: "true",
+      description: "Show wireframe overlay on ocean."
+    },
+    {
+      prop: "oceanOpacity",
+      type: "number",
+      defaultValue: "0.85",
+      description: "Ocean surface opacity (0-1)."
+    },
+    {
+      prop: "children",
+      type: "React.ReactNode",
+      defaultValue: "-",
+      description: "Overlay content to display on top of the ocean."
+    },
+  ]}
+/>
+
+## Features
+
+**3D Animated Ocean**: Flowing wave animation with configurable speed and amplitude
+
+**Floating Boxes**: Animated boxes that bob and tilt with the waves
+
+**Fully Customizable**: Change colors, wave settings, boat count, and more
+
+**Multiple Themes**: Create any color scheme with hex color props
+
+**React Three Fiber**: Built with modern React 3D patterns for optimal performance
+
+**Overlay Support**: Add any content on top of the ocean scene

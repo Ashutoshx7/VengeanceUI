@@ -79,6 +79,7 @@ const GlowBorderCardDemo = dynamic(() => import('@/components/docs/glow-border-c
 const LineHoverLinkDemo = dynamic(() => import('@/components/docs/line-hover-link').then(mod => mod.LineHoverLinkDemo), { ssr: false, loading: () => <LoadingPlaceholder /> })
 const LogoSliderDemo = dynamic(() => import('@/components/docs/logo-slider').then(mod => mod.LogoSliderDemo), { ssr: false, loading: () => <LoadingPlaceholder /> })
 const StackedLogosDemo = dynamic(() => import('@/components/docs/stacked-logos').then(mod => mod.StackedLogosDemo), { ssr: false, loading: () => <LoadingPlaceholder /> })
+const LiquidOcean = dynamic(() => import('@/components/ui/liquid-ocean').then(mod => mod.LiquidOcean), { ssr: false, loading: () => <LoadingPlaceholder /> })
 
 
 const components = [
@@ -319,6 +320,18 @@ const components = [
         href: "/docs/stacked-logos",
         icon: Users,
         component: <div className="scale-[0.5] origin-center w-[210%] h-[210%] shrink-0 flex items-center justify-center"><StackedLogosDemo /></div>
+    },
+    {
+        title: "Liquid Ocean",
+        description: "3D animated ocean waves",
+        category: "Backgrounds",
+        href: "/docs/liquid-ocean",
+        icon: Waves,
+        component: (
+            <div className="absolute inset-0 overflow-hidden bg-black">
+                <LiquidOcean />
+            </div>
+        )
     },
 ]
 
