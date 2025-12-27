@@ -1,3 +1,5 @@
+
+"use client"
 import {
   Card,
   CardContent,
@@ -5,6 +7,7 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
+
 import {
   FileText,
   Github,
@@ -14,77 +17,127 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { ReactNode } from "react";
+import { motion } from "framer-motion";
 
 const Footer = () => {
-  return (
-    <div className=" flex justify-center relative ">
-      <section className=" w-7xl mx-4 ">
-        <div className="  grid md:grid-cols-[350px_1fr]  grid-cols-1 gap-3">
-          <img
-            className=" rounded-xl border object-cover h-full w-full  shadow z-30"
-            src="https://res.cloudinary.com/dz12pywzs/image/upload/v1762336185/Gemini_Generated_Image_qxos2hqxos2hqxos_rlosmn.png"
-            alt="Vansh Nagar"
-          />
-          <Card className=" h-full  bg-background flex justify-between relative  z-30">
-            <CardHeader>
-              {" "}
-              <div className=" text-4xl font-medium"> Vansh Nagar</div>
-              <div className="text-muted-foreground text-sm mt-2 text-justify">
-                Take your imagination to real production web & app with me.
-                Full-Stack/App Dev || DevOps & Deployment ||  Production AI
-                Agent || UI/UX || Creative Engineer || Blender || 2D/3D
-                Experiences (Three.js/R3F , GSAP) ✨
-              </div>
-            </CardHeader>
-            <CardContent className=" flex flex-wrap justify-center mt-6">
-              {[
+
+const icons = [
                 {
                   icon: Instagram,
                   link: "https://www.instagram.com/epitome0.0/",
-                },
-                {
-                  icon: LinkedinIcon,
-                  link: "https://www.linkedin.com/in/vansh-nagar-469648346/",
-                },
-                { icon: Twitter, link: "#" },
-                { icon: Github, link: "https://github.com/vansh-nagar" },
-                { icon: FileText, link: "https://vanshnagar.me/resume" },
-              ].map((item, index) => (
-                <div
-                  key={index}
-                  className="group border-0 shadow-none cursor-pointer"
-                >
-                  <Link href={item.link} target="_blank">
-                    <CardDecorator>
-                      <item.icon className="size-6" aria-hidden />
-                    </CardDecorator>
+                }
+              ]
+
+  const firstLI = [
+    {
+      li: '01 Components',
+      href: '/docs/components-overview'
+    },
+    {
+      li: '02 Templates',
+      href: '/templates'
+    },
+  ]
+
+  const secondLI = [
+    {
+      li: '03 Playground',
+      href: '/playground'
+    },
+    {
+      li: '04 Pricing',
+      href: "/pricing"
+    },
+
+  ]
+  return (
+
+
+
+    <div className=" flex justify-center  ">
+      <section className=" w-7xl mx-4 grid grid-cols-[1fr_2fr] grid-rows-[1fr_1fr] h-80">
+
+
+        <div className=" border-b border-r border-foreground/10  py-4 ">
+          <p className="text-lg text-muted-foreground leading-relaxed max-w-xl font-light text-balance">
+            A carefully crafted React component library for building modern, responsive web applications.
+            <br /> Every component is designed with attention to detail.
+          </p>
+
+          {/* {
+            icons.map((el , id)=>{
+              return <div className="" key={id} >
+               <span>{el.icon}</span>
+              </div>
+            })
+          } */}
+
+         
+        </div>
+
+        <div className=" p-4 border-b border-foreground/10 ">
+         
+          <div className="grid grid-cols-[1fr_1fr_2fr] w-fit  gap-4 font-medium text-foreground/70 ">
+
+            <ul>
+
+              {
+                firstLI.map((el, id) => {
+                  return <Link href={el.href}>
+                    <li key={id} className="hover:text-foreground"> {el.li}</li>
                   </Link>
-                </div>
-              ))}
-            </CardContent>
-            <CardFooter className=" flex justify-end">
-              <Link href="https://vanshnagar.me" target="_blank">
-                <InteractiveHoverButton>Portfolio</InteractiveHoverButton>
+                })
+              }
+            </ul>
+            <ul>
+              {
+                secondLI.map((el, id) => {
+                  return <Link href={el.href}>
+                    <li key={id} className="hover:text-foreground">{el.li}</li>
+                  </Link>
+                })
+              }
+
+            </ul>
+            
+             <div className="py-2 flex gap-4 ">
+              <Link href='https://github.com/Ashutoshx7/VengeanceUI'>
+            < Github className="hover:text-foreground"/> 
               </Link>
-            </CardFooter>
-          </Card>
+            
+          </div>
+          </div>
+        </div>
+
+        <div className="perspective-distant transform-3d border-r border-foreground/10 ">
+          <motion.img
+
+            src="/logo/bg-less.png"
+            alt="Logo"
+            className="size-60 w-auto dark:invert rotate-180"
+            draggable={false}
+
+            whileHover={{
+              scale: 1.1
+            }}
+
+            transition={{
+              duration: 0.3
+            }}
+
+          />
+        </div>
+
+        <div className="flex items-center justify-center bg-[ #e91e63] overflow-hidden relative">
+          <h1 className="vengeanceUI-text">
+            VengeanceUI
+          </h1>
         </div>
       </section>
     </div>
+
   );
 };
 
 export default Footer;
 
-const CardDecorator = ({ children }: { children: ReactNode }) => (
-  <div className="mask-radial-from-40% mask-radial-to-60% relative mx-auto size-36 duration-200 [--color-border:color-mix(in_oklab,var(--color-zinc-950)10%,transparent)] group-hover:text-primary dark:[--color-border:color-mix(in_oklab,var(--color-white)15%,transparent)] dark:group-hover:[--color-border:color-mix(in_oklab,var(--color-white)20%,transparent)]">
-    <div
-      aria-hidden
-      className="absolute inset-0 bg-[linear-gradient(to_right,var(--color-border)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-border)_1px,transparent_1px)] bg-[size:24px_24px] dark:opacity-50"
-    />
-
-    <div className="bg-background absolute inset-0 m-auto flex size-12 items-center justify-center border-l border-t">
-      {children}
-    </div>
-  </div>
-);

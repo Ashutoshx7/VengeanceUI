@@ -384,6 +384,65 @@ html:not(.dark) [class*="nav-container"] {
       -webkit-text-fill-color: transparent;
 }
 
+
+.vengeanceUI-text{
+
+  font-size: 6rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #fff;
+  position: relative;
+  animation: melt 3s infinite ease-in-out;
+  background: linear-gradient(90deg, #ff6f61 , #ffbd44 , #ff6f61);
+  background-clip: text;
+  color:transparent
+}
+
+.vengeanceUI-text::before,
+.vengeanceUI-text::after{
+  content: 'vengeanceUI';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height:100%;
+  background: linear-gradient(90deg , #ff6f61, #ffbd44 , #ff6f61);
+  background-clip: text;
+  color:transparent;
+  z-index: -1;
+  transform: scaleY(1);
+  opacity: 0.5;
+  animation:  drip 3s infinite ease-in-out;
+
+}
+
+.vengeanceUI-text::after{
+  filter: blur(10px);
+  opacity: 0.3
+}
+
+/* effect for vengeanceUI-text melting */
+
+@keyframes melt{
+  0%, 100%{
+    transform: translateY(0);
+  }
+  50%{
+    transform: translateY(20px);
+  }
+}
+
+@keyframes drip{
+  0%, 100%{
+    transform: scaleY(1);
+  }
+  50%{
+    transform: scaleY(1.5);
+    opacity: 0.4;
+  }
+}
+ 
+
 /* FORCE LOGO TO WHITE IN DARK MODE */
 .dark nav img,
 .dark header img,
@@ -1287,6 +1346,7 @@ html:not(.dark) [class*="nav-container"] {
        justify-self: end;
       
     }
+}
    
 /* ============================================
    Pixelated Image Trail Component Styles

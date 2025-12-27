@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter_Tight, Pixelify_Sans, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import { CommandMenu } from "@/components/command-menu";
+import Footer from "@/components/mine/landing-page/footer";
 
 // Default font
 const interTight = Inter_Tight({
@@ -28,7 +30,18 @@ export const metadata: Metadata = {
   title: "VengeanceUI - Premium React Components",
   description:
     "Beautiful, modern, and customizable React components. Build stunning interfaces with VengeanceUI - a premium component library for React and Next.js.",
-  keywords: ["React", "Next.js", "UI Components", "Component Library", "Tailwind CSS", "Three.js", "Animation", "Web Development", "Frontend", "VengeanceUI"],
+  keywords: [
+    "React",
+    "Next.js",
+    "UI Components",
+    "Component Library",
+    "Tailwind CSS",
+    "Three.js",
+    "Animation",
+    "Web Development",
+    "Frontend",
+    "VengeanceUI",
+  ],
   authors: [{ name: "VengeanceUI" }],
   icons: {
     icon: "/logo/bg-less.png",
@@ -38,7 +51,8 @@ export const metadata: Metadata = {
     type: "website",
     url: "https://www.vengenceui.com",
     title: "VengeanceUI - Premium React Components",
-    description: "Beautiful, modern, and customizable React components. Build stunning interfaces with VengeanceUI - a premium component library for React and Next.js.",
+    description:
+      "Beautiful, modern, and customizable React components. Build stunning interfaces with VengeanceUI - a premium component library for React and Next.js.",
     siteName: "VengeanceUI",
     images: [
       {
@@ -53,7 +67,8 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "VengeanceUI - Premium React Components",
-    description: "Beautiful, modern, and customizable React components. Build stunning interfaces with VengeanceUI.",
+    description:
+      "Beautiful, modern, and customizable React components. Build stunning interfaces with VengeanceUI.",
     images: ["https://www.vengenceui.com/og-image.png"],
   },
   robots: {
@@ -64,13 +79,10 @@ export const metadata: Metadata = {
 };
 
 export const viewport = {
-  width: 'device-width',
+  width: "device-width",
   initialScale: 1,
   maximumScale: 1,
 };
-
-import { CommandMenu } from "@/components/command-menu";
-import Footer from "@/components/ui/footer";
 
 export default function RootLayout({
   children,
