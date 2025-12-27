@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Navbar1 } from "../../../registry/new-york/navbars/navbar1";
@@ -14,6 +14,7 @@ const components = [
     category: "Navigation",
     component: Navbar1,
   },
+
   {
     id: "button1",
     title: "Button 1",
@@ -23,8 +24,11 @@ const components = [
   },
 ];
 
+
+
 const ComponentCard = ({ component }: { component: typeof components[0] }) => {
   const Component = component.component;
+  
   
   return (
     <motion.div
@@ -34,9 +38,14 @@ const ComponentCard = ({ component }: { component: typeof components[0] }) => {
       transition={{ duration: 0.3 }}
       className="group relative overflow-hidden rounded-xl border border-border/50 bg-card/50 backdrop-blur-sm shadow-sm hover:shadow-md transition-all"
     >
+
+
       {/* Preview Container */}
       <div className="relative h-48 overflow-hidden bg-gradient-to-br from-muted/30 to-muted/10 p-6 flex items-center justify-center">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] opacity-50" />
+
+
+
         <div className="relative z-10 w-full flex items-center justify-center scale-75">
           <Component />
         </div>
@@ -74,8 +83,9 @@ const Page = () => {
     <div className="min-h-screen bg-background">
       <Navbar1 />
 
-      <div className="container mx-auto px-4 pt-32 pb-20">
-        {/* Header */}
+      <div className="  px-4 pt-32 pb-20 ">
+       <div className="">
+         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -120,6 +130,7 @@ const Page = () => {
             </p>
           </div>
         )}
+       </div>
       </div>
     </div>
   );

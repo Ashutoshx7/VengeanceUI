@@ -36,6 +36,7 @@ export default {
     "line-hover-link": "Line Hover Link",
     "logo-slider": "Logo Slider",
     "stacked-logos": "Stacked Logos",
-    "scroll-effect": "Scroll Effect",
+    "scroll-effect":"Scroll Effect",
+    
     "pixelated-image-trail": "Pixelated Image Trail"
 }

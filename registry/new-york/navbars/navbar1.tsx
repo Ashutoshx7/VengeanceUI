@@ -36,12 +36,12 @@ export const Navbar1 = () => {
         <img
           src="/logo/bg-less.png"
           alt="PIXEL PERFECT"
-          className="w-8 dark:hidden block "
+          className="w-22 dark:hidden block "
         />
         <img
           src="/logo/final-dark.png"
           alt="PIXEL PERFECT"
-          className="w-8 hidden dark:block "
+          className="w-22 hidden dark:block "
         />
       </Link>
 
@@ -56,7 +56,7 @@ export const Navbar1 = () => {
               style={{
                 width: "var(--w, 0%)",
               }}
-              className="  text-xs font-medium border-b-2 "
+              className="  text-sm font-medium border-b-2 "
             >
               {item.name}
             </motion.div>
