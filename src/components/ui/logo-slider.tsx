@@ -35,6 +35,8 @@ export interface LogoSliderProps {
  * A beautiful infinite marquee for showcasing logos, partners, or any content.
  * Uses per-item CSS animations for optimal performance.
  */
+
+
 export const LogoSlider = ({
     logos,
     speed = 60,

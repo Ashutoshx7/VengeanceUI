@@ -29,6 +29,14 @@
     ]
   },
   {
+    "name": "animated-tab-bar",
+    "dependencies": [],
+    "type": "registry:ui",
+    "files": [
+      "public/r/animated-tab-bar.json"
+    ]
+  },
+  {
     "name": "avatar",
     "dependencies": [
       "@radix-ui/react-avatar"
@@ -281,6 +289,14 @@
     ]
   },
   {
+    "name": "glow-border-card",
+    "dependencies": [],
+    "type": "registry:ui",
+    "files": [
+      "public/r/glow-border-card.json"
+    ]
+  },
+  {
     "name": "gradient-tiles",
     "dependencies": [],
     "type": "registry:ui",
@@ -457,6 +473,14 @@
     ]
   },
   {
+    "name": "pixelated-image-trail",
+    "dependencies": [],
+    "type": "registry:ui",
+    "files": [
+      "public/r/pixelated-image-trail.json"
+    ]
+  },
+  {
     "name": "popover",
     "dependencies": [
       "@radix-ui/react-popover"
@@ -505,6 +529,16 @@
     "type": "registry:ui",
     "files": [
       "public/r/scroll-area.json"
+    ]
+  },
+  {
+    "name": "scroll-effect",
+    "dependencies": [
+      "framer-motion"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/scroll-effect.json"
     ]
   },
   {

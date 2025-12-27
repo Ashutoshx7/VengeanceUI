@@ -1,0 +1,16 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "scroll-effect",
+  "type": "registry:ui",
+  "dependencies": [
+    "framer-motion"
+  ],
+  "files": [
+    {
+      "path": "components/ui/scroll-effect.tsx",
+      "content": "\"use client\";\r\nimport React, { useRef } from 'react'\r\nimport { motion, useScroll, useTransform } from 'framer-motion'\r\nimport { cn } from '@/lib/utils'\r\n\r\n\r\ntype ImageProps = {\r\n\r\n        start: string[];\r\n        middle: string[];\r\n        featured: string\r\n}\r\n\r\ninterface ScrollEffectProps{\r\n    images: ImageProps;\r\n    className?: string\r\n}\r\n\r\n export function ScrollEffect  ({ images , className }: ScrollEffectProps)  {\r\n\r\n\r\n\r\n    const sectionRef = useRef<HTMLDivElement>(null);\r\n\r\n\r\n    const { scrollYProgress } = useScroll({\r\n        target: sectionRef,\r\n        offset: ['start start', 'end start']\r\n    })\r\n\r\n\r\n\r\n    const k = useTransform(scrollYProgress, [0, 1], [0, 1])\r\n\r\n    const {start , middle , featured}= images\r\n\r\n\r\n\r\n\r\n    return (\r\n\r\n        <section ref={sectionRef}\r\n            className={cn('relative h-[400dvh]' , className)}\r\n        >\r\n\r\n            <motion.main className='clip-root' style={{\r\n                ['--k' as any]: k\r\n            }}>\r\n\r\n                {start.map((src, i) => (\r\n\r\n                    <img key={`start-${i}`}\r\n                        src={src}\r\n                        className={cn('clip-img end')}\r\n                        style={{\r\n                            ['--i' as any]: i,\r\n                            ['--j' as any]: 0\r\n                        }}\r\n                        alt={`start-image${i}`}\r\n                    />\r\n                ))\r\n                }\r\n\r\n              \r\n\r\n\r\n                {/* featured image */}\r\n                <img src={featured}\r\n                    className='clip-img feat'\r\n                    alt='featured-image'\r\n                />\r\n\r\n                {/* middle images */}\r\n\r\n\r\n                {\r\n                    middle.map((src, i) =>\r\n\r\n                    (\r\n                        <img key={`mid-${i}`}\r\n                            src={src}\r\n                            className={cn('clip-img mid' , \r\n                               \r\n                            )}\r\n                            style={{\r\n                                ['--i' as any]: i + start.length,\r\n                                ['--j' as any]: 1\r\n                            }}\r\n                            alt={`middle-image${i}`}\r\n\r\n                        />\r\n                    ))\r\n                }\r\n            </motion.main>\r\n\r\n        </section>\r\n\r\n    );\r\n};\r\n\r\n\r\n\r\n",
+      "type": "registry:ui",
+      "target": "components/ui/scroll-effect.tsx"
+    }
+  ]
+}
