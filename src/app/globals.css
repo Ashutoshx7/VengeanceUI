@@ -373,75 +373,74 @@ html:not(.dark) [class*="nav-container"] {
 
 /* Wordmark Gradient for Footer */
 .wordmark-gradient {
-    background: linear-gradient(
-  to bottom,
-  rgba(255, 255, 255, 0.85) 0%,
-  rgba(255, 255, 255, 0.35) 35%,
-  rgba(255, 255, 255, 0) 85%
-    );
-    
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+  background: linear-gradient(to bottom,
+      rgba(255, 255, 255, 0.85) 0%,
+      rgba(255, 255, 255, 0.35) 35%,
+      rgba(255, 255, 255, 0) 85%);
+
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 
-.vengeanceUI-text{
+.vengeanceUI-text {
 
   font-size: 6rem;
   font-weight: bold;
   text-transform: uppercase;
-  color: #fff;
   position: relative;
   animation: melt 3s infinite ease-in-out;
-  background: linear-gradient(90deg, #ff6f61 , #ffbd44 , #ff6f61);
-  background-clip: text;
-  color:transparent
+  color: hsl(var(--foreground));
+  text-shadow: 0 0 40px hsl(var(--foreground) / 0.3);
 }
 
 .vengeanceUI-text::before,
-.vengeanceUI-text::after{
+.vengeanceUI-text::after {
   content: 'vengeanceUI';
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  height:100%;
-  background: linear-gradient(90deg , #ff6f61, #ffbd44 , #ff6f61);
-  background-clip: text;
-  color:transparent;
+  height: 100%;
+  color: hsl(var(--foreground) / 0.3);
   z-index: -1;
   transform: scaleY(1);
-  opacity: 0.5;
-  animation:  drip 3s infinite ease-in-out;
+  animation: drip 3s infinite ease-in-out;
 
 }
 
-.vengeanceUI-text::after{
+.vengeanceUI-text::after {
   filter: blur(10px);
-  opacity: 0.3
+  color: hsl(var(--foreground) / 0.15);
 }
 
 /* effect for vengeanceUI-text melting */
 
-@keyframes melt{
-  0%, 100%{
+@keyframes melt {
+
+  0%,
+  100% {
     transform: translateY(0);
   }
-  50%{
+
+  50% {
     transform: translateY(20px);
   }
 }
 
-@keyframes drip{
-  0%, 100%{
+@keyframes drip {
+
+  0%,
+  100% {
     transform: scaleY(1);
   }
-  50%{
+
+  50% {
     transform: scaleY(1.5);
     opacity: 0.4;
   }
 }
- 
+
 
 /* FORCE LOGO TO WHITE IN DARK MODE */
 .dark nav img,
@@ -1223,131 +1222,124 @@ html:not(.dark) [class*="nav-container"] {
    ============================================ */
 
 
-@property --k{
-    syntax: '<number>';
-    initial-value: 0 ;
-    inherits: true;
+@property --k {
+  syntax: '<number>';
+  initial-value: 0;
+  inherits: true;
 
 }
 
-.clip-root{
+.clip-root {
 
-    --g : 1rem;
-    --n : 2;
+  --g: 1rem;
+  --n: 2;
 
 
-    position: sticky;
-    top:0;
-    height: 110dvh;
-    padding: var(--g);
+  position: sticky;
+  top: 0;
+  height: 110dvh;
+  padding: var(--g);
 
-    display: grid;
-    grid-template:  repeat(3 , 1fr) / repeat(3 , 1fr);
-    grid-auto-rows: 1fr;
-    gap: var(--g);
-    overflow: hidden;
-    
-  
+  display: grid;
+  grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+  grid-auto-rows: 1fr;
+  gap: var(--g);
+  overflow: hidden;
+
+
 }
 
 /* image clip effect support */
-.clip-img{
-    --_j: var(--j , 0);
-    --p: calc(2 * var(--_j) + 1);
-    --s: sign(var(--_j) - 0.5);
+.clip-img {
+  --_j: var(--j, 0);
+  --p: calc(2 * var(--_j) + 1);
+  --s: sign(var(--_j) - 0.5);
 
-    grid-area: 2 / var(--p);
+  grid-area: 2 / var(--p);
 
-     justify-self: var(--j , end); 
+  justify-self: var(--j, end);
 
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: var(--g);
-    contain: size;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--g);
+  contain: size;
 
-    &:nth-child(n+3){
-        --j: 1
-    }
+  &:nth-child(n+3) {
+    --j: 1
+  }
 }
 
 /* featured (main) image clip calculation */
-.feat{
-    grid-area: 1 / 1 / -1 / -1 ; 
-    /* grid-column: 1/ -1;
+.feat {
+  grid-area: 1 / 1 / -1 / -1;
+  /* grid-column: 1/ -1;
     grid-row: 1; */
-    height: 200%; 
-    border-radius: 2px;
- 
-    clip-path: inset(
-        0 calc(min(1 ,2 * var(--k))  * (100% + var(--g)) / 3)
-        round var(--g)
-    );
-    z-index: 1;
+  height: 200%;
+  border-radius: 2px;
+
+  clip-path: inset(0 calc(min(1, 2 * var(--k)) * (100% + var(--g)) / 3) round var(--g));
+  z-index: 1;
 }
 
-.clip-img:not(.feat){
-    --d: calc(
-        clamp(
-            0 , var(--i) + (1-2 * var(--k)) * (var(--n) - 1) ,
-            1
-        ) * 33cqw
-    );
+.clip-img:not(.feat) {
+  --d: calc(clamp(0, var(--i) + (1-2 * var(--k)) * (var(--n) - 1),
+        1) * 33cqw);
 
-    transform: translate(
-        calc(var(--s) * var(--d)),
-        calc(0.5 * var(--d))
-    );
-    z-index: 0;
+  transform: translate(calc(var(--s) * var(--d)),
+      calc(0.5 * var(--d)));
+  z-index: 0;
 }
 
-.mid{
-    
-    --j: 1;
-    grid-column: var(--p);
-    grid-row: calc(var(--i) + 1); 
-    
-    
-     &:nth-child(5){
-      
-        width: 80%;
-        height: 150px;
+.mid {
 
-    }
+  --j: 1;
+  grid-column: var(--p);
+  grid-row: calc(var(--i) + 1);
 
-    &:nth-child(4){
-        margin-top: -200px;
-    
 
-        width: 40%;
-        height: 200px;
-    }
-   
-   
+  &:nth-child(5) {
+
+    width: 80%;
+    height: 150px;
+
+  }
+
+  &:nth-child(4) {
+    margin-top: -200px;
+
+
+    width: 40%;
+    height: 200px;
+  }
+
+
 }
 
 /* end images grid calculations */
-.end{
+.end {
 
-    /* grid-area: var(--p) / var(--p); */
+  /* grid-area: var(--p) / var(--p); */
 
-    grid-column: var(--p);
-    grid-row: calc(var(--i) + 1);
-    
-    --j:1; 
-    &:nth-child(1){
-        width: 80%;
-        height: 200px;
-           justify-self: end;
-    }
-    &:nth-child(2){
-        width: 40%;
-        height: 200px;
-       justify-self: end;
-      
-    }
+  grid-column: var(--p);
+  grid-row: calc(var(--i) + 1);
+
+  --j: 1;
+
+  &:nth-child(1) {
+    width: 80%;
+    height: 200px;
+    justify-self: end;
+  }
+
+  &:nth-child(2) {
+    width: 40%;
+    height: 200px;
+    justify-self: end;
+
+  }
 }
-   
+
 /* ============================================
    Pixelated Image Trail Component Styles
    Premium, buttery-smooth 60fps animations
@@ -1604,10 +1596,12 @@ html:not(.dark) [class*="nav-container"] {
   border-radius: 2px;
   z-index: 1;
 }
+
 @keyframes background-shine {
   from {
     background-position: 0 0;
   }
+
   to {
     background-position: -200% 0;
   }

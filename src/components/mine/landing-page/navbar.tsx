@@ -14,28 +14,20 @@ import { useSound } from "@/hooks/use-sound"
 const ThemeToggle = () => {
   const { theme, setTheme, resolvedTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
-
   const playClick = useSound("/audio/ui-sounds/click.wav");
 
+  const isDark = (theme === 'dark' || resolvedTheme === 'dark')
+
+  const switchTheme = useCallback(() => {
+    playClick();
+    setTheme(isDark ? 'light' : 'dark');
+  }, [setTheme, isDark, playClick])
+
   useEffect(() => {
-    
     setMounted(true)
   }, [])
 
   if (!mounted) return <div className="w-9 h-9" />
-
-  const isDark = (theme === 'dark' || resolvedTheme === 'dark')
-
-  const switchTheme = useCallback(()=>{
-    playClick();
-    setTheme(isDark ? 'light' : 'dark');
-  } , [   setTheme , theme])
-
-
-
- 
-
-
 
   return (
     <button
