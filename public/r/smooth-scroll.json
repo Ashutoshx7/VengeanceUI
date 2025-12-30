@@ -6,7 +6,7 @@
   "files": [
     {
       "path": "components/ui/smooth-scroll.tsx",
-      "content": "'use client'\r\nimport { ReactNode, useEffect } from 'react'\r\nimport Lenis from 'lenis'\r\n\r\nexport interface SmoothScrollProps {\r\n    children: ReactNode\r\n}\r\n\r\nexport function SmoothScroll({ children }: SmoothScrollProps) {\r\n    useEffect(() => {\r\n        const lenis = new Lenis()\r\n\r\n        function raf(time: number) {\r\n            lenis.raf(time)\r\n            requestAnimationFrame(raf)\r\n        }\r\n\r\n        requestAnimationFrame(raf)\r\n\r\n        // Remove loading class\r\n        document.body.classList.remove('loading');\r\n\r\n        return () => {\r\n            lenis.destroy()\r\n        }\r\n    }, [])\r\n\r\n    return <>{children}</>\r\n}\r\n\r\nexport default SmoothScroll\r\n",
+      "content": "'use client'\nimport { ReactNode, useEffect } from 'react'\nimport Lenis from 'lenis'\n\nexport interface SmoothScrollProps {\n    children: ReactNode\n}\n\nexport function SmoothScroll({ children }: SmoothScrollProps) {\n    useEffect(() => {\n        const lenis = new Lenis()\n\n        function raf(time: number) {\n            lenis.raf(time)\n            requestAnimationFrame(raf)\n        }\n\n        requestAnimationFrame(raf)\n\n        // Remove loading class\n        document.body.classList.remove('loading');\n\n        return () => {\n            lenis.destroy()\n        }\n    }, [])\n\n    return <>{children}</>\n}\n\nexport default SmoothScroll\n",
       "type": "registry:ui",
       "target": "components/ui/smooth-scroll.tsx"
     }
