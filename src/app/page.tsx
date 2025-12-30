@@ -9,10 +9,8 @@ const Page = () => {
   return (
     <SmoothScroll>
       <div className="overflow-hidden noScrollbar">
-        <div className="px-4 md:px-20">
-          <Navbar />
-          <HeroSection />
-        </div>
+        <Navbar />
+        <HeroSection />
 
         {/* Component Preview Grid Section - Shows actual UI components */}
         <LandingPageGrid
