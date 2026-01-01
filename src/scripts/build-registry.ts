@@ -113,7 +113,8 @@ async function main() {
         });
 
         fs.writeFileSync(path.join(REGISTRY_DIR, 'registry.json'), JSON.stringify(registryIndex, null, 2));
-        console.log('Generated registry.json index.');
+        fs.writeFileSync(path.join(REGISTRY_DIR, 'index.json'), JSON.stringify(registryIndex, null, 2));
+        console.log('Generated registry.json and index.json.');
 
         files.forEach(file => {
             processComponent(file);

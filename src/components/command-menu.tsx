@@ -18,6 +18,10 @@ export function CommandMenu() {
                 e.preventDefault()
                 setOpen((open) => !open)
             }
+
+            if(e.key === "Escape"){
+                setOpen(false)
+            }
         }
 
         document.addEventListener("keydown", down)
@@ -30,13 +34,27 @@ export function CommandMenu() {
     }, [])
 
     return (
-        <CommandPrimitive.Dialog
-            open={open}
-            onOpenChange={setOpen}
-            label="Global Command Menu"
-            className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm transition-all duration-200 ease-in-out"
-        >
-            <div className="fixed left-1/2 top-1/2 w-full max-w-[640px] -translate-x-1/2 -translate-y-1/2 rounded-xl border border-neutral-200 bg-white p-2 shadow-2xl dark:border-neutral-800 dark:bg-neutral-900">
+        <>
+            <button
+                onClick={() => setOpen(true)}
+                className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-foreground/70 hover:text-foreground transition-colors rounded-md hover:bg-foreground/5"
+                aria-label="Open command menu"
+            >
+                <Search className="w-4 h-4" />
+                <span className="hidden sm:inline">Search...</span>
+                <kbd className="hidden sm:inline-flex items-center gap-1 px-1.5 py-0.5 text-xs font-mono bg-foreground/10 rounded">
+                    <span>⌘</span>
+                    <span>K</span>
+                </kbd>
+            </button>
+            <CommandPrimitive.Dialog
+                open={open}
+                modal={false}
+                onOpenChange={setOpen}
+                label="Global Command Menu"
+                className="fixed inset-0 z-100 bg-black/50 backdrop-blur-sm transition-all duration-200 ease-in-out pointer-events-none"
+            >
+            <div className="fixed left-1/2 top-1/2 w-full max-w-[640px] -translate-x-1/2 -translate-y-1/2 rounded-xl border border-neutral-200 bg-white p-2 shadow-2xl dark:border-neutral-800 dark:bg-neutral-900 pointer-events-auto">
                 <div className="flex items-center border-b border-neutral-100 px-3 pb-2 dark:border-neutral-800">
                     <Search className="mr-2 h-5 w-5 shrink-0 opacity-50" />
                     <CommandPrimitive.Input
@@ -104,5 +122,6 @@ export function CommandMenu() {
                 </CommandPrimitive.List>
             </div>
         </CommandPrimitive.Dialog>
+      </>
     )
 }

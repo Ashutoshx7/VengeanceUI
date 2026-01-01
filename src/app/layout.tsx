@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/react";
 import { Inter_Tight, Pixelify_Sans, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
@@ -96,6 +97,7 @@ export default function RootLayout({
           <CommandMenu />
           {children}
           <Footer />
+          <Analytics />
         </ThemeProvider>
       </body>
     </html>

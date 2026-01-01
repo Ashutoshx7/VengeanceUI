@@ -2,8 +2,10 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
-import { Navbar1 } from "../../../registry/new-york/navbars/navbar1";
+import Navbar from "@/components/mine/landing-page/navbar";
 import Button1 from "../../../registry/new-york/button/button";
+import { Navbar1 } from "../../../registry/new-york/navbars/navbar1"; // Keep for registry list but not as main nav
+import { SmoothScroll } from "@/components/ui/smooth-scroll";
 
 // Component registry data
 const components = [
@@ -25,7 +27,7 @@ const components = [
 
 const ComponentCard = ({ component }: { component: typeof components[0] }) => {
   const Component = component.component;
-  
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -71,57 +73,59 @@ const ComponentCard = ({ component }: { component: typeof components[0] }) => {
 
 const Page = () => {
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar1 />
+    <SmoothScroll>
+      <div className="min-h-screen bg-background overflow-hidden noScrollbar">
+        <Navbar />
 
-      <div className="container mx-auto px-4 pt-32 pb-20">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="max-w-3xl mb-16"
-        >
-          <h1 className="text-4xl lg:text-5xl font-bold text-foreground mb-4">
-            Component Registry
-          </h1>
-          <p className="text-lg text-muted-foreground">
-            Browse our collection of beautifully crafted, production-ready components.
-            Copy, customize, and use them in your projects.
-          </p>
-        </motion.div>
-
-        {/* Components Section */}
-        <div className="mb-16">
+        <div className="px-4 md:px-20 pt-32 pb-20">
+          {/* Header */}
           <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-            className="mb-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="max-w-3xl mb-16"
           >
-            <h2 className="text-2xl font-semibold text-foreground mb-2">
-              Components
-            </h2>
-            <div className="h-1 w-20 bg-gradient-to-r from-primary to-primary/50 rounded-full" />
+            <h1 className="text-4xl lg:text-5xl font-bold text-foreground mb-4">
+              Component Registry
+            </h1>
+            <p className="text-lg text-muted-foreground">
+              Browse our collection of beautifully crafted, production-ready components.
+              Copy, customize, and use them in your projects.
+            </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {components.map((component) => (
-              <ComponentCard key={component.id} component={component} />
-            ))}
-          </div>
-        </div>
+          {/* Components Section */}
+          <div className="mb-16">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5 }}
+              className="mb-8"
+            >
+              <h2 className="text-2xl font-semibold text-foreground mb-2">
+                Components
+              </h2>
+              <div className="h-1 w-20 bg-gradient-to-r from-primary to-primary/50 rounded-full" />
+            </motion.div>
 
-        {/* Empty State */}
-        {components.length === 0 && (
-          <div className="text-center py-20">
-            <p className="text-muted-foreground text-lg">
-              No components available yet. Check back soon!
-            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {components.map((component) => (
+                <ComponentCard key={component.id} component={component} />
+              ))}
+            </div>
           </div>
-        )}
+
+          {/* Empty State */}
+          {components.length === 0 && (
+            <div className="text-center py-20">
+              <p className="text-muted-foreground text-lg">
+                No components available yet. Check back soon!
+              </p>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </SmoothScroll>
   );
 };
 

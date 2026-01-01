@@ -59,7 +59,7 @@ export function CLICommand({ componentName, className }: CLICommandProps) {
 
     const getFullCommand = (pm: PackageManager) => {
         const config = packageManagerConfig[pm];
-        return `${config.command} shadcn@latest add "https://vengeance-ui.vercel.app/r/${componentName}.json"`;
+        return `${config.command} shadcn@latest add "https://www.vengenceui.com/r/${componentName}.json"`;
     };
 
     const copyToClipboard = async () => {
@@ -89,7 +89,7 @@ export function CLICommand({ componentName, className }: CLICommandProps) {
                 {" "}
                 <span className="text-neutral-600 dark:text-green-400">add</span>
                 {" "}
-                <span className="text-amber-600 dark:text-amber-400">{`"https://vengeance-ui.vercel.app/r/${componentName}.json"`}</span>
+                <span className="text-amber-600 dark:text-amber-400">{`"https://www.vengenceui.com/r/${componentName}.json"`}</span>
             </code>
         );
     };
