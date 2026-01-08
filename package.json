@@ -7,10 +7,12 @@
     "build": "npm run registry:build && next build",
     "start": "next start",
     "lint": "eslint",
-    "registry:build": "npx tsx src/scripts/build-registry.ts"
+    "registry:build": "npx tsx src/scripts/build-registry.ts",
+    "mcp": "npx tsx src/scripts/mcp-server.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
+    "@modelcontextprotocol/sdk": "^1.25.1",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-alert-dialog": "^1.1.15",
     "@radix-ui/react-aspect-ratio": "^1.1.8",
@@ -40,6 +42,7 @@
     "@react-three/drei": "^9.114.0",
     "@react-three/fiber": "^8.17.6",
     "@types/imagesloaded": "^4.1.7",
+    "@vercel/analytics": "^1.6.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",

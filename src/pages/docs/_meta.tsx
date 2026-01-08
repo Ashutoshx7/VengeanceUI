@@ -16,14 +16,15 @@ export default {
     "animated-button": "Animated Button",
     "animated-hero": "Animated Hero",
     "glow-border-card": "Glow Border Card",
-    "gradient-tiles": "Gradient Tiles",
+
+
     "liquid-text": "3D Displacement Text",
     "testimonials-card": "Testimonials Card",
     "flip-text": "Flip Text",
     "creepy-button": "Creepy Button",
     "masked-avatars": "Masked Avatars",
     "glass-dock": "Dock",
-    "animated-tab-bar": "Animated Tab Bar",
+
     "perspective-grid": "Perspective Grid",
     "social-flip-button": "Social Flip Button",
     "interactive-book": "Interactive Book",
@@ -36,7 +37,7 @@ export default {
     "line-hover-link": "Line Hover Link",
     "logo-slider": "Logo Slider",
     "stacked-logos": "Stacked Logos",
-    "scroll-effect":"Scroll Effect",
-    
-    "pixelated-image-trail": "Pixelated Image Trail"
+
+
+
 }

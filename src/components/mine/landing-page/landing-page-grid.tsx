@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState, memo, lazy, Suspense } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import imagesLoaded from 'imagesloaded'
@@ -18,6 +18,9 @@ import { SpotlightNavbar } from '@/components/ui/spotlight-navbar'
 import { MaskedAvatars } from '@/components/ui/masked-avatars'
 import InteractiveBook from '@/components/ui/interactive-book'
 import TestimonialsCard from '@/components/ui/testimonials-card'
+import { GlowBorderCard } from '@/components/ui/glow-border-card'
+import LightLines from '@/components/ui/light-lines'
+import LiquidOcean from '@/components/ui/liquid-ocean'
 import {
     Sparkles, Book, Grid3X3, Users,
     Layers, Type, MousePointer2, Palette, Dock, PanelTop, Image,
@@ -25,6 +28,17 @@ import {
 } from 'lucide-react'
 
 gsap.registerPlugin(ScrollTrigger)
+
+// Memoized wrapper for heavy components to prevent re-renders
+const MemoizedPerspectiveGrid = memo(PerspectiveGrid)
+const MemoizedLightLines = memo(LightLines)
+const MemoizedLiquidOcean = memo(LiquidOcean)
+const MemoizedGlowBorderCard = memo(GlowBorderCard)
+const MemoizedGlassDock = memo(GlassDock)
+const MemoizedSpotlightNavbar = memo(SpotlightNavbar)
+const MemoizedMaskedAvatars = memo(MaskedAvatars)
+const MemoizedInteractiveBook = memo(InteractiveBook)
+const MemoizedTestimonialsCard = memo(TestimonialsCard)
 
 interface ComponentPreview {
     id: string
@@ -34,7 +48,7 @@ interface ComponentPreview {
     docPath: string
 }
 
-// Using ACTUAL UI library components as previews
+// OPTIMIZED: Actual UI components with memoization + reduced complexity
 const documentedComponents: ComponentPreview[] = [
     {
         id: 'animated-button',
@@ -52,7 +66,7 @@ const documentedComponents: ComponentPreview[] = [
         name: 'Creepy Button',
         icon: <Sparkles className="w-6 h-6" />,
         preview: (
-            <div className="w-full h-full flex items-center justify-center scale-[0.85]">
+            <div className="w-full h-full flex items-center justify-center scale-[0.7]">
                 <CreepyButton>Click Me</CreepyButton>
             </div>
         ),
@@ -64,7 +78,7 @@ const documentedComponents: ComponentPreview[] = [
         icon: <Type className="w-6 h-6" />,
         preview: (
             <div className="w-full h-full flex items-center justify-center">
-                <FlipText className="text-xl font-bold text-zinc-700 dark:text-zinc-300">
+                <FlipText className="text-lg font-bold text-zinc-700 dark:text-zinc-300">
                     Flip
                 </FlipText>
             </div>
@@ -74,84 +88,84 @@ const documentedComponents: ComponentPreview[] = [
     {
         id: 'glass-dock',
         name: 'Glass Dock',
-        icon: <Dock className="w-6 h-6" />,
+        icon: <Dock className="w-8 h-8" />,
         preview: (
-            <div className="w-full h-full flex items-center justify-center scale-[0.7]">
-                <GlassDock
-                    items={[
-                        { icon: Home, title: 'Home', href: '#' },
-                        { icon: User, title: 'User', href: '#' },
-                        { icon: Settings, title: 'Settings', href: '#' },
-                    ]}
-                    className="relative"
-                />
+            <div className="w-full h-full flex items-center justify-center scale-[0.5]">
+                <MemoizedGlassDock items={[
+                    { title: 'Home', icon: Home },
+                    { title: 'Settings', icon: Settings },
+                    { title: 'User', icon: User },
+                ]} />
             </div>
         ),
         docPath: '/docs/glass-dock'
     },
     {
-        id: 'gradient-tiles',
-        name: 'Gradient Tiles',
+        id: 'glow-border-card',
+        name: 'Glow Card',
         icon: <Palette className="w-8 h-8" />,
-        docPath: '/docs/gradient-tiles'
+        preview: (
+            <MemoizedGlowBorderCard
+                width="100%"
+                height="100%"
+                colorPreset="aurora"
+                animationDuration={6}
+                borderRadius="0.75rem"
+            />
+        ),
+        docPath: '/docs/glow-border-card'
     },
     {
         id: 'liquid-text',
         name: 'Liquid Text',
         icon: <Type className="w-6 h-6" />,
         preview: (
-            <div className="w-full h-full flex items-center justify-center scale-[0.9]">
-                <LiquidText text="Liquid" className="text-lg" />
+            <div className="w-full h-full flex items-center justify-center scale-[0.8]">
+                <LiquidText text="Liquid" className="text-base" />
             </div>
         ),
         docPath: '/docs/liquid-text'
     },
     {
-        id: 'perspective-grid',
-        name: 'Perspective Grid',
-        icon: <Layers className="w-6 h-6" />,
+        id: 'liquid-ocean',
+        name: 'Liquid Ocean',
+        icon: <Sparkles className="w-8 h-8" />,
         preview: (
-            <div className="w-full h-full overflow-hidden rounded-lg">
-                <PerspectiveGrid />
+            <div className="w-full h-full relative overflow-hidden rounded-lg">
+                <MemoizedLiquidOcean className="absolute inset-0" showBoats={false} showGrid={false} />
             </div>
         ),
-        docPath: '/docs/perspective-grid'
+        docPath: '/docs/liquid-ocean'
     },
     {
         id: 'social-flip-button',
         name: 'Social Flip',
         icon: <MousePointer2 className="w-6 h-6" />,
         preview: (
-            <div className="w-full h-full flex items-center justify-center scale-[0.45]">
+            <div className="w-full h-full flex items-center justify-center scale-[0.4]">
                 <SocialFlipButton />
             </div>
         ),
         docPath: '/docs/social-flip-button'
     },
     {
-        id: 'spotlight-navbar',
-        name: 'Spotlight Nav',
-        icon: <PanelTop className="w-6 h-6" />,
+        id: 'perspective-grid',
+        name: 'Perspective Grid',
+        icon: <Layers className="w-8 h-8" />,
         preview: (
-            <div className="w-full h-full flex items-center justify-center scale-[0.6]">
-                <SpotlightNavbar
-                    items={[
-                        { label: 'Home', href: '#' },
-                        { label: 'About', href: '#' },
-                        { label: 'Work', href: '#' },
-                    ]}
-                />
+            <div className="w-full h-full relative overflow-hidden">
+                <MemoizedPerspectiveGrid gridSize={8} showOverlay={true} fadeRadius={85} className="absolute inset-0" />
             </div>
         ),
-        docPath: '/docs/spotlight-navbar'
+        docPath: '/docs/perspective-grid'
     },
     {
         id: 'masked-avatars',
         name: 'Masked Avatars',
         icon: <Image className="w-8 h-8" />,
         preview: (
-            <div className="w-full h-full flex items-center justify-center scale-[0.7]">
-                <MaskedAvatars size={50} />
+            <div className="w-full h-full flex items-center justify-center scale-[0.6]">
+                <MemoizedMaskedAvatars />
             </div>
         ),
         docPath: '/docs/masked-avatars'
@@ -161,13 +175,11 @@ const documentedComponents: ComponentPreview[] = [
         name: 'Interactive Book',
         icon: <Book className="w-8 h-8" />,
         preview: (
-            <div className="w-full h-full flex items-center justify-center scale-[0.4]">
-                <InteractiveBook
-                    coverImage="https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=350&h=500&fit=crop"
-                    bookTitle="Preview"
-                    bookAuthor="VengeanceUI"
-                    width={200}
-                    height={280}
+            <div className="w-full h-full flex items-center justify-center scale-[0.3]">
+                <MemoizedInteractiveBook
+                    coverImage="/og-image.png"
+                    bookTitle="UI Book"
+                    bookAuthor="Vengeance"
                     pages={[
                         { pageNumber: 1, content: <div className="p-4 text-sm">Page 1</div> },
                         { pageNumber: 2, content: <div className="p-4 text-sm">Page 2</div> },
@@ -177,7 +189,47 @@ const documentedComponents: ComponentPreview[] = [
         ),
         docPath: '/docs/interactive-book'
     },
-    // These components are complex, show icons instead
+    {
+        id: 'testimonials-card',
+        name: 'Testimonials',
+        icon: <Users className="w-8 h-8" />,
+        preview: (
+            <div className="w-full h-full flex items-center justify-center scale-[0.35]">
+                <MemoizedTestimonialsCard
+                    items={[
+                        { id: 1, title: "Amazing!", description: "Best UI library ever", image: "/Avatar11.jpg" },
+                        { id: 2, title: "Love it!", description: "So easy to use", image: "/Avatar6.jpg" },
+                    ]}
+                    showNavigation={false}
+                    showCounter={false}
+                    autoPlay={false}
+                />
+            </div>
+        ),
+        docPath: '/docs/testimonials-card'
+    },
+    {
+        id: 'spotlight-navbar',
+        name: 'Spotlight Nav',
+        icon: <PanelTop className="w-8 h-8" />,
+        preview: (
+            <div className="w-full h-full flex items-center justify-center scale-[0.5]">
+                <MemoizedSpotlightNavbar />
+            </div>
+        ),
+        docPath: '/docs/spotlight-navbar'
+    },
+    {
+        id: 'light-lines',
+        name: 'Light Lines',
+        icon: <Sparkles className="w-8 h-8" />,
+        preview: (
+            <div className="w-full h-full relative overflow-hidden rounded-lg">
+                <MemoizedLightLines className="absolute inset-0" speedMultiplier={0.5} />
+            </div>
+        ),
+        docPath: '/docs/light-lines'
+    },
     {
         id: 'expandable-bento',
         name: 'Bento Grid',
@@ -185,73 +237,40 @@ const documentedComponents: ComponentPreview[] = [
         docPath: '/docs/expandable-bento-grid'
     },
     {
-        id: 'testimonials-card',
-        name: 'Testimonials',
-        icon: <Users className="w-8 h-8" />,
-        preview: (
-            <div className="w-full h-full flex items-center justify-center scale-[0.55] overflow-visible">
-                <TestimonialsCard
-                    width={300}
-                    showNavigation={false}
-                    showCounter={false}
-                    items={[
-                        {
-                            id: 1,
-                            title: "John Doe",
-                            description: "Amazing UI components!",
-                            image: "https://i.pravatar.cc/100?u=1"
-                        },
-                    ]}
-                />
-            </div>
-        ),
-        docPath: '/docs/testimonials-card'
-    },
-    {
         id: 'staggered-grid',
         name: 'Staggered Grid',
         icon: <Grid3X3 className="w-8 h-8" />,
         docPath: '/docs/staggered-grid'
     },
-    {
-        id: 'animated-hero',
-        name: 'Animated Hero',
-        icon: <Sparkles className="w-8 h-8" />,
-        docPath: '/docs/animated-hero'
-    },
-    {
-        id: 'pixelated-image-trail',
-        name: 'Image Trail',
-        icon: <MousePointerClick className="w-8 h-8" />,
-        docPath: '/docs/pixelated-image-trail'
-    },
 ]
 
-// Featured components for center bento - using ACTUAL components
+// Featured components - ACTUAL components with memoization + reduced complexity
 const featuredComponents = [
     {
-        id: 'creepy-button',
-        name: 'Creepy Button',
+        id: 'card-1',
+        name: 'Light Lines',
         preview: (
-            <div className="scale-[0.6] origin-center">
-                <CreepyButton>Hover</CreepyButton>
+            <div className="relative w-full h-full overflow-hidden rounded-xl">
+                <MemoizedLightLines className="absolute inset-0" speedMultiplier={0.5} />
             </div>
         ),
     },
     {
-        id: 'flip-text',
-        name: 'Flip Text',
+        id: 'card-2',
+        name: 'Perspective Grid',
         preview: (
-            <FlipText className="text-base font-bold text-zinc-700 dark:text-zinc-300">
-                Animate
-            </FlipText>
+            <div className="relative w-full h-full overflow-hidden rounded-xl">
+                <MemoizedPerspectiveGrid gridSize={10} showOverlay={true} fadeRadius={90} className="absolute inset-0" />
+            </div>
         ),
     },
     {
-        id: 'animated-button',
-        name: 'Animated Button',
+        id: 'card-3',
+        name: 'Liquid Ocean',
         preview: (
-            <AnimatedButton className="text-xs px-3 py-1.5">Explore</AnimatedButton>
+            <div className="relative w-full h-full overflow-hidden rounded-xl">
+                <MemoizedLiquidOcean className="absolute inset-0" showBoats={false} showGrid={false} />
+            </div>
         ),
     },
 ]
@@ -418,18 +437,17 @@ export function LandingPageGrid({
                                                 onMouseEnter={() => setActiveBento(index)}
                                                 onClick={() => setActiveBento(index)}
                                             >
+                                                {/* Background preview layer */}
+                                                {feat.preview && (
+                                                    <div className="absolute inset-0 z-0 overflow-hidden rounded-2xl">
+                                                        {feat.preview}
+                                                    </div>
+                                                )}
                                                 <div className={cn(
                                                     "absolute inset-0 rounded-2xl border z-50 pointer-events-none transition-colors duration-700",
                                                     isActive ? "border-zinc-300 dark:border-zinc-700" : "border-transparent"
                                                 )} />
                                                 <div className="relative z-10 w-full h-full flex flex-col items-center justify-center p-2">
-                                                    <div className={cn(
-                                                        "flex flex-col items-center justify-center transition-all duration-500",
-                                                        isActive ? "opacity-100 scale-100" : "opacity-0 scale-90"
-                                                    )}>
-                                                        {feat.preview}
-                                                        <span className="text-[10px] text-zinc-500 dark:text-zinc-400 mt-2 font-medium">{feat.name}</span>
-                                                    </div>
                                                     <div className={cn(
                                                         "absolute inset-0 flex items-center justify-center transition-all duration-500 overflow-hidden px-1",
                                                         isActive ? "opacity-0" : "opacity-100"

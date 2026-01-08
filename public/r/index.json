@@ -1,0 +1,766 @@
+[
+  {
+    "name": "alert",
+    "dependencies": [],
+    "type": "registry:ui",
+    "files": [
+      "public/r/alert.json"
+    ]
+  },
+  {
+    "name": "animated-button",
+    "dependencies": [
+      "framer-motion"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/animated-button.json"
+    ]
+  },
+  {
+    "name": "animated-hero",
+    "dependencies": [
+      "framer-motion",
+      "lucide-react"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/animated-hero.json"
+    ]
+  },
+  {
+    "name": "animated-tab-bar",
+    "dependencies": [],
+    "type": "registry:ui",
+    "files": [
+      "public/r/animated-tab-bar.json"
+    ]
+  },
+  {
+    "name": "avatar",
+    "dependencies": [
+      "@radix-ui/react-avatar"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/avatar.json"
+    ]
+  },
+  {
+    "name": "badge",
+    "dependencies": [
+      "@radix-ui/react-slot"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/badge.json"
+    ]
+  },
+  {
+    "name": "breadcrumb",
+    "dependencies": [
+      "lucide-react",
+      "@radix-ui/react-slot"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/breadcrumb.json"
+    ]
+  },
+  {
+    "name": "button-group",
+    "dependencies": [
+      "@radix-ui/react-slot"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/button-group.json"
+    ]
+  },
+  {
+    "name": "button",
+    "dependencies": [
+      "@radix-ui/react-slot"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/button.json"
+    ]
+  },
+  {
+    "name": "calendar",
+    "dependencies": [
+      "lucide-react",
+      "react-day-picker"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/calendar.json"
+    ]
+  },
+  {
+    "name": "card",
+    "dependencies": [],
+    "type": "registry:ui",
+    "files": [
+      "public/r/card.json"
+    ]
+  },
+  {
+    "name": "carousel",
+    "dependencies": [
+      "lucide-react",
+      "embla-carousel-react"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/carousel.json"
+    ]
+  },
+  {
+    "name": "chart",
+    "dependencies": [],
+    "type": "registry:ui",
+    "files": [
+      "public/r/chart.json"
+    ]
+  },
+  {
+    "name": "checkbox",
+    "dependencies": [
+      "lucide-react",
+      "@radix-ui/react-checkbox"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/checkbox.json"
+    ]
+  },
+  {
+    "name": "collapsible",
+    "dependencies": [
+      "@radix-ui/react-collapsible"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/collapsible.json"
+    ]
+  },
+  {
+    "name": "command",
+    "dependencies": [
+      "lucide-react",
+      "cmdk"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/command.json"
+    ]
+  },
+  {
+    "name": "context-menu",
+    "dependencies": [
+      "lucide-react",
+      "@radix-ui/react-context-menu"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/context-menu.json"
+    ]
+  },
+  {
+    "name": "creepy-button",
+    "dependencies": [
+      "framer-motion"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/creepy-button.json"
+    ]
+  },
+  {
+    "name": "dialog",
+    "dependencies": [
+      "lucide-react",
+      "@radix-ui/react-dialog"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/dialog.json"
+    ]
+  },
+  {
+    "name": "drawer",
+    "dependencies": [
+      "vaul"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/drawer.json"
+    ]
+  },
+  {
+    "name": "dropdown-menu",
+    "dependencies": [
+      "lucide-react",
+      "@radix-ui/react-dropdown-menu"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/dropdown-menu.json"
+    ]
+  },
+  {
+    "name": "empty",
+    "dependencies": [],
+    "type": "registry:ui",
+    "files": [
+      "public/r/empty.json"
+    ]
+  },
+  {
+    "name": "expandable-bento-grid",
+    "dependencies": [
+      "framer-motion",
+      "lucide-react"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/expandable-bento-grid.json"
+    ]
+  },
+  {
+    "name": "field",
+    "dependencies": [],
+    "type": "registry:ui",
+    "files": [
+      "public/r/field.json"
+    ]
+  },
+  {
+    "name": "flip-fade-text",
+    "dependencies": [
+      "framer-motion"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/flip-fade-text.json"
+    ]
+  },
+  {
+    "name": "flip-text",
+    "dependencies": [],
+    "type": "registry:ui",
+    "files": [
+      "public/r/flip-text.json"
+    ]
+  },
+  {
+    "name": "folder-preview",
+    "dependencies": [
+      "framer-motion"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/folder-preview.json"
+    ]
+  },
+  {
+    "name": "footer",
+    "dependencies": [],
+    "type": "registry:ui",
+    "files": [
+      "public/r/footer.json"
+    ]
+  },
+  {
+    "name": "form",
+    "dependencies": [
+      "react-hook-form",
+      "@radix-ui/react-label",
+      "@radix-ui/react-slot"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/form.json"
+    ]
+  },
+  {
+    "name": "glass-dock",
+    "dependencies": [
+      "framer-motion",
+      "lucide-react"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/glass-dock.json"
+    ]
+  },
+  {
+    "name": "glow-border-card",
+    "dependencies": [],
+    "type": "registry:ui",
+    "files": [
+      "public/r/glow-border-card.json"
+    ]
+  },
+  {
+    "name": "gradient-tiles",
+    "dependencies": [],
+    "type": "registry:ui",
+    "files": [
+      "public/r/gradient-tiles.json"
+    ]
+  },
+  {
+    "name": "hover-card",
+    "dependencies": [
+      "@radix-ui/react-hover-card"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/hover-card.json"
+    ]
+  },
+  {
+    "name": "input-group",
+    "dependencies": [],
+    "type": "registry:ui",
+    "files": [
+      "public/r/input-group.json"
+    ]
+  },
+  {
+    "name": "input-otp",
+    "dependencies": [
+      "lucide-react",
+      "input-otp"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/input-otp.json"
+    ]
+  },
+  {
+    "name": "input",
+    "dependencies": [],
+    "type": "registry:ui",
+    "files": [
+      "public/r/input.json"
+    ]
+  },
+  {
+    "name": "interactive-book",
+    "dependencies": [
+      "framer-motion",
+      "lucide-react"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/interactive-book.json"
+    ]
+  },
+  {
+    "name": "interactive-hover-button",
+    "dependencies": [
+      "lucide-react"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/interactive-hover-button.json"
+    ]
+  },
+  {
+    "name": "item",
+    "dependencies": [
+      "@radix-ui/react-slot"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/item.json"
+    ]
+  },
+  {
+    "name": "kbd",
+    "dependencies": [],
+    "type": "registry:ui",
+    "files": [
+      "public/r/kbd.json"
+    ]
+  },
+  {
+    "name": "label",
+    "dependencies": [
+      "@radix-ui/react-label"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/label.json"
+    ]
+  },
+  {
+    "name": "light-lines",
+    "dependencies": [],
+    "type": "registry:ui",
+    "files": [
+      "public/r/light-lines.json"
+    ]
+  },
+  {
+    "name": "line-hover-link",
+    "dependencies": [],
+    "type": "registry:ui",
+    "files": [
+      "public/r/line-hover-link.json"
+    ]
+  },
+  {
+    "name": "liquid-ocean",
+    "dependencies": [],
+    "type": "registry:ui",
+    "files": [
+      "public/r/liquid-ocean.json"
+    ]
+  },
+  {
+    "name": "liquid-text",
+    "dependencies": [],
+    "type": "registry:ui",
+    "files": [
+      "public/r/liquid-text.json"
+    ]
+  },
+  {
+    "name": "logo-slider",
+    "dependencies": [],
+    "type": "registry:ui",
+    "files": [
+      "public/r/logo-slider.json"
+    ]
+  },
+  {
+    "name": "masked-avatars",
+    "dependencies": [
+      "framer-motion"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/masked-avatars.json"
+    ]
+  },
+  {
+    "name": "menubar",
+    "dependencies": [
+      "lucide-react",
+      "@radix-ui/react-menubar"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/menubar.json"
+    ]
+  },
+  {
+    "name": "navigation-menu",
+    "dependencies": [
+      "lucide-react",
+      "@radix-ui/react-navigation-menu"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/navigation-menu.json"
+    ]
+  },
+  {
+    "name": "pagination",
+    "dependencies": [
+      "lucide-react"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/pagination.json"
+    ]
+  },
+  {
+    "name": "perspective-grid",
+    "dependencies": [],
+    "type": "registry:ui",
+    "files": [
+      "public/r/perspective-grid.json"
+    ]
+  },
+  {
+    "name": "pixelated-image-trail",
+    "dependencies": [],
+    "type": "registry:ui",
+    "files": [
+      "public/r/pixelated-image-trail.json"
+    ]
+  },
+  {
+    "name": "popover",
+    "dependencies": [
+      "@radix-ui/react-popover"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/popover.json"
+    ]
+  },
+  {
+    "name": "progress",
+    "dependencies": [
+      "@radix-ui/react-progress"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/progress.json"
+    ]
+  },
+  {
+    "name": "radio-group",
+    "dependencies": [
+      "lucide-react",
+      "@radix-ui/react-radio-group"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/radio-group.json"
+    ]
+  },
+  {
+    "name": "resizable",
+    "dependencies": [
+      "lucide-react"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/resizable.json"
+    ]
+  },
+  {
+    "name": "scroll-area",
+    "dependencies": [
+      "@radix-ui/react-scroll-area"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/scroll-area.json"
+    ]
+  },
+  {
+    "name": "scroll-effect",
+    "dependencies": [
+      "framer-motion"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/scroll-effect.json"
+    ]
+  },
+  {
+    "name": "select",
+    "dependencies": [
+      "lucide-react",
+      "@radix-ui/react-select"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/select.json"
+    ]
+  },
+  {
+    "name": "separator",
+    "dependencies": [
+      "@radix-ui/react-separator"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/separator.json"
+    ]
+  },
+  {
+    "name": "sheet",
+    "dependencies": [
+      "lucide-react",
+      "@radix-ui/react-dialog"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/sheet.json"
+    ]
+  },
+  {
+    "name": "sidebar",
+    "dependencies": [
+      "lucide-react",
+      "@radix-ui/react-slot"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/sidebar.json"
+    ]
+  },
+  {
+    "name": "skeleton",
+    "dependencies": [],
+    "type": "registry:ui",
+    "files": [
+      "public/r/skeleton.json"
+    ]
+  },
+  {
+    "name": "slider",
+    "dependencies": [
+      "@radix-ui/react-slider"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/slider.json"
+    ]
+  },
+  {
+    "name": "smooth-scroll",
+    "dependencies": [],
+    "type": "registry:ui",
+    "files": [
+      "public/r/smooth-scroll.json"
+    ]
+  },
+  {
+    "name": "social-flip-button",
+    "dependencies": [
+      "framer-motion"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/social-flip-button.json"
+    ]
+  },
+  {
+    "name": "sonner",
+    "dependencies": [
+      "lucide-react",
+      "next-themes",
+      "sonner"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/sonner.json"
+    ]
+  },
+  {
+    "name": "spinner",
+    "dependencies": [
+      "lucide-react"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/spinner.json"
+    ]
+  },
+  {
+    "name": "spotlight-navbar",
+    "dependencies": [
+      "framer-motion"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/spotlight-navbar.json"
+    ]
+  },
+  {
+    "name": "stacked-logos",
+    "dependencies": [],
+    "type": "registry:ui",
+    "files": [
+      "public/r/stacked-logos.json"
+    ]
+  },
+  {
+    "name": "staggered-grid",
+    "dependencies": [
+      "lucide-react"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/staggered-grid.json"
+    ]
+  },
+  {
+    "name": "switch",
+    "dependencies": [
+      "@radix-ui/react-switch"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/switch.json"
+    ]
+  },
+  {
+    "name": "table",
+    "dependencies": [],
+    "type": "registry:ui",
+    "files": [
+      "public/r/table.json"
+    ]
+  },
+  {
+    "name": "tabs",
+    "dependencies": [
+      "@radix-ui/react-tabs"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/tabs.json"
+    ]
+  },
+  {
+    "name": "testimonials-card",
+    "dependencies": [
+      "framer-motion",
+      "lucide-react"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/testimonials-card.json"
+    ]
+  },
+  {
+    "name": "textarea",
+    "dependencies": [],
+    "type": "registry:ui",
+    "files": [
+      "public/r/textarea.json"
+    ]
+  },
+  {
+    "name": "toggle-group",
+    "dependencies": [
+      "@radix-ui/react-toggle-group"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/toggle-group.json"
+    ]
+  },
+  {
+    "name": "toggle",
+    "dependencies": [
+      "@radix-ui/react-toggle"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/toggle.json"
+    ]
+  },
+  {
+    "name": "tooltip",
+    "dependencies": [
+      "@radix-ui/react-tooltip"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/tooltip.json"
+    ]
+  }
+]

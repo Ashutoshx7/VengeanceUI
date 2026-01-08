@@ -24,7 +24,7 @@ interface ManualStepProps {
 // Clean CLI Installation Block
 export function CLIInstall({ componentName, className }: CLIInstallProps) {
     const [copied, setCopied] = React.useState(false);
-    const command = `npx shadcn@latest add https://vengeance-ui.vercel.app/r/${componentName}.json`;
+    const command = `npx shadcn@latest add https://www.vengenceui.com/r/${componentName}.json`;
 
     const copyToClipboard = async () => {
         await navigator.clipboard.writeText(command);

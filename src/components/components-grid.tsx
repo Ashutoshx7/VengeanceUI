@@ -40,10 +40,9 @@ const LiquidText = dynamic(() => import('@/components/ui/liquid-text'), {
     loading: () => <LoadingPlaceholder />
 })
 
-const GradientTilesDemo = dynamic(() => import('@/components/docs/gradient-tiles').then(mod => mod.GradientTilesDemo), {
-    ssr: false,
-    loading: () => <LoadingPlaceholder />
-})
+
+
+
 
 const TestimonialsCardDemo = dynamic(() => import('@/components/docs/testimonials-card').then(mod => mod.TestimonialsCardDemo), {
     ssr: false,
@@ -116,14 +115,8 @@ const components = [
             </div>
         )
     },
-    {
-        title: "Gradient Tiles",
-        description: "Fluted glass effect",
-        category: "Backgrounds",
-        href: "/docs/gradient-tiles",
-        icon: Grid2X2,
-        component: <div className="scale-75"><GradientTilesDemo /></div>
-    },
+
+
     {
         title: "Testimonials Card",
         description: "3D stacked carousel",

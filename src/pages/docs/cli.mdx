@@ -31,3 +31,40 @@ To add the animated button component:
 | `add` | Add a component to your project |
 | `init` | Initialize Vengeance UI in your project |
 | `list` | List all available components |
+
+---
+
+## MCP Server
+
+The shadcn MCP Server allows AI assistants to interact with items from registries. You can browse available components, search for specific ones, and install them directly into your project using natural language.
+
+### Configuration
+
+Add the Vengeance UI registry to your project's `components.json` file.
+
+<CodeBlock 
+  code={`{
+  "registries": {
+    "@vengeance": "https://www.vengenceui.com/r/{name}.json"
+  }
+}`}
+  language="json"
+/>
+
+### Initialization
+
+Add the MCP server to your project:
+
+<CodeBlock 
+  code="npx shadcn@latest mcp init"
+  language="bash"
+/>
+
+### Client Setup
+
+Configure for your AI assistant (e.g., Cursor):
+
+<CodeBlock 
+  code="npx shadcn@latest mcp init --client cursor"
+  language="bash"
+/>
