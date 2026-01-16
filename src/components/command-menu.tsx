@@ -3,7 +3,7 @@
 import * as React from "react"
 import { useRouter } from "next/navigation"
 import { Command as CommandPrimitive } from "cmdk"
-import { Search, Moon, Sun, Laptop, FileText, Home, ArrowRight, Box, Book, Settings } from "lucide-react"
+import { Search, Moon, Sun, Laptop, Home, ArrowRight, Box, Book, Settings } from "lucide-react"
 import { useTheme } from "next-themes"
 
 // All VengeanceUI pages and components
@@ -47,18 +47,25 @@ const NAVIGATION_ITEMS = {
     ],
 }
 
-export function CommandMenu() {
-    const router = useRouter()
+// Context to share the open state
+const CommandMenuContext = React.createContext<{
+    open: boolean
+    setOpen: (open: boolean) => void
+}>({
+    open: false,
+    setOpen: () => { },
+})
+
+// Provider component - adds keyboard listener globally
+export function CommandMenuProvider({ children }: { children: React.ReactNode }) {
     const [open, setOpen] = React.useState(false)
-    const { setTheme } = useTheme()
 
     React.useEffect(() => {
         const down = (e: KeyboardEvent) => {
             if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
                 e.preventDefault()
-                setOpen((open) => !open)
+                setOpen((prev) => !prev)
             }
-
             if (e.key === "Escape") {
                 setOpen(false)
             }
@@ -68,43 +75,49 @@ export function CommandMenu() {
         return () => document.removeEventListener("keydown", down)
     }, [])
 
+    return (
+        <CommandMenuContext.Provider value={{ open, setOpen }}>
+            {children}
+            <CommandMenuDialog />
+        </CommandMenuContext.Provider>
+    )
+}
+
+// The trigger button (for navbar usage)
+export function CommandMenu() {
+    const { setOpen } = React.useContext(CommandMenuContext)
+
+    return (
+        <button
+            onClick={() => setOpen(true)}
+            className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-foreground/70 hover:text-foreground transition-colors rounded-md hover:bg-foreground/5"
+            aria-label="Open command menu"
+        >
+            <Search className="w-4 h-4" />
+            <span className="hidden sm:inline">Search...</span>
+            <kbd className="hidden sm:inline-flex items-center gap-1 px-1.5 py-0.5 text-xs font-mono bg-foreground/10 rounded">
+                <span>⌘</span>
+                <span>K</span>
+            </kbd>
+        </button>
+    )
+}
+
+// The dialog component (rendered by provider)
+function CommandMenuDialog() {
+    const router = useRouter()
+    const { open, setOpen } = React.useContext(CommandMenuContext)
+    const { setTheme } = useTheme()
+
     const runCommand = React.useCallback((command: () => unknown) => {
         setOpen(false)
         command()
-    }, [])
+    }, [setOpen])
 
-    if (!open) {
-        return (
-            <button
-                onClick={() => setOpen(true)}
-                className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-foreground/70 hover:text-foreground transition-colors rounded-md hover:bg-foreground/5"
-                aria-label="Open command menu"
-            >
-                <Search className="w-4 h-4" />
-                <span className="hidden sm:inline">Search documentation...</span>
-                <kbd className="hidden sm:inline-flex items-center gap-1 px-1.5 py-0.5 text-xs font-mono bg-foreground/10 rounded">
-                    <span>⌘</span>
-                    <span>K</span>
-                </kbd>
-            </button>
-        )
-    }
+    if (!open) return null
 
     return (
         <>
-            <button
-                onClick={() => setOpen(true)}
-                className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-foreground/70 hover:text-foreground transition-colors rounded-md hover:bg-foreground/5"
-                aria-label="Open command menu"
-            >
-                <Search className="w-4 h-4" />
-                <span className="hidden sm:inline">Search documentation...</span>
-                <kbd className="hidden sm:inline-flex items-center gap-1 px-1.5 py-0.5 text-xs font-mono bg-foreground/10 rounded">
-                    <span>⌘</span>
-                    <span>K</span>
-                </kbd>
-            </button>
-
             {/* Backdrop */}
             <div
                 className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm"

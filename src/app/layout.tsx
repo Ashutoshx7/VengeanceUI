@@ -3,7 +3,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { Inter_Tight, Pixelify_Sans, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
-import { CommandMenu } from "@/components/command-menu";
+import { CommandMenuProvider } from "@/components/command-menu";
 import Footer from "@/components/mine/landing-page/footer";
 import Navbar from "@/components/mine/landing-page/navbar";
 
@@ -96,9 +96,10 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          <CommandMenu />
-          {children}
-          <Footer />
+          <CommandMenuProvider>
+            {children}
+            <Footer />
+          </CommandMenuProvider>
           <Analytics />
         </ThemeProvider>
       </body>
