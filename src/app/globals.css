@@ -286,10 +286,17 @@ div[data-nextra-sidebar="true"] {
   color: var(--muted-foreground);
 }
 
-/* Vertical Line - DISABLED - Now handled by SidebarHoverIndicator component */
+/* Vertical Line - runs along the left of all items */
 .nextra-sidebar-container a::before,
 .nextra-sidebar-container button:not([aria-label])::before {
-  display: none !important;
+  content: "";
+  position: absolute;
+  left: 8px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background-color: var(--border);
+  transition: background-color 0.3s ease;
 }
 
 /* Active/Hover Indicator Bar - Now handled by SidebarHoverIndicator component */
