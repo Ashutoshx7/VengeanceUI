@@ -6,6 +6,7 @@ import { SmoothScroll } from "@/components/ui/smooth-scroll";
 
 // Critical component - load immediately
 import { HeroSection } from "@/components/mine/landing-page/herosection";
+import { TestimonialSection } from "@/components/mine/landing-page/testimonial-section";
 
 // Heavy components - lazy load for better initial load
 const LandingPageGrid = dynamic(
@@ -57,6 +58,10 @@ const Page = () => {
 
         <div className="px-4 md:px-20">
           <Sec1 />
+        </div>
+
+        <div className="px-4 md:px-20">
+          <TestimonialSection/>
         </div>
 
 
