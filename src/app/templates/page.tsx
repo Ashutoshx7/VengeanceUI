@@ -20,14 +20,14 @@ import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
     title: "Templates",
-    description: "Portfolio templates built with the Vengeance UI design language.",
+    description: "Portfolio and blog templates built with the Vengeance UI design language.",
     alternates: {
         canonical: "/templates",
     },
     openGraph: {
         url: "/templates",
         title: "Templates | Vengeance UI",
-        description: "Portfolio templates built with the Vengeance UI design language.",
+        description: "Portfolio and blog templates built with the Vengeance UI design language.",
     },
 };
 
@@ -111,6 +111,41 @@ const portfolioTemplates: PortfolioTemplate[] = [
             {
                 src: "/templates/portfolio-v1-mobile.png",
                 alt: "Portfolio V1 mobile responsive screenshot",
+                label: "Mobile",
+                className: "object-top",
+            },
+        ],
+    },
+];
+
+const blogTemplates: PortfolioTemplate[] = [
+    {
+        title: "Blog V1",
+        label: "Vengeance UI blog template",
+        description:
+            "A clean editorial blog template with category pages, long-form article layout, and mobile-first reading experience.",
+        accent: "from-cyan-500/30 via-zinc-300/15 to-transparent",
+        status: "Blog 01",
+        stats: ["Categories", "Articles", "Mobile"],
+        tags: ["Next.js", "TypeScript", "Tailwind CSS", "MDX-ready"],
+        liveUrl: "https://vengeance-blog-template.vercel.app/",
+        githubUrl: "https://github.com/FirePheonix/vengeance-ui-blog-template",
+        screenshots: [
+            {
+                src: "/templates/blog-v1-home.png",
+                alt: "Blog V1 homepage screenshot",
+                label: "Homepage",
+                className: "object-top",
+            },
+            {
+                src: "/templates/blog-v1-blogweb.png",
+                alt: "Blog V1 blogweb page screenshot",
+                label: "Blogweb",
+                className: "object-top",
+            },
+            {
+                src: "/templates/blog-v1-mobile.png",
+                alt: "Blog V1 mobile reading layout screenshot",
                 label: "Mobile",
                 className: "object-top",
             },
@@ -284,6 +319,45 @@ export default function TemplatesPage() {
                 </Container>
             </section>
 
+            <section id="blog-templates" className="border-b border-border/70">
+                <Container>
+                    <div className="md:border-x md:border-border/70">
+                        <div className="grid gap-4 border-b border-border/70 px-4 py-8 md:grid-cols-[minmax(0,1fr)_360px] md:gap-8 md:px-8 md:py-12">
+                            <div className="space-y-3">
+                                <Heading variant="medium">One live blog template</Heading>
+                                <SubHeading>
+                                    Blog templates follow the same stacked gallery style as portfolio entries, with live link, source link, and screenshot rail.
+                                </SubHeading>
+                            </div>
+                            <div className="grid grid-cols-3 border border-foreground/10 bg-foreground/[0.02] text-center font-mono text-xs dark:bg-white/[0.02]">
+                                <div className="border-r border-foreground/10 p-3">
+                                    <span className="block text-lg font-semibold text-foreground">1</span>
+                                    Template
+                                </div>
+                                <div className="border-r border-foreground/10 p-3">
+                                    <span className="block text-lg font-semibold text-foreground">3</span>
+                                    Screens
+                                </div>
+                                <div className="p-3">
+                                    <span className="block text-lg font-semibold text-foreground">1</span>
+                                    Repo
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="divide-y">
+                            {blogTemplates.map((template, index) => (
+                                <PortfolioTemplateRow
+                                    key={template.title}
+                                    template={template}
+                                    index={index}
+                                />
+                            ))}
+                        </div>
+                    </div>
+                </Container>
+            </section>
+
             <section>
                 <Container>
                     <div className="grid border-b border-border/70 md:grid-cols-3 md:border-x md:border-border/70">
@@ -410,6 +484,7 @@ function ScreenshotFrame({
                     src={screenshot.src}
                     alt={screenshot.alt}
                     fill
+                    unoptimized
                     sizes={size === "portrait" ? "(min-width: 1024px) 16vw, 80vw" : "(min-width: 1024px) 30vw, 80vw"}
                     className={cn("object-cover", screenshot.className)}
                 />
