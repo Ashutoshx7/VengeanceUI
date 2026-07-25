@@ -18,16 +18,19 @@ import { Button } from "@/components/landing/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
+const templatesPageDescription =
+    "Portfolio and blog templates with live previews, GitHub source links, and multi-screenshot galleries.";
+
 export const metadata: Metadata = {
     title: "Templates",
-    description: "Portfolio and blog templates built with the Vengeance UI design language.",
+    description: templatesPageDescription,
     alternates: {
         canonical: "/templates",
     },
     openGraph: {
         url: "/templates",
         title: "Templates | Vengeance UI",
-        description: "Portfolio and blog templates built with the Vengeance UI design language.",
+        description: templatesPageDescription,
     },
 };
 
@@ -484,7 +487,6 @@ function ScreenshotFrame({
                     src={screenshot.src}
                     alt={screenshot.alt}
                     fill
-                    unoptimized
                     sizes={size === "portrait" ? "(min-width: 1024px) 16vw, 80vw" : "(min-width: 1024px) 30vw, 80vw"}
                     className={cn("object-cover", screenshot.className)}
                 />
