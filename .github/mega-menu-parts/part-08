@@ -1,0 +1,21 @@
+group.links.map((item) => (
+                <MobileMenuItem key={`${group.title}-${item.title}`} item={item} onNavigate={closeMobile} />
+              )),
+            )}
+          </MobileAccordion>
+        </nav>
+
+        <div className="mt-auto grid grid-cols-2 gap-3 pt-6">
+          <NavAction href={loginHref} variant="outline" className="w-full" onClick={closeMobile}>
+            Log in
+          </NavAction>
+          <NavAction href={ctaHref} className="w-full" onClick={closeMobile}>
+            {ctaLabel}
+          </NavAction>
+        </div>
+      </aside>
+    </header>
+  );
+}
+
+export default MegaMenuNavbar;

@@ -1,0 +1,71 @@
+#!/usr/bin/env node
+
+import { mkdir, readFile, readdir, writeFile } from "node:fs/promises";
+import { join, resolve } from "node:path";
+
+const repoRoot = resolve(process.argv[2] ?? process.cwd());
+
+const partsDir = join(repoRoot, ".github/mega-menu-parts");
+const partNames = (await readdir(partsDir)).sort();
+const componentSource = (
+  await Promise.all(partNames.map((name) => readFile(join(partsDir, name), "utf8")))
+).join("");
+
+await mkdir(join(repoRoot, "src/components/ui"), { recursive: true });
+await writeFile(
+  join(repoRoot, "src/components/ui/mega-menu-navbar.tsx"),
+  componentSource,
+  "utf8",
+);
+
+const demoSource = `"use client";
+
+import { MegaMenuNavbar } from "@/components/ui/mega-menu-navbar";
+
+export function MegaMenuNavbarDemo() {
+  return (
+    <div className="relative h-full min-h-[520px] w-full overflow-hidden rounded-lg bg-zinc-50 dark:bg-zinc-950">
+      <MegaMenuNavbar className="absolute inset-x-0 top-0" />
+
+      <div className="mx-auto flex h-full max-w-3xl flex-col items-center justify-center px-6 pt-20 text-center">
+        <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
+          Open each desktop mega-menu or resize the preview to test the mobile drawer.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+export default MegaMenuNavbarDemo;
+`;
+
+await mkdir(join(repoRoot, "src/components/docs"), { recursive: true });
+await writeFile(
+  join(repoRoot, "src/components/docs/mega-menu-navbar-demo.tsx"),
+  demoSource,
+  "utf8",
+);
+
+async function replaceOnce(relativePath, search, replacement) {
+  const path = join(repoRoot, relativePath);
+  const content = await readFile(path, "utf8");
+
+  if (content.includes(replacement.trim())) return;
+  if (!content.includes(search)) {
+    throw new Error(`Could not find insertion point in ${relativePath}`);
+  }
+
+  await writeFile(path, content.replace(search, replacement), "utf8");
+}
+
+await replaceOnce(
+  "src/lib/components-catalog.ts",
+  '      { name: "Notch Navbar", slug: "notch-navbar", description: "Responsive navbar with a sleek cutout notch design", componentName: "notch-navbar" },\n',
+  '      { name: "Notch Navbar", slug: "notch-navbar", description: "Responsive navbar with a sleek cutout notch design", componentName: "notch-navbar" },\n' +
+    '      { name: "Mega Menu Navbar", slug: "mega-menu-navbar", description: "Responsive SaaS navbar with rich dropdowns and a mobile drawer", componentName: "mega-menu-navbar", isNew: true },\n',
+);
+
+await replaceOnce(
+  "src/components/docs/demo-renderer.tsx",
+  '  "notch-navbar": dynamic(() => import("@/components/docs/notch-navbar-demo").then((m) => ({ default: m.NotchNavbarDemo })), { ssr: false, loading: LOADING }),\n',
+  '  "notch-navbar": dynamic(() => import("@/components/docs/notch-navbar-demo").then((m) => ({ default: m

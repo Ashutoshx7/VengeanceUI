@@ -1,0 +1,107 @@
+ssName={cn(
+        "inline-flex h-9 items-center justify-center rounded-md px-4 text-sm font-medium transition-colors",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2",
+        variant === "primary" &&
+          "bg-zinc-900 text-white shadow-sm hover:bg-zinc-800 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200",
+        variant === "ghost" &&
+          "text-zinc-700 hover:bg-zinc-100 hover:text-zinc-950 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-white",
+        variant === "outline" &&
+          "border border-zinc-200 bg-white text-zinc-900 shadow-sm hover:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-100 dark:hover:bg-zinc-800",
+        className,
+      )}
+    >
+      {children}
+    </a>
+  );
+}
+
+function Brand({
+  brandName,
+  brandHref,
+  logo,
+  onNavigate,
+}: {
+  brandName: string;
+  brandHref: string;
+  logo?: React.ReactNode;
+  onNavigate?: () => void;
+}) {
+  return (
+    <a
+      href={brandHref}
+      onClick={onNavigate}
+      className="relative z-10 flex shrink-0 items-center gap-2 text-lg font-bold tracking-tight text-zinc-950 dark:text-zinc-50"
+    >
+      {logo ?? (
+        <span className="flex size-8 items-center justify-center rounded-lg bg-zinc-900 dark:bg-zinc-50">
+          <Blocks className="size-5 text-white dark:text-zinc-900" />
+        </span>
+      )}
+      <span>{brandName}</span>
+    </a>
+  );
+}
+
+function MenuTrigger({
+  id,
+  label,
+  isOpen,
+  onToggle,
+  onOpen,
+}: {
+  id: string;
+  label: string;
+  isOpen: boolean;
+  onToggle: () => void;
+  onOpen: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      aria-expanded={isOpen}
+      aria-controls={id}
+      onClick={onToggle}
+      onFocus={onOpen}
+      className={cn(
+        "flex items-center gap-1 rounded-md px-4 py-2 text-sm font-medium transition-colors",
+        "text-zinc-700 hover:bg-zinc-100 hover:text-zinc-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400",
+        "dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-white",
+        isOpen && "bg-zinc-100 text-zinc-950 dark:bg-zinc-800 dark:text-white",
+      )}
+    >
+      {label}
+      <ChevronDown
+        className={cn(
+          "size-3.5 opacity-60 transition-transform duration-200",
+          isOpen && "rotate-180",
+        )}
+      />
+    </button>
+  );
+}
+
+function FeatureGrid({ items }: { items: MegaMenuItem[] }) {
+  return (
+    <div className="grid grid-cols-2 gap-2">
+      {items.map((item) => {
+        const Icon = item.icon;
+
+        return (
+          <a
+            key={item.title}
+            href={item.href}
+            className={cn(
+              "group/item flex items-start gap-3 rounded-lg p-3 transition-colors",
+              "hover:bg-zinc-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-300",
+              "dark:hover:bg-zinc-900 dark:focus-visible:ring-zinc-700",
+            )}
+          >
+            {Icon ? (
+              <span className="flex size-10 shrink-0 items-center justify-center rounded-md border border-zinc-200 bg-white shadow-sm transition-colors group-hover/item:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-950 dark:group-hover/item:border-zinc-700">
+                <Icon className={cn("size-5", item.iconClassName ?? "text-zinc-700 dark:text-zinc-300")} />
+              </span>
+            ) : null}
+
+            <span className="min-w-0">
+              <span className="flex items-center gap-2">
+                <span className="text-sm font-semibold text-zinc-950 dark:t
