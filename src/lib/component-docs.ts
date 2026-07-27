@@ -196,8 +196,8 @@ export function StaggerTextDemo() {
   )
 }`,
     props: [
-      { prop: "children", type: "string", defaultValue: "-", description: "The text content to animate." },
-      { prop: "divideBy", type: "'word' | 'letter'", defaultValue: "-", description: "Specifies whether to split and animate the text by words or by individual letters." },
+      { prop: "children", type: "React.ReactNode", defaultValue: "-", description: "The text content to animate." },
+      { prop: "divideBy", type: "'word' | 'letter'", defaultValue: "'word'", description: "Specifies whether to split and animate the text by words or by individual letters." },
       { prop: "delay", type: "number", defaultValue: "0", description: "Initial delay before the animation starts in seconds." },
     ],
   },

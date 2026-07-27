@@ -27,12 +27,22 @@ const TextAnimation = ({
   delay = 0,
   divideBy = "word",
 }: {
-  children: string;
+  children: React.ReactNode;
   delay?: number;
-  divideBy: "word" | "letter";
+  divideBy?: "word" | "letter";
 }) => {
+  if (typeof children !== "string") {
+    if (typeof children === "number" || typeof children === "boolean") {
+      children = String(children);
+    } else {
+      console.warn("TextAnimation only supports plain text/string children.");
+      return <>{children}</>;
+    }
+  }
+
+  const text = children as string;
   const parts =
-    divideBy === "letter" ? children.split("") : children.split(" ");
+    divideBy === "letter" ? text.split("") : text.split(" ");
   const stagger = divideBy === "letter" ? 0.02 : 0.05;
 
   return (
