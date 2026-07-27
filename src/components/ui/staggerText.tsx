@@ -54,22 +54,20 @@ const TextAnimation = ({
       style={{ display: "inline-block" }}
     >
       {parts.map((part, i) => (
-        <span
-          key={i}
-          className="inline-block overflow-hidden relative"
-          style={{ verticalAlign: "top" }}
-        >
-          <motion.span
-            variants={item}
-            className="inline-block will-change-transform"
+        <React.Fragment key={i}>
+          {divideBy === "word" && i > 0 && " "}
+          <span
+            className="inline-block overflow-hidden relative"
+            style={{ verticalAlign: "top" }}
           >
-            {divideBy === "letter"
-              ? part === " "
-                ? "\u00A0"
-                : part
-              : part + "\u00A0"}
-          </motion.span>
-        </span>
+            <motion.span
+              variants={item}
+              className="inline-block will-change-transform"
+            >
+              {divideBy === "letter" && part === " " ? "\u00A0" : part}
+            </motion.span>
+          </span>
+        </React.Fragment>
       ))}
     </motion.span>
   );
