@@ -36,6 +36,7 @@ const DEMO_COMPONENTS: Record<string, React.ComponentType> = {
   "liquid-text": dynamic(() => import("@/components/docs/liquid-text").then((m) => ({ default: m.LiquidTextDemo })), { ssr: false, loading: LOADING }),
   "liquid-metal": dynamic(() => import("@/components/docs/liquid-metal").then((m) => ({ default: m.LiquidMetalPreview })), { ssr: false, loading: LOADING }),
   "ascii-glitch-ripple": dynamic(() => import("@/components/docs/ascii-glitch-ripple-demo").then((m) => ({ default: m.AsciiGlitchRippleDemo })), { ssr: false, loading: LOADING }),
+  "stagger-text": dynamic(() => import("@/components/docs/stagger-text-demo").then((m) => ({ default: m.StaggerTextDemo })), { ssr: false, loading: LOADING }),
 
   "reveal-loader": dynamic(() => import("@/components/docs/reveal-loader-demo").then((m) => ({ default: m.RevealLoaderDemo })), { ssr: false, loading: LOADING }),
   "social-flip-button": dynamic(() => import("@/components/docs/social-flip-button").then((m) => ({ default: m.SocialFlipButtonDemo })), { ssr: false, loading: LOADING }),

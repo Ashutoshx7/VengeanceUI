@@ -178,7 +178,27 @@ export function AsciiGlitchRippleDemo() {
       { prop: "dur", type: "number", defaultValue: "1000", description: "Duration of the scramble animation wave in milliseconds." },
       { prop: "chars", type: "string", defaultValue: "'.,·-─~+:;=*π\"\"┐┌┘┴┬╗╔╝╚╬╠╣╩╦║░▒▓█▄▀▌▐■!?&#$@0123456789*'", description: "Character set used for the glitch scrambling effect." },
       { prop: "preserveSpaces", type: "boolean", defaultValue: "true", description: "Whether to keep original spaces unscrambled." },
-      { prop: "spread", type: "number", defaultValue: "1.0", description: "Spread factor controlling the speed and width of the ripple wave." },
+      { prop: "spread", type: "number", defaultValue: "1.2", description: "The width/dispersion of the transition wave." },
+    ],
+  },
+
+  "stagger-text": {
+    dependencies: "npm install framer-motion",
+    usageCode: `import TextAnimation from "@/components/ui/staggerText"
+
+export function StaggerTextDemo() {
+  return (
+    <div className="text-xl font-medium">
+      <TextAnimation divideBy="word" delay={0.2}>
+        This text animates word by word.
+      </TextAnimation>
+    </div>
+  )
+}`,
+    props: [
+      { prop: "children", type: "string", defaultValue: "-", description: "The text content to animate." },
+      { prop: "divideBy", type: "'word' | 'letter'", defaultValue: "-", description: "Specifies whether to split and animate the text by words or by individual letters." },
+      { prop: "delay", type: "number", defaultValue: "0", description: "Initial delay before the animation starts in seconds." },
     ],
   },
 

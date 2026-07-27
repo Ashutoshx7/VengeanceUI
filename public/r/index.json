@@ -980,6 +980,16 @@
     ]
   },
   {
+    "name": "stagger-text",
+    "dependencies": [
+      "framer-motion"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/stagger-text.json"
+    ]
+  },
+  {
     "name": "staggered-grid",
     "dependencies": [
       "gsap"
