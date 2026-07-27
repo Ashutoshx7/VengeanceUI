@@ -79,7 +79,7 @@ export function CLICommand({ componentName, className }: CLICommandProps) {
                     </>
                 )}
                 {" "}
-                <span className="text-[#4a7f94] dark:text-[#8bb8d0]">shadcn@latest</span>
+                <span className="text-cyan-800 dark:text-[#8bb8d0]">shadcn@latest</span>
                 {" "}
                 <span className="text-[#71717a] dark:text-[#a1a1aa]">add</span>
                 {" "}
