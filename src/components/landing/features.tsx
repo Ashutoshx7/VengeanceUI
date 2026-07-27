@@ -9,7 +9,7 @@ export default function Features() {
         <Container>
             <div className="md:border-x border-b overflow-hidden">
                 <div className="flex-1 flex flex-col gap-4 md:gap-8 justify-center px-4 md:px-8 py-8 md:py-16 lg:py-24">
-                    <Heading variant="big" className="text-center">Why Vengence?</Heading>
+                    <Heading variant="big" className="text-center">Why Vengeance?</Heading>
                     <SubHeading variant="big" className="text-center mx-auto w-full max-w-2xl">
                         Vengeance UI is built to explore unique interaction patterns from displacement hover effects to animated tooltips and scroll-driven components.
                     </SubHeading>
