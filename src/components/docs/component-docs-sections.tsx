@@ -177,64 +177,68 @@ export function ComponentDocsSections({ componentName, slug, sourceCode }: Compo
         <section id="credits" className="scroll-mt-24">
           <h2 className="text-2xl font-bold tracking-tight text-neutral-900 dark:text-zinc-100 mb-6">Credits</h2>
           
-          <div className="relative overflow-hidden rounded-xl border border-neutral-200 dark:border-[#222] bg-neutral-50/50 dark:bg-[#07080a] p-6">
-            {/* Subtle ambient mesh background glow */}
-            <div className="absolute right-0 top-0 -z-10 size-48 bg-radial from-neutral-200/40 via-transparent to-transparent dark:from-zinc-800/5 pointer-events-none" />
-            
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
-              <div className="space-y-2">
-                <div className="inline-flex items-center gap-1.5 rounded-md bg-neutral-100 dark:bg-zinc-800/80 px-2.5 py-0.5 font-mono text-[11px] font-medium text-neutral-600 dark:text-zinc-400 border border-neutral-200/50 dark:border-zinc-700/50">
-                  contributor
-                </div>
-                <h3 className="font-orbitron text-xl font-bold tracking-tight text-neutral-900 dark:text-white">
-                  {docs.credits.author}
-                </h3>
-                <p className="text-sm text-neutral-500 dark:text-zinc-400 max-w-md leading-relaxed">
-                  Designed and contributed the interactive 3D Solar System component to the Vengeance UI catalog.
-                </p>
-              </div>
+          <div className="flex flex-col gap-4">
+            {(Array.isArray(docs.credits) ? docs.credits : [docs.credits]).map((credit, idx) => (
+              <div key={idx} className="relative overflow-hidden rounded-xl border border-neutral-200 dark:border-[#222] bg-neutral-50/50 dark:bg-[#07080a] p-6">
+                {/* Subtle ambient mesh background glow */}
+                <div className="absolute right-0 top-0 -z-10 size-48 bg-radial from-neutral-200/40 via-transparent to-transparent dark:from-zinc-800/5 pointer-events-none" />
+                
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+                  <div className="space-y-2">
+                    <div className="inline-flex items-center gap-1.5 rounded-md bg-neutral-100 dark:bg-zinc-800/80 px-2.5 py-0.5 font-mono text-[11px] font-medium text-neutral-600 dark:text-zinc-400 border border-neutral-200/50 dark:border-zinc-700/50">
+                      {credit.role || "contributor"}
+                    </div>
+                    <h3 className="font-orbitron text-xl font-bold tracking-tight text-neutral-900 dark:text-white">
+                      {credit.author}
+                    </h3>
+                    <p className="text-sm text-neutral-500 dark:text-zinc-400 max-w-md leading-relaxed">
+                      {credit.description || "Designed and contributed this component to the Vengeance UI catalog."}
+                    </p>
+                  </div>
 
-              <div className="flex items-center gap-3">
-                {docs.credits.github && (
-                  <a
-                    href={docs.credits.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group inline-flex items-center gap-2 rounded-lg border border-neutral-200 dark:border-[#222] bg-white dark:bg-[#0b0c10] px-4 py-2.5 text-xs font-semibold text-neutral-700 dark:text-zinc-300 transition-all hover:bg-neutral-50 dark:hover:bg-[#12141a] hover:text-neutral-900 dark:hover:text-white"
-                  >
-                    <svg
-                      className="size-4 text-neutral-900 dark:text-zinc-100 transition-transform group-hover:scale-110"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.06c3-.36 6-2 6-5.24a4.31 4.31 0 0 0-1.2-3.08 4 4 0 0 0-.08-3.2s-1-.3-3.3 1.2a11.5 11.5 0 0 0-6 0C5.3 2 4.3 2 4.3 2a4 4 0 0 0-.08 3.2A4.31 4.31 0 0 0 3 8.24c0 3.24 3 4.88 6 5.24A4.8 4.8 0 0 0 8 18v4" />
-                    </svg>
-                    GitHub
-                  </a>
-                )}
-                {docs.credits.linkedin && (
-                  <a
-                    href={docs.credits.linkedin}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group inline-flex items-center gap-2 rounded-lg border border-[#0A66C2]/20 dark:border-[#0A66C2]/30 bg-white dark:bg-[#0b0c10] px-4 py-2.5 text-xs font-semibold text-neutral-700 dark:text-zinc-300 transition-all hover:bg-[#0A66C2]/5 dark:hover:bg-[#0A66C2]/10 hover:border-[#0A66C2]/50 hover:text-neutral-900 dark:hover:text-white"
-                  >
-                    <svg
-                      className="size-4 text-[#0A66C2] transition-transform group-hover:scale-110"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                    >
-                      <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.779-1.75-1.75s.784-1.75 1.75-1.75 1.75.779 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                    </svg>
-                    LinkedIn
-                  </a>
-                )}
+                  <div className="flex items-center gap-3">
+                    {credit.github && (
+                      <a
+                        href={credit.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group inline-flex items-center gap-2 rounded-lg border border-neutral-200 dark:border-[#222] bg-white dark:bg-[#0b0c10] px-4 py-2.5 text-xs font-semibold text-neutral-700 dark:text-zinc-300 transition-all hover:bg-neutral-50 dark:hover:bg-[#12141a] hover:text-neutral-900 dark:hover:text-white"
+                      >
+                        <svg
+                          className="size-4 text-neutral-900 dark:text-zinc-100 transition-transform group-hover:scale-110"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.06c3-.36 6-2 6-5.24a4.31 4.31 0 0 0-1.2-3.08 4 4 0 0 0-.08-3.2s-1-.3-3.3 1.2a11.5 11.5 0 0 0-6 0C5.3 2 4.3 2 4.3 2a4 4 0 0 0-.08 3.2A4.31 4.31 0 0 0 3 8.24c0 3.24 3 4.88 6 5.24A4.8 4.8 0 0 0 8 18v4" />
+                        </svg>
+                        GitHub
+                      </a>
+                    )}
+                    {credit.linkedin && (
+                      <a
+                        href={credit.linkedin}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group inline-flex items-center gap-2 rounded-lg border border-[#0A66C2]/20 dark:border-[#0A66C2]/30 bg-white dark:bg-[#0b0c10] px-4 py-2.5 text-xs font-semibold text-neutral-700 dark:text-zinc-300 transition-all hover:bg-[#0A66C2]/5 dark:hover:bg-[#0A66C2]/10 hover:border-[#0A66C2]/50 hover:text-neutral-900 dark:hover:text-white"
+                      >
+                        <svg
+                          className="size-4 text-[#0A66C2] transition-transform group-hover:scale-110"
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                        >
+                          <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.779-1.75-1.75s.784-1.75 1.75-1.75 1.75.779 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                        </svg>
+                        LinkedIn
+                      </a>
+                    )}
+                  </div>
+                </div>
               </div>
-            </div>
+            ))}
           </div>
         </section>
       )}

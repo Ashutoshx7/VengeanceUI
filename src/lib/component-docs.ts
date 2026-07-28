@@ -1,5 +1,14 @@
 import type { PropDef } from "@/components/docs/props-table";
 
+export interface ComponentCredit {
+  author: string;
+  github?: string;
+  twitter?: string;
+  linkedin?: string;
+  description?: string;
+  role?: string;
+}
+
 export interface ComponentDocData {
   /** npm dependencies to install (e.g. "npm install framer-motion clsx tailwind-merge") */
   dependencies: string;
@@ -14,12 +23,7 @@ export interface ComponentDocData {
   /** Additional props sections (e.g. nested configs like metalConfig) */
   additionalPropSections?: { title: string; data: PropDef[] }[];
   /** Optional credit section for the component author */
-  credits?: {
-    author: string;
-    github?: string;
-    twitter?: string;
-    linkedin?: string;
-  };
+  credits?: ComponentCredit | ComponentCredit[];
 }
 
 /**
@@ -178,7 +182,27 @@ export function AsciiGlitchRippleDemo() {
       { prop: "dur", type: "number", defaultValue: "1000", description: "Duration of the scramble animation wave in milliseconds." },
       { prop: "chars", type: "string", defaultValue: "'.,·-─~+:;=*π\"\"┐┌┘┴┬╗╔╝╚╬╠╣╩╦║░▒▓█▄▀▌▐■!?&#$@0123456789*'", description: "Character set used for the glitch scrambling effect." },
       { prop: "preserveSpaces", type: "boolean", defaultValue: "true", description: "Whether to keep original spaces unscrambled." },
-      { prop: "spread", type: "number", defaultValue: "1.0", description: "Spread factor controlling the speed and width of the ripple wave." },
+      { prop: "spread", type: "number", defaultValue: "1.2", description: "The width/dispersion of the transition wave." },
+    ],
+  },
+
+  "stagger-text": {
+    dependencies: "npm install framer-motion",
+    usageCode: `import TextAnimation from "@/components/ui/staggerText"
+
+export function StaggerTextDemo() {
+  return (
+    <div className="text-xl font-medium">
+      <TextAnimation divideBy="word" delay={0.2}>
+        This text animates word by word.
+      </TextAnimation>
+    </div>
+  )
+}`,
+    props: [
+      { prop: "children", type: "React.ReactNode", defaultValue: "-", description: "The text content to animate." },
+      { prop: "divideBy", type: "'word' | 'letter'", defaultValue: "'word'", description: "Specifies whether to split and animate the text by words or by individual letters." },
+      { prop: "delay", type: "number", defaultValue: "0", description: "Initial delay before the animation starts in seconds." },
     ],
   },
 
@@ -1938,11 +1962,20 @@ export function SolarSystemDemo() {
         ]
       }
     ],
-    credits: {
-      author: "Siddh2024",
-      github: "https://github.com/Siddh2024",
-      linkedin: "https://www.linkedin.com/in/siddh-sharma-b0164430b/"
-    }
+    credits: [
+      {
+        author: "Siddh2024",
+        github: "https://github.com/Siddh2024",
+        linkedin: "https://www.linkedin.com/in/siddh-sharma-b0164430b/",
+        description: "Designed and contributed the interactive 3D Solar System component to the Vengeance UI catalog."
+      },
+      {
+        author: "Antigravity",
+        role: "AI assistant",
+        github: "https://github.com/google-gemini",
+        description: "AI coding assistant designed by Google DeepMind. Helped design, refine, and polish components for Vengeance UI."
+      }
+    ]
   },
 
   "mega-menu-navbar": {

@@ -1,0 +1,16 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "stagger-text",
+  "type": "registry:ui",
+  "dependencies": [
+    "framer-motion"
+  ],
+  "files": [
+    {
+      "path": "components/ui/staggerText.tsx",
+      "content": "'use client'\nimport React from \"react\";\nimport { motion } from 'framer-motion'\n\nconst EASE = [0.22, 1, 0.36, 1] as const;\n\nconst container = (stagger: number, delay: number) => ({\n  hidden: {},\n  show: {\n    transition: {\n      staggerChildren: stagger,\n      delayChildren: delay,\n    },\n  },\n});\n\nconst item = {\n  hidden: { y: \"110%\" },\n  show: {\n    y: \"0%\",\n    transition: { duration: 0.6, ease: EASE },\n  },\n};\n\nconst TextAnimation = ({\n  children,\n  delay = 0,\n  divideBy = \"word\",\n}: {\n  children: React.ReactNode;\n  delay?: number;\n  divideBy?: \"word\" | \"letter\";\n}) => {\n  if (typeof children !== \"string\") {\n    if (typeof children === \"number\" || typeof children === \"boolean\") {\n      children = String(children);\n    } else {\n      console.warn(\"TextAnimation only supports plain text/string children.\");\n      return <>{children}</>;\n    }\n  }\n\n  const text = children as string;\n  const parts =\n    divideBy === \"letter\" ? text.split(\"\") : text.split(\" \");\n  const stagger = divideBy === \"letter\" ? 0.02 : 0.05;\n\n  return (\n    <motion.span\n      variants={container(stagger, delay)}\n      initial=\"hidden\"\n      whileInView=\"show\"\n      viewport={{ once: true }}\n      style={{ display: \"inline-block\" }}\n    >\n      {parts.map((part, i) => (\n        <span\n          key={i}\n          className=\"inline-block overflow-hidden relative\"\n          style={{ verticalAlign: \"top\" }}\n        >\n          <motion.span\n            variants={item}\n            className=\"inline-block will-change-transform\"\n          >\n            {divideBy === \"letter\"\n              ? part === \" \"\n                ? \"\\u00A0\"\n                : part\n              : part + \"\\u00A0\"}\n          </motion.span>\n        </span>\n      ))}\n    </motion.span>\n  );\n};\n\nexport default TextAnimation;\n",
+      "type": "registry:ui",
+      "target": "components/ui/staggerText.tsx"
+    }
+  ]
+}

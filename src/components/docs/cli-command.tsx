@@ -3,7 +3,6 @@
 import { Check, Copy } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
-import { useTheme } from "next-themes";
 import React from "react";
 import {
     getRegistryItemUrl,
@@ -57,7 +56,6 @@ const packageManagerConfig: Record<PackageManager, { icon: React.ReactNode; labe
 export function CLICommand({ componentName, className }: CLICommandProps) {
     const [activeTab, setActiveTab] = React.useState<PackageManager>("npm");
     const [copied, setCopied] = React.useState(false);
-    const { resolvedTheme } = useTheme();
 
     const copyToClipboard = async () => {
         await navigator.clipboard.writeText(getShadcnAddCommand(componentName, activeTab));
@@ -69,31 +67,23 @@ export function CLICommand({ componentName, className }: CLICommandProps) {
     const renderHighlightedCommand = () => {
         const command = PACKAGE_MANAGER_EXECUTORS[activeTab];
         const parts = command.split(" ");
-        const isDark = resolvedTheme === "dark";
         const registryUrl = getRegistryItemUrl(componentName);
-
-        const colors = {
-            keyword: isDark ? "#a0a0cc" : "#6b6b99",
-            pkg: isDark ? "#8bb8d0" : "#4a7f94",
-            sub: isDark ? "#a1a1aa" : "#71717a",
-            str: isDark ? "#c9a87c" : "#8a6d3b",
-        };
 
         return (
             <code className="text-sm font-mono leading-relaxed">
-                <span style={{ color: colors.keyword }}>{parts[0]}</span>
+                <span className="text-[#6b6b99] dark:text-[#a0a0cc]">{parts[0]}</span>
                 {parts[1] && (
                     <>
                         {" "}
-                        <span style={{ color: colors.keyword }}>{parts[1]}</span>
+                        <span className="text-[#6b6b99] dark:text-[#a0a0cc]">{parts[1]}</span>
                     </>
                 )}
                 {" "}
-                <span style={{ color: colors.pkg }}>shadcn@latest</span>
+                <span className="text-cyan-800 dark:text-[#8bb8d0]">shadcn@latest</span>
                 {" "}
-                <span style={{ color: colors.sub }}>add</span>
+                <span className="text-[#71717a] dark:text-[#a1a1aa]">add</span>
                 {" "}
-                <span style={{ color: colors.str }}>{registryUrl}</span>
+                <span className="text-[#8a6d3b] dark:text-[#c9a87c]">{registryUrl}</span>
             </code>
         );
     };
