@@ -13,26 +13,6 @@
 ---
 
 <p align="center">
-  <strong>Community Token CA</strong>
-</p>
-
-<p align="center">
-  <code>C5x6c7mJsJrw23JeMF1hfZvre4gQaA5JNSSLwnjGpump</code>
-</p>
-
-<p align="center">
-  <a href="https://dexscreener.com/solana/dypltbkb3c5c6worztaba4dghhjz7p86zvftdebvt5db">
-    <strong>View on DEX Screener</strong>
-  </a>
-</p>
-
-<p align="center">
-  <sub>Always verify the CA from official VengeanceUI sources before interacting with it.</sub>
-</p>
-
----
-
-<p align="center">
   <a href="https://github.com/Ashutoshx7/VengeanceUI/stargazers">
     <img src="https://img.shields.io/github/stars/Ashutoshx7/VengeanceUI?style=social" alt="GitHub stars" />
   </a>
@@ -175,6 +155,12 @@ If you want to improve an existing component, add a new component, fix bugs, or 
 If you like VengeanceUI, consider giving the repository a star.
 
 It helps the project grow and reach more builders.
+
+---
+
+## License
+
+VengeanceUI is released under the [MIT License](LICENSE).
 
 <p align="center">
   <strong>Built by <a href="https://github.com/Ashutoshx7">Ashutosh</a></strong>
