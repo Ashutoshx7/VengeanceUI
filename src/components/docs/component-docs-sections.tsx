@@ -93,6 +93,74 @@ const InstallationManual = memo(function InstallationManual({
   );
 });
 
+interface SocialLinkProps {
+  href: string;
+  platform: "github" | "linkedin" | "twitter";
+  author: string;
+}
+
+const SocialLink = memo(function SocialLink({ href, platform, author }: SocialLinkProps) {
+  const isLinkedIn = platform === "linkedin";
+  const label = platform === "github" ? "GitHub" : platform === "linkedin" ? "LinkedIn" : "X";
+  const ariaLabel = `View ${author}'s ${platform === "twitter" ? "Twitter" : label} profile`;
+
+  const classes = cn(
+    "group inline-flex items-center gap-2 rounded-lg bg-white dark:bg-[#0b0c10] px-4 py-2.5 text-xs font-semibold text-neutral-700 dark:text-zinc-300 transition-all",
+    isLinkedIn
+      ? "border border-[#0A66C2]/20 dark:border-[#0A66C2]/30 hover:bg-[#0A66C2]/5 dark:hover:bg-[#0A66C2]/10 hover:border-[#0A66C2]/50 hover:text-neutral-900 dark:hover:text-white"
+      : "border border-neutral-200 dark:border-[#222] hover:bg-neutral-50 dark:hover:bg-[#12141a] hover:text-neutral-900 dark:hover:text-white"
+  );
+
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={classes}
+      aria-label={ariaLabel}
+    >
+      {platform === "github" && (
+        <svg
+          className="size-4 text-neutral-900 dark:text-zinc-100 transition-transform group-hover:scale-110"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.06c3-.36 6-2 6-5.24a4.31 4.31 0 0 0-1.2-3.08 4 4 0 0 0-.08-3.2s-1-.3-3.3 1.2a11.5 11.5 0 0 0-6 0C5.3 2 4.3 2 4.3 2a4 4 0 0 0-.08 3.2A4.31 4.31 0 0 0 3 8.24c0 3.24 3 4.88 6 5.24A4.8 4.8 0 0 0 8 18v4" />
+        </svg>
+      )}
+      {platform === "twitter" && (
+        <svg
+          className="size-4 text-neutral-900 dark:text-zinc-100 transition-transform group-hover:scale-110"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+        </svg>
+      )}
+      {platform === "linkedin" && (
+        <svg
+          className="size-4 text-[#0A66C2] transition-transform group-hover:scale-110"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.779-1.75-1.75s.784-1.75 1.75-1.75 1.75.779 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+        </svg>
+      )}
+      {label}
+    </a>
+  );
+});
+
 export function ComponentDocsSections({ componentName, slug, sourceCode }: ComponentDocsSectionsProps) {
   const docs = COMPONENT_DOCS[slug] || COMPONENT_DOCS[componentName];
   const [installTab, setInstallTab] = useState<"cli" | "manual">("cli");
@@ -198,59 +266,25 @@ export function ComponentDocsSections({ componentName, slug, sourceCode }: Compo
 
                   <div className="flex items-center gap-3">
                     {credit.github && (
-                      <a
+                      <SocialLink
                         href={credit.github}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="group inline-flex items-center gap-2 rounded-lg border border-neutral-200 dark:border-[#222] bg-white dark:bg-[#0b0c10] px-4 py-2.5 text-xs font-semibold text-neutral-700 dark:text-zinc-300 transition-all hover:bg-neutral-50 dark:hover:bg-[#12141a] hover:text-neutral-900 dark:hover:text-white"
-                      >
-                        <svg
-                          className="size-4 text-neutral-900 dark:text-zinc-100 transition-transform group-hover:scale-110"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        >
-                          <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.06c3-.36 6-2 6-5.24a4.31 4.31 0 0 0-1.2-3.08 4 4 0 0 0-.08-3.2s-1-.3-3.3 1.2a11.5 11.5 0 0 0-6 0C5.3 2 4.3 2 4.3 2a4 4 0 0 0-.08 3.2A4.31 4.31 0 0 0 3 8.24c0 3.24 3 4.88 6 5.24A4.8 4.8 0 0 0 8 18v4" />
-                        </svg>
-                        GitHub
-                      </a>
+                        platform="github"
+                        author={credit.author}
+                      />
                     )}
                     {credit.twitter && (
-                      <a
+                      <SocialLink
                         href={credit.twitter}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="group inline-flex items-center gap-2 rounded-lg border border-neutral-200 dark:border-[#222] bg-white dark:bg-[#0b0c10] px-4 py-2.5 text-xs font-semibold text-neutral-700 dark:text-zinc-300 transition-all hover:bg-neutral-50 dark:hover:bg-[#12141a] hover:text-neutral-900 dark:hover:text-white"
-                      >
-                        <svg
-                          className="size-4 text-neutral-900 dark:text-zinc-100 transition-transform group-hover:scale-110"
-                          viewBox="0 0 24 24"
-                          fill="currentColor"
-                        >
-                          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                        </svg>
-                        X
-                      </a>
+                        platform="twitter"
+                        author={credit.author}
+                      />
                     )}
                     {credit.linkedin && (
-                      <a
+                      <SocialLink
                         href={credit.linkedin}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="group inline-flex items-center gap-2 rounded-lg border border-[#0A66C2]/20 dark:border-[#0A66C2]/30 bg-white dark:bg-[#0b0c10] px-4 py-2.5 text-xs font-semibold text-neutral-700 dark:text-zinc-300 transition-all hover:bg-[#0A66C2]/5 dark:hover:bg-[#0A66C2]/10 hover:border-[#0A66C2]/50 hover:text-neutral-900 dark:hover:text-white"
-                      >
-                        <svg
-                          className="size-4 text-[#0A66C2] transition-transform group-hover:scale-110"
-                          viewBox="0 0 24 24"
-                          fill="currentColor"
-                        >
-                          <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.779-1.75-1.75s.784-1.75 1.75-1.75 1.75.779 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                        </svg>
-                        LinkedIn
-                      </a>
+                        platform="linkedin"
+                        author={credit.author}
+                      />
                     )}
                   </div>
                 </div>
