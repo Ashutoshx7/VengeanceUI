@@ -1959,25 +1959,26 @@ export function SolarSystemDemo() {
 export function MegaMenuNavbarDemo() {
   return (
     <MegaMenuNavbar
-      brandName="Northstar"
-      pricingHref="/pricing"
-      loginHref="/login"
-      ctaHref="/signup"
-      ctaLabel="Start free"
+      brandName="VengeanceUI"
+      brandHref="/"
+      pricingHref="/templates"
+      loginHref="/docs"
+      ctaHref="/components"
+      ctaLabel="Browse components"
     />
   )
 }`,
     props: [
-      { prop: "brandName", type: "string", defaultValue: "'AcmeCorp'", description: "Brand text displayed beside the logo." },
-      { prop: "brandHref", type: "string", defaultValue: "'#'", description: "Destination used by the brand link." },
-      { prop: "logo", type: "React.ReactNode", defaultValue: "Blocks icon", description: "Optional custom logo rendered before the brand name." },
+      { prop: "brandName", type: "string", defaultValue: "'VengeanceUI'", description: "Brand text displayed beside the logo." },
+      { prop: "brandHref", type: "string", defaultValue: "'/'", description: "Destination used by the brand link." },
+      { prop: "logo", type: "React.ReactNode", defaultValue: "VengeanceUI logo", description: "Optional custom logo rendered before the brand name." },
       { prop: "features", type: "MegaMenuItem[]", defaultValue: "Sample feature set", description: "Items shown in the two-column Features mega-menu." },
       { prop: "useCases", type: "MegaMenuItem[]", defaultValue: "Sample use cases", description: "Items shown in the Use Cases dropdown." },
       { prop: "resourceGroups", type: "MegaMenuResourceGroup[]", defaultValue: "Sample groups", description: "Grouped links shown in the Resources mega-menu and mobile accordion." },
-      { prop: "pricingHref", type: "string", defaultValue: "'#'", description: "Destination of the Pricing link." },
-      { prop: "loginHref", type: "string", defaultValue: "'#'", description: "Destination of the login action." },
-      { prop: "ctaHref", type: "string", defaultValue: "'#'", description: "Destination of the primary call to action." },
-      { prop: "ctaLabel", type: "string", defaultValue: "'Get Started'", description: "Text shown in the primary call to action." },
+      { prop: "pricingHref", type: "string", defaultValue: "'/templates'", description: "Destination of the Templates link." },
+      { prop: "loginHref", type: "string", defaultValue: "'/docs'", description: "Destination of the documentation action." },
+      { prop: "ctaHref", type: "string", defaultValue: "'/components'", description: "Destination of the primary call to action." },
+      { prop: "ctaLabel", type: "string", defaultValue: "'Browse components'", description: "Text shown in the primary call to action." },
       { prop: "className", type: "string", defaultValue: "-", description: "Additional classes for the root header." },
     ],
     additionalPropSections: [

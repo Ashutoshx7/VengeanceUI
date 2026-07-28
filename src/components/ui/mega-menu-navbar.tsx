@@ -3,7 +3,6 @@
 import * as React from "react";
 import {
   BarChart3,
-  Blocks,
   BookOpen,
   Briefcase,
   Building2,
@@ -24,6 +23,7 @@ import {
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import LogoIcon from "@/assets/logo/logo-icon";
 
 export interface MegaMenuItem {
   title: string;
@@ -58,86 +58,80 @@ type MobileSection = Exclude<DesktopMenu, null>;
 
 const DEFAULT_FEATURES: MegaMenuItem[] = [
   {
-    title: "AI Automation",
-    description: "Automate repetitive workflows with an intelligent execution layer.",
-    href: "#",
+    title: "Components",
+    description: "Polished interface elements ready to copy, customize, and ship.",
+    href: "/components",
     icon: Sparkles,
-    iconClassName: "text-blue-500",
     badge: "New",
   },
   {
-    title: "Real-time Analytics",
-    description: "Turn live product activity into clear, actionable insights.",
-    href: "#",
+    title: "Blocks",
+    description: "Complete, flexible sections for building pages with less effort.",
+    href: "/blocks",
     icon: BarChart3,
-    iconClassName: "text-emerald-500",
   },
   {
-    title: "Workflow Builder",
-    description: "Compose multi-step automations with a visual builder.",
-    href: "#",
+    title: "Motion",
+    description: "Considered interactions that add rhythm without distraction.",
+    href: "/components",
     icon: Zap,
-    iconClassName: "text-amber-500",
   },
   {
-    title: "Team Collaboration",
-    description: "Coordinate work with comments, assignments, and roles.",
-    href: "#",
+    title: "Templates",
+    description: "A curated starting point for landing pages and portfolios.",
+    href: "/templates",
     icon: Users,
-    iconClassName: "text-violet-500",
   },
   {
-    title: "API Access",
-    description: "Connect custom applications directly to the platform.",
-    href: "#",
+    title: "Documentation",
+    description: "Clear installation notes, usage examples, and component APIs.",
+    href: "/docs",
     icon: Code2,
-    iconClassName: "text-rose-500",
   },
   {
-    title: "Advanced Security",
-    description: "Protect every workflow with enterprise-ready controls.",
-    href: "#",
+    title: "Open source",
+    description: "A practical design system built for the wider frontend community.",
+    href: "https://github.com/Ashutoshx7/VengeanceUI",
     icon: ShieldCheck,
-    iconClassName: "text-teal-500",
   },
 ];
 
 const DEFAULT_USE_CASES: MegaMenuItem[] = [
   {
-    title: "Startups",
-    description: "Move from idea to repeatable operations without adding busywork.",
-    href: "#",
+    title: "Landing pages",
+    description: "Build expressive first impressions with a more considered visual system.",
+    href: "/blocks",
     icon: Rocket,
   },
   {
-    title: "Agencies",
-    description: "Manage multiple clients and workflows from one workspace.",
-    href: "#",
+    title: "Product sites",
+    description: "Compose useful product narratives, feature sections, and calls to action.",
+    href: "/components",
     icon: Briefcase,
   },
   {
-    title: "Enterprise",
-    description: "Deploy secure, reliable workflows across larger organizations.",
-    href: "#",
+    title: "Personal work",
+    description: "Give portfolios and creative projects a refined, technical character.",
+    href: "/templates",
     icon: Building2,
   },
 ];
 
 const DEFAULT_RESOURCE_GROUPS: MegaMenuResourceGroup[] = [
   {
-    title: "Company",
+    title: "Explore",
     links: [
-      { title: "About us", href: "#", icon: Building2 },
-      { title: "Careers", href: "#", icon: Briefcase },
-      { title: "Contact", href: "#", icon: MessagesSquare },
+      { title: "Components", href: "/components", icon: Building2 },
+      { title: "Blocks", href: "/blocks", icon: Briefcase },
+      { title: "Templates", href: "/templates", icon: MessagesSquare },
     ],
   },
   {
     title: "Learn",
     links: [
-      { title: "Blog", href: "#", icon: FileText },
-      { title: "Documentation", href: "#", icon: Code2 },
-      { title: "Community", href: "#", icon: GraduationCap },
+      { title: "Documentation", href: "/docs", icon: FileText },
+      { title: "Changelog", href: "/changelog", icon: Code2 },
+      { title: "GitHub", href: "https://github.com/Ashutoshx7/VengeanceUI", icon: GraduationCap },
     ],
   },
 ];
@@ -160,10 +154,10 @@ function NavAction({
       href={href}
       onClick={onClick}
       className={cn(
-        "inline-flex h-9 items-center justify-center rounded-md px-4 text-sm font-medium transition-colors",
+        "inline-flex h-8 items-center justify-center rounded-lg px-3 text-[13px] font-medium transition-colors",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2",
         variant === "primary" &&
-          "bg-zinc-900 text-white shadow-sm hover:bg-zinc-800 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200",
+          "bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200",
         variant === "ghost" &&
           "text-zinc-700 hover:bg-zinc-100 hover:text-zinc-950 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-white",
         variant === "outline" &&
@@ -191,12 +185,10 @@ function Brand({
     <a
       href={brandHref}
       onClick={onNavigate}
-      className="relative z-10 flex shrink-0 items-center gap-2 text-lg font-bold tracking-tight text-zinc-950 dark:text-zinc-50"
+      className="relative z-10 flex shrink-0 items-center gap-2 text-[15px] font-semibold tracking-[-0.02em] text-zinc-950 dark:text-zinc-50"
     >
       {logo ?? (
-        <span className="flex size-8 items-center justify-center rounded-lg bg-zinc-900 dark:bg-zinc-50">
-          <Blocks className="size-5 text-white dark:text-zinc-900" />
-        </span>
+        <LogoIcon className="size-5 rotate-180 text-zinc-900 dark:text-zinc-100" />
       )}
       <span>{brandName}</span>
     </a>
@@ -224,10 +216,10 @@ function MenuTrigger({
       onClick={onToggle}
       onFocus={onOpen}
       className={cn(
-        "flex items-center gap-1 rounded-md px-4 py-2 text-sm font-medium transition-colors",
-        "text-zinc-700 hover:bg-zinc-100 hover:text-zinc-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400",
-        "dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-white",
-        isOpen && "bg-zinc-100 text-zinc-950 dark:bg-zinc-800 dark:text-white",
+        "flex items-center gap-1 rounded-lg px-3 py-1.5 text-[13px] font-medium transition-colors",
+        "text-zinc-600 hover:bg-zinc-100/80 hover:text-zinc-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400",
+        "dark:text-zinc-400 dark:hover:bg-white/[0.06] dark:hover:text-zinc-100",
+        isOpen && "bg-zinc-100 text-zinc-950 dark:bg-white/[0.08] dark:text-zinc-100",
       )}
     >
       {label}
@@ -253,23 +245,23 @@ function FeatureGrid({ items }: { items: MegaMenuItem[] }) {
             href={item.href}
             className={cn(
               "group/item flex items-start gap-3 rounded-lg p-3 transition-colors",
-              "hover:bg-zinc-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-300",
-              "dark:hover:bg-zinc-900 dark:focus-visible:ring-zinc-700",
+              "hover:bg-zinc-100/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-300",
+              "dark:hover:bg-white/[0.05] dark:focus-visible:ring-zinc-700",
             )}
           >
             {Icon ? (
-              <span className="flex size-10 shrink-0 items-center justify-center rounded-md border border-zinc-200 bg-white shadow-sm transition-colors group-hover/item:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-950 dark:group-hover/item:border-zinc-700">
-                <Icon className={cn("size-5", item.iconClassName ?? "text-zinc-700 dark:text-zinc-300")} />
+              <span className="flex size-9 shrink-0 items-center justify-center rounded-md border border-zinc-200/80 bg-zinc-50 transition-colors group-hover/item:bg-white dark:border-white/[0.08] dark:bg-white/[0.04] dark:group-hover/item:bg-white/[0.08]">
+                <Icon className={cn("size-4", item.iconClassName ?? "text-zinc-600 dark:text-zinc-300")} />
               </span>
             ) : null}
 
             <span className="min-w-0">
               <span className="flex items-center gap-2">
-                <span className="text-sm font-semibold text-zinc-950 dark:text-zinc-100">
+                <span className="text-sm font-medium text-zinc-950 dark:text-zinc-100">
                   {item.title}
                 </span>
                 {item.badge ? (
-                  <span className="rounded-full border border-blue-200 bg-blue-50 px-1.5 py-0.5 text-[10px] font-medium text-blue-700 dark:border-blue-400/20 dark:bg-blue-400/10 dark:text-blue-300">
+                  <span className="rounded-full border border-zinc-200 bg-zinc-100 px-1.5 py-0.5 text-[10px] font-medium text-zinc-600 dark:border-white/[0.1] dark:bg-white/[0.06] dark:text-zinc-300">
                     {item.badge}
                   </span>
                 ) : null}
@@ -303,7 +295,7 @@ function DesktopDropdown({
       id={id}
       aria-hidden={!open}
       className={cn(
-        "absolute left-0 top-full z-50 pt-3 transition-all duration-200",
+        "absolute left-0 top-full z-50 pt-2 transition-all duration-150",
         open
           ? "visible translate-y-0 opacity-100"
           : "invisible translate-y-2 opacity-0 pointer-events-none",
@@ -382,16 +374,16 @@ function MobileMenuItem({ item, onNavigate }: { item: MegaMenuItem; onNavigate: 
 }
 
 export function MegaMenuNavbar({
-  brandName = "AcmeCorp",
-  brandHref = "#",
+  brandName = "VengeanceUI",
+  brandHref = "/",
   logo,
   features = DEFAULT_FEATURES,
   useCases = DEFAULT_USE_CASES,
   resourceGroups = DEFAULT_RESOURCE_GROUPS,
-  pricingHref = "#",
-  loginHref = "#",
-  ctaHref = "#",
-  ctaLabel = "Get Started",
+  pricingHref = "/templates",
+  loginHref = "/docs",
+  ctaHref = "/components",
+  ctaLabel = "Browse components",
   className,
   ...props
 }: MegaMenuNavbarProps) {
@@ -453,8 +445,8 @@ export function MegaMenuNavbar({
       {...props}
       ref={navRef}
       className={cn(
-        "sticky top-0 z-50 w-full border-b border-zinc-200 bg-white/80 backdrop-blur-lg",
-        "dark:border-zinc-800 dark:bg-zinc-950/80",
+        "sticky top-0 z-50 w-full border-b border-zinc-200/80 bg-white/85 backdrop-blur-xl",
+        "dark:border-white/[0.08] dark:bg-zinc-950/85",
         className,
       )}
       onMouseLeave={(event) => {
@@ -462,9 +454,9 @@ export function MegaMenuNavbar({
         props.onMouseLeave?.(event);
       }}
     >
-      <div className="mx-auto max-w-7xl px-4 md:px-6">
-        <div className="flex h-16 items-center justify-between">
-          <div className="flex items-center gap-8">
+      <div className="mx-auto max-w-6xl px-4 md:px-6">
+        <div className="flex h-14 items-center justify-between">
+          <div className="flex items-center gap-6">
             <Brand brandName={brandName} brandHref={brandHref} logo={logo} />
 
             <nav aria-label="Primary navigation" className="hidden items-center lg:flex">
@@ -478,17 +470,17 @@ export function MegaMenuNavbar({
                     onOpen={() => setOpenMenu("features")}
                   />
                   <DesktopDropdown id="features-mega-menu" open={openMenu === "features"} className="w-[640px]">
-                    <div className="rounded-xl border border-zinc-200 bg-white p-4 shadow-xl dark:border-zinc-800 dark:bg-zinc-950">
+                    <div className="rounded-xl border border-zinc-200/80 bg-white p-3 shadow-[0_18px_45px_-28px_rgba(0,0,0,0.55)] dark:border-white/[0.1] dark:bg-zinc-950">
                       <FeatureGrid items={features} />
-                      <div className="mt-4 flex items-center justify-between border-t border-zinc-100 px-2 pt-4 dark:border-zinc-800/70">
+                      <div className="mt-3 flex items-center justify-between border-t border-zinc-100 px-2 pt-3 dark:border-white/[0.08]">
                         <span className="text-sm text-zinc-500 dark:text-zinc-400">
-                          Looking for a custom enterprise solution?
+                          Building something distinct?
                         </span>
                         <a
-                          href="#"
+                          href="/components"
                           className="inline-flex items-center gap-1 text-sm font-medium text-zinc-950 hover:underline dark:text-zinc-100"
                         >
-                          Contact sales
+                          Explore the library
                           <MoveRight className="size-4" />
                         </a>
                       </div>
@@ -505,7 +497,7 @@ export function MegaMenuNavbar({
                     onOpen={() => setOpenMenu("use-cases")}
                   />
                   <DesktopDropdown id="use-cases-mega-menu" open={openMenu === "use-cases"} className="w-[390px]">
-                    <div className="rounded-xl border border-zinc-200 bg-white p-3 shadow-xl dark:border-zinc-800 dark:bg-zinc-950">
+                    <div className="rounded-xl border border-zinc-200/80 bg-white p-2 shadow-[0_18px_45px_-28px_rgba(0,0,0,0.55)] dark:border-white/[0.1] dark:bg-zinc-950">
                       <div className="flex flex-col gap-1">
                         {useCases.map((item) => {
                           const Icon = item.icon;
@@ -514,15 +506,15 @@ export function MegaMenuNavbar({
                             <a
                               key={item.title}
                               href={item.href}
-                              className="flex items-center gap-3 rounded-lg p-3 transition-colors hover:bg-zinc-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-300 dark:hover:bg-zinc-900 dark:focus-visible:ring-zinc-700"
+                              className="flex items-center gap-3 rounded-lg p-3 transition-colors hover:bg-zinc-100/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-300 dark:hover:bg-white/[0.05] dark:focus-visible:ring-zinc-700"
                             >
                               {Icon ? (
-                                <span className="flex size-10 shrink-0 items-center justify-center rounded-md border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
-                                  <Icon className="size-5 text-zinc-700 dark:text-zinc-300" />
+                                <span className="flex size-9 shrink-0 items-center justify-center rounded-md border border-zinc-200/80 bg-zinc-50 dark:border-white/[0.08] dark:bg-white/[0.04]">
+                                  <Icon className="size-4 text-zinc-600 dark:text-zinc-300" />
                                 </span>
                               ) : null}
                               <span>
-                                <span className="block text-sm font-semibold text-zinc-950 dark:text-zinc-100">
+                                <span className="block text-sm font-medium text-zinc-950 dark:text-zinc-100">
                                   {item.title}
                                 </span>
                                 {item.description ? (
@@ -536,13 +528,13 @@ export function MegaMenuNavbar({
                         })}
                       </div>
 
-                      <div className="mt-2 rounded-lg border border-zinc-100 bg-zinc-50 p-4 dark:border-zinc-800/70 dark:bg-zinc-900/50">
-                        <p className="text-sm font-medium text-zinc-950 dark:text-zinc-100">Customer stories</p>
+                      <div className="mt-2 rounded-lg border border-zinc-100 bg-zinc-50/80 p-4 dark:border-white/[0.08] dark:bg-white/[0.03]">
+                        <p className="text-sm font-medium text-zinc-950 dark:text-zinc-100">Made to be remixed</p>
                         <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-                          See how growing teams turn manual work into reliable systems.
+                          Start with a detail, then make it entirely yours.
                         </p>
-                        <a href="#" className="mt-3 inline-flex text-xs font-medium text-blue-600 hover:underline dark:text-blue-400">
-                          Read case studies →
+                        <a href="/components" className="mt-3 inline-flex text-xs font-medium text-zinc-900 hover:underline dark:text-zinc-100">
+                          Browse components →
                         </a>
                       </div>
                     </div>
@@ -552,9 +544,9 @@ export function MegaMenuNavbar({
                 <li>
                   <a
                     href={pricingHref}
-                    className="inline-flex rounded-md px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-100 hover:text-zinc-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-white"
+                    className="inline-flex rounded-lg px-3 py-1.5 text-[13px] font-medium text-zinc-600 transition-colors hover:bg-zinc-100/80 hover:text-zinc-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 dark:text-zinc-400 dark:hover:bg-white/[0.06] dark:hover:text-zinc-100"
                   >
-                    Pricing
+                    Templates
                   </a>
                 </li>
 
@@ -571,21 +563,21 @@ export function MegaMenuNavbar({
                     open={openMenu === "resources"}
                     className="left-1/2 w-[620px] -translate-x-1/2"
                   >
-                    <div className="grid grid-cols-3 gap-6 rounded-xl border border-zinc-200 bg-white p-5 shadow-xl dark:border-zinc-800 dark:bg-zinc-950">
-                      <div className="flex flex-col justify-between rounded-xl border border-zinc-100 bg-zinc-50 p-5 dark:border-zinc-800/70 dark:bg-zinc-900">
+                    <div className="grid grid-cols-3 gap-5 rounded-xl border border-zinc-200/80 bg-white p-4 shadow-[0_18px_45px_-28px_rgba(0,0,0,0.55)] dark:border-white/[0.1] dark:bg-zinc-950">
+                      <div className="flex flex-col justify-between rounded-lg border border-zinc-100 bg-zinc-50/80 p-4 dark:border-white/[0.08] dark:bg-white/[0.03]">
                         <div>
-                          <span className="flex size-10 items-center justify-center rounded-lg bg-blue-100 text-blue-600 dark:bg-blue-900/50 dark:text-blue-300">
-                            <BookOpen className="size-5" />
+                          <span className="flex size-9 items-center justify-center rounded-md bg-zinc-200/70 text-zinc-700 dark:bg-white/[0.08] dark:text-zinc-200">
+                            <BookOpen className="size-4" />
                           </span>
                           <h4 className="mt-4 text-sm font-semibold text-zinc-950 dark:text-zinc-100">
-                            State of SaaS 2026
+                            Designed with restraint
                           </h4>
                           <p className="mt-2 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">
-                            A practical report on the workflows shaping modern product teams.
+                            A small set of expressive details, kept deliberately quiet.
                           </p>
                         </div>
-                        <a href="#" className="mt-6 inline-flex items-center gap-1.5 text-xs font-medium text-blue-600 hover:underline dark:text-blue-400">
-                          Read report
+                        <a href="/about" className="mt-6 inline-flex items-center gap-1.5 text-xs font-medium text-zinc-900 hover:underline dark:text-zinc-100">
+                          About VengeanceUI
                           <MoveRight className="size-3.5" />
                         </a>
                       </div>
@@ -603,7 +595,7 @@ export function MegaMenuNavbar({
                                 <a
                                   key={item.title}
                                   href={item.href}
-                                  className="flex items-center gap-2 rounded-md p-2 text-sm text-zinc-600 transition-colors hover:bg-zinc-100 hover:text-zinc-950 dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-white"
+                                  className="flex items-center gap-2 rounded-md p-2 text-sm text-zinc-600 transition-colors hover:bg-zinc-100/80 hover:text-zinc-950 dark:text-zinc-400 dark:hover:bg-white/[0.06] dark:hover:text-zinc-100"
                                 >
                                   {Icon ? <Icon className="size-4 text-zinc-400" /> : null}
                                   {item.title}
@@ -702,7 +694,7 @@ export function MegaMenuNavbar({
             onClick={closeMobile}
             className="block border-b border-zinc-200 py-4 text-sm font-medium text-zinc-950 dark:border-zinc-800 dark:text-zinc-100"
           >
-            Pricing
+            Templates
           </a>
 
           <MobileAccordion
