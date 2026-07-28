@@ -218,6 +218,23 @@ export function ComponentDocsSections({ componentName, slug, sourceCode }: Compo
                         GitHub
                       </a>
                     )}
+                    {credit.twitter && (
+                      <a
+                        href={credit.twitter}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group inline-flex items-center gap-2 rounded-lg border border-neutral-200 dark:border-[#222] bg-white dark:bg-[#0b0c10] px-4 py-2.5 text-xs font-semibold text-neutral-700 dark:text-zinc-300 transition-all hover:bg-neutral-50 dark:hover:bg-[#12141a] hover:text-neutral-900 dark:hover:text-white"
+                      >
+                        <svg
+                          className="size-4 text-neutral-900 dark:text-zinc-100 transition-transform group-hover:scale-110"
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                        >
+                          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                        </svg>
+                        X
+                      </a>
+                    )}
                     {credit.linkedin && (
                       <a
                         href={credit.linkedin}

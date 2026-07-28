@@ -204,6 +204,12 @@ export function StaggerTextDemo() {
       { prop: "divideBy", type: "'word' | 'letter'", defaultValue: "'word'", description: "Specifies whether to split and animate the text by words or by individual letters." },
       { prop: "delay", type: "number", defaultValue: "0", description: "Initial delay before the animation starts in seconds." },
     ],
+    credits: {
+      author: "dubyyy",
+      github: "https://github.com/dubyyy",
+      twitter: "https://x.com/dubemtheking",
+      description: "Designed and contributed the Stagger Text component to the Vengeance UI catalog."
+    },
   },
 
   "reveal-loader": {
@@ -1962,19 +1968,11 @@ export function SolarSystemDemo() {
         ]
       }
     ],
-    credits: [
-      {
-        author: "Siddh2024",
-        github: "https://github.com/Siddh2024",
-        linkedin: "https://www.linkedin.com/in/siddh-sharma-b0164430b/",
-        description: "Designed and contributed the interactive 3D Solar System component to the Vengeance UI catalog."
-      },
-      {
-        author: "Antigravity",
-        role: "AI assistant",
-        github: "https://github.com/google-gemini",
-        description: "AI coding assistant designed by Google DeepMind. Helped design, refine, and polish components for Vengeance UI."
-      }
-    ]
+    credits: {
+      author: "Siddh2024",
+      github: "https://github.com/Siddh2024",
+      linkedin: "https://www.linkedin.com/in/siddh-sharma-b0164430b/",
+      description: "Designed and contributed the interactive 3D Solar System component to the Vengeance UI catalog."
+    }
   },
 };
