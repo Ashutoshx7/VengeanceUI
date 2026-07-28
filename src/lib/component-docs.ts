@@ -1,5 +1,14 @@
 import type { PropDef } from "@/components/docs/props-table";
 
+export interface ComponentCredit {
+  author: string;
+  github?: string;
+  twitter?: string;
+  linkedin?: string;
+  description?: string;
+  role?: string;
+}
+
 export interface ComponentDocData {
   /** npm dependencies to install (e.g. "npm install framer-motion clsx tailwind-merge") */
   dependencies: string;
@@ -14,12 +23,7 @@ export interface ComponentDocData {
   /** Additional props sections (e.g. nested configs like metalConfig) */
   additionalPropSections?: { title: string; data: PropDef[] }[];
   /** Optional credit section for the component author */
-  credits?: {
-    author: string;
-    github?: string;
-    twitter?: string;
-    linkedin?: string;
-  };
+  credits?: ComponentCredit | ComponentCredit[];
 }
 
 /**
@@ -1958,10 +1962,19 @@ export function SolarSystemDemo() {
         ]
       }
     ],
-    credits: {
-      author: "Siddh2024",
-      github: "https://github.com/Siddh2024",
-      linkedin: "https://www.linkedin.com/in/siddh-sharma-b0164430b/"
-    }
+    credits: [
+      {
+        author: "Siddh2024",
+        github: "https://github.com/Siddh2024",
+        linkedin: "https://www.linkedin.com/in/siddh-sharma-b0164430b/",
+        description: "Designed and contributed the interactive 3D Solar System component to the Vengeance UI catalog."
+      },
+      {
+        author: "Antigravity",
+        role: "AI assistant",
+        github: "https://github.com/google-gemini",
+        description: "AI coding assistant designed by Google DeepMind. Helped design, refine, and polish components for Vengeance UI."
+      }
+    ]
   },
 };
