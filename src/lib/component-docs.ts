@@ -1944,4 +1944,65 @@ export function SolarSystemDemo() {
       linkedin: "https://www.linkedin.com/in/siddh-sharma-b0164430b/"
     }
   },
+
+  "mega-menu-navbar": {
+    dependencies: "npm install lucide-react clsx tailwind-merge",
+    includeUtils: true,
+    manualNotes: [
+      "The desktop navigation supports hover, click, and keyboard focus. Escape and outside clicks close any open mega-menu.",
+      "At the lg breakpoint the component switches to a slide-out mobile drawer with animated accordion sections and body-scroll locking.",
+      "Replace the sample feature, use-case, and resource data through props. Each menu item accepts a Lucide icon component, optional badge, and optional icon color class.",
+      "The component is self-contained and only requires lucide-react plus the shared cn utility.",
+    ],
+    usageCode: `import { MegaMenuNavbar } from "@/components/ui/mega-menu-navbar"
+
+export function MegaMenuNavbarDemo() {
+  return (
+    <MegaMenuNavbar
+      brandName="Northstar"
+      pricingHref="/pricing"
+      loginHref="/login"
+      ctaHref="/signup"
+      ctaLabel="Start free"
+    />
+  )
+}`,
+    props: [
+      { prop: "brandName", type: "string", defaultValue: "'AcmeCorp'", description: "Brand text displayed beside the logo." },
+      { prop: "brandHref", type: "string", defaultValue: "'#'", description: "Destination used by the brand link." },
+      { prop: "logo", type: "React.ReactNode", defaultValue: "Blocks icon", description: "Optional custom logo rendered before the brand name." },
+      { prop: "features", type: "MegaMenuItem[]", defaultValue: "Sample feature set", description: "Items shown in the two-column Features mega-menu." },
+      { prop: "useCases", type: "MegaMenuItem[]", defaultValue: "Sample use cases", description: "Items shown in the Use Cases dropdown." },
+      { prop: "resourceGroups", type: "MegaMenuResourceGroup[]", defaultValue: "Sample groups", description: "Grouped links shown in the Resources mega-menu and mobile accordion." },
+      { prop: "pricingHref", type: "string", defaultValue: "'#'", description: "Destination of the Pricing link." },
+      { prop: "loginHref", type: "string", defaultValue: "'#'", description: "Destination of the login action." },
+      { prop: "ctaHref", type: "string", defaultValue: "'#'", description: "Destination of the primary call to action." },
+      { prop: "ctaLabel", type: "string", defaultValue: "'Get Started'", description: "Text shown in the primary call to action." },
+      { prop: "className", type: "string", defaultValue: "-", description: "Additional classes for the root header." },
+    ],
+    additionalPropSections: [
+      {
+        title: "MegaMenuItem Interface",
+        data: [
+          { prop: "title", type: "string", defaultValue: "-", description: "Visible item label." },
+          { prop: "description", type: "string", defaultValue: "-", description: "Optional supporting copy." },
+          { prop: "href", type: "string", defaultValue: "-", description: "Navigation destination." },
+          { prop: "icon", type: "LucideIcon", defaultValue: "-", description: "Optional Lucide icon component." },
+          { prop: "iconClassName", type: "string", defaultValue: "-", description: "Optional icon color or styling classes." },
+          { prop: "badge", type: "string", defaultValue: "-", description: "Optional compact status badge." },
+        ],
+      },
+      {
+        title: "MegaMenuResourceGroup Interface",
+        data: [
+          { prop: "title", type: "string", defaultValue: "-", description: "Heading displayed above the group." },
+          { prop: "links", type: "MegaMenuItem[]", defaultValue: "-", description: "Links contained in the group." },
+        ],
+      },
+    ],
+    credits: {
+      author: "ALI-OUALA",
+      github: "https://github.com/ALI-OUALA",
+    },
+  },
 };

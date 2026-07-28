@@ -85,6 +85,7 @@ const DEMO_COMPONENTS: Record<string, React.ComponentType> = {
   "fluid-morph-bg": dynamic(() => import("@/components/docs/fluid-morph-bg-demo").then((m) => ({ default: m.FluidMorphBgDemo })), { ssr: false, loading: LOADING }),
   "typing-keyboard": dynamic(() => import("@/components/docs/typing-keyboard-demo").then((m) => ({ default: m.TypingKeyboardDemo })), { ssr: false, loading: LOADING }),
   "notch-navbar": dynamic(() => import("@/components/docs/notch-navbar-demo").then((m) => ({ default: m.NotchNavbarDemo })), { ssr: false, loading: LOADING }),
+  "mega-menu-navbar": dynamic(() => import("@/components/docs/mega-menu-navbar-demo").then((m) => ({ default: m.MegaMenuNavbarDemo })), { ssr: false, loading: LOADING }),
   "scroll-dissolve-reveal": dynamic(() => import("@/components/docs/scroll-dissolve-reveal-demo").then((m) => ({ default: m.default })), { ssr: false, loading: LOADING }),
   "animated-footer": dynamic(() => import("@/components/docs/animated-footer-demo").then((m) => ({ default: m.AnimatedFooterDemo })), { ssr: false, loading: LOADING }),
   "music-player": dynamic(() => import("@/components/docs/music-player-demo").then((m) => ({ default: m.MusicPlayerDemo })), { ssr: false, loading: LOADING }),

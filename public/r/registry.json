@@ -1199,5 +1199,15 @@
     "files": [
       "public/r/animated-footer.json"
     ]
+  },
+  {
+    "name": "mega-menu-navbar",
+    "dependencies": [
+      "lucide-react"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/mega-menu-navbar.json"
+    ]
   }
 ]
