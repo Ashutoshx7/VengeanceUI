@@ -32,22 +32,32 @@ const KEY_CODE_MAP: Record<string, string> = {
   Numpad9: "numpad 9", Numpad0: "numpad 0", NumpadDecimal: "numpad .",
 };
 
+const PREVENT_DEFAULT_KEYS = new Set([
+  "space", "tab", "up", "down", "left", "right",
+  "page up", "page down", "home", "end", "delete",
+]);
+
+function isEditableTarget(target: EventTarget | null) {
+  const el = target as HTMLElement | null;
+  return !!el && (el.isContentEditable || el.tagName === "INPUT" || el.tagName === "TEXTAREA" || el.tagName === "SELECT");
+}
+
 export interface InteractiveKeyboardProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onKeyPress'> {
   onKeyClick?: (key: string) => void;
   onKeyPress?: (key: string) => void;
 }
 
-export function InteractiveKeyboard({ className, onKeyClick, onKeyPress, ...props }: InteractiveKeyboardProps) {
+export function InteractiveKeyboard({ className, onKeyClick, onKeyPress, onPointerEnter, onPointerLeave, ...props }: InteractiveKeyboardProps) {
   const [capsLock, setCapsLock] = useState(false);
   const [pressedKeys, setPressedKeys] = useState<Set<string>>(new Set());
   const hoverRef = useRef(false);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (!hoverRef.current) return;
+      if (!hoverRef.current || isEditableTarget(event.target)) return;
       const keyName = KEY_CODE_MAP[event.code];
       if (!keyName) return;
-      event.preventDefault();
+      if (PREVENT_DEFAULT_KEYS.has(keyName)) event.preventDefault();
       if (event.repeat) return;
       if (keyName === "caps lock") {
         setCapsLock(event.getModifierState("CapsLock"));
@@ -95,13 +105,15 @@ export function InteractiveKeyboard({ className, onKeyClick, onKeyPress, ...prop
     "data-pressed": pressedKeys.has(keyName) || undefined,
   });
 
-  const handlePointerEnter = () => {
+  const handlePointerEnter = (event: React.PointerEvent<HTMLDivElement>) => {
     hoverRef.current = true;
+    onPointerEnter?.(event);
   };
 
-  const handlePointerLeave = () => {
+  const handlePointerLeave = (event: React.PointerEvent<HTMLDivElement>) => {
     hoverRef.current = false;
     setPressedKeys(new Set());
+    onPointerLeave?.(event);
   };
 
   return (
@@ -406,7 +418,7 @@ export function InteractiveKeyboard({ className, onKeyClick, onKeyPress, ...prop
           <button type="button" className="ikb-btn-2" {...keyProps("k")}><span>K</span></button>
           <button type="button" className="ikb-btn-2" {...keyProps("l")}><span>L</span></button>
           <button type="button" className="ikb-btn-2" {...keyProps(";")}><span className="ikb-sm">:<br/>;</span></button>
-          <button type="button" className="ikb-btn-2" {...keyProps("'")}><span className="ikb-sm">&quot;<br/>'</span></button>
+          <button type="button" className="ikb-btn-2" {...keyProps("'")}><span className="ikb-sm">&quot;<br/>&#39;</span></button>
           <button type="button" className="ikb-btn-4" {...keyProps("return")}><span className="ikb-lr ikb-xs">return</span></button>
         </div>
         <div className="ikb-row"></div>
