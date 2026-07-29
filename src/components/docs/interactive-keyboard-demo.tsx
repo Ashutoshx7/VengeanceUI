@@ -13,7 +13,7 @@ export function InteractiveKeyboardDemo() {
   return (
     <div className="w-full min-h-[500px] flex flex-col items-center justify-center p-8 rounded-xl overflow-visible relative">
       <div className="w-full pb-8 -mx-8 px-8 flex justify-center items-start">
-        <InteractiveKeyboard onKeyClick={handleKeyPress} />
+        <InteractiveKeyboard onKeyClick={handleKeyPress} onKeyPress={handleKeyPress} />
       </div>
     </div>
   );

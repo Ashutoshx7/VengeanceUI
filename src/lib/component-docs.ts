@@ -1682,13 +1682,15 @@ export function FaqAccordionDemo() {
 
 export function InteractiveKeyboardDemo() {
   return (
-    <InteractiveKeyboard 
+    <InteractiveKeyboard
       onKeyClick={(key) => console.log(key)}
+      onKeyPress={(key) => console.log(key)}
     />
   )
 }`,
     props: [
       { prop: "onKeyClick", type: "(key: string) => void", defaultValue: "-", description: "Callback fired when any key is clicked. Returns the key's label." },
+      { prop: "onKeyPress", type: "(key: string) => void", defaultValue: "-", description: "Callback fired when a physical key is pressed while the cursor is over the keyboard. Returns the key's label." },
       { prop: "className", type: "string", defaultValue: "-", description: "Additional CSS classes for the keyboard wrapper." },
     ],
   },

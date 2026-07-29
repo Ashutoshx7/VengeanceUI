@@ -63,7 +63,7 @@ export const COMPONENT_CATEGORIES: ComponentCategory[] = [
       { name: "Scroll Dissolve Reveal", slug: "scroll-dissolve-reveal", description: "A beautiful image dissolve effect driven by scrolling using React Three Fiber and Shaders.", componentName: "scroll-dissolve-reveal" },
       { name: "Pixelated Image Trail", slug: "pixelated-image-trail", description: "Cursor trail image reveal", componentName: "pixelated-image-trail" },
 
-      { name: "Interactive Keyboard", slug: "interactive-keyboard", description: "Animated physical keyboard UI", componentName: "interactive-keyboard" },
+      { name: "Interactive Keyboard", slug: "interactive-keyboard", description: "Keyboard UI that mirrors your real key presses", componentName: "interactive-keyboard" },
       { name: "Typing Keyboard", slug: "typing-keyboard", description: "3D isometric keyboard with auto-typing screen", componentName: "typing-keyboard" },
       { name: "Solar System", slug: "solar-system", description: "Interactive 3D technology ecosystem orbit animation", componentName: "solar-system" },
       { name: "Interactive Particles", slug: "interactive-particles", description: "Image-sampled particles that scatter around the cursor", componentName: "interactive-particles" },
