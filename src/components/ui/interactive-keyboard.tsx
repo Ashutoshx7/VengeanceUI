@@ -125,17 +125,23 @@ export function InteractiveKeyboard({ className, onKeyClick, onKeyPress, onPoint
     >
       <style>{`
         .interactive-keyboard-wrapper {
-          --kb-bg: hsl(0,0%,93%);
-          --kb-text: hsl(0,0%,47%);
-          --kb-shadow-1: hsla(0,0%,0%,0.25);
-          --kb-shadow-2: hsla(0,0%,0%,0.3);
-          --kb-shadow-3: hsla(0,0%,0%,0.4);
-          --kb-shadow-4: hsla(0,0%,100%,0.8);
-          --kb-active-shadow-1: hsla(0,0%,0%,0.2);
-          --kb-active-shadow-2: hsla(0,0%,0%,0.4);
+          --kb-key-top: hsl(0,0%,99%);
+          --kb-key-bottom: hsl(0,0%,93%);
+          --kb-text: hsl(0,0%,40%);
+          --kb-key-shadow:
+            0 0 0.02em 0.01em hsla(0,0%,0%,0.45),
+            0 0.05em 0.06em hsla(0,0%,0%,0.28),
+            0 0.03em 0.02em hsla(0,0%,100%,0.95) inset,
+            0 -0.04em 0.05em hsla(0,0%,0%,0.12) inset;
+          --kb-key-shadow-pressed:
+            0 0 0.02em 0.01em hsla(0,0%,0%,0.5),
+            0 0.01em 0.02em hsla(0,0%,0%,0.2),
+            0 0.02em 0.04em hsla(0,0%,0%,0.18) inset,
+            0 -0.02em 0.03em hsla(0,0%,100%,0.4) inset;
+          --kb-press-brightness: 0.96;
           --kb-focus-bg: hsl(0,0%,100%);
           --kb-focus-text: hsl(0,0%,54%);
-          
+
           font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
           display: flex;
           width: 100%;
@@ -144,31 +150,34 @@ export function InteractiveKeyboard({ className, onKeyClick, onKeyPress, onPoint
         }
 
         :is(.dark) .interactive-keyboard-wrapper {
-          --kb-bg: #1a1a1c;
-          --kb-text: #909096;
-          --kb-shadow-1: rgba(0,0,0,0.8);
-          --kb-shadow-2: rgba(0,0,0,0.4);
-          --kb-shadow-3: rgba(0,0,0,0.7);
-          --kb-shadow-4: rgba(255,255,255,0.06);
-          --kb-active-shadow-1: rgba(0,0,0,0.9);
-          --kb-active-shadow-2: rgba(0,0,0,0.6);
+          --kb-key-top: #18181b;
+          --kb-key-bottom: #0c0b10;
+          --kb-text: #b4b4bc;
+          --kb-key-shadow:
+            0 0 0.02em 0.01em rgba(0,0,0,0.9),
+            0 0.05em 0.07em rgba(0,0,0,0.55),
+            0 0.03em 0.02em rgba(255,255,255,0.09) inset,
+            0 -0.04em 0.06em rgba(0,0,0,0.6) inset;
+          --kb-key-shadow-pressed:
+            0 0 0.02em 0.01em rgba(0,0,0,0.95),
+            0 0.01em 0.02em rgba(0,0,0,0.5),
+            0 0.03em 0.05em rgba(0,0,0,0.8) inset,
+            0 -0.02em 0.02em rgba(255,255,255,0.05) inset;
+          --kb-press-brightness: 1.25;
           --kb-focus-bg: #222224;
           --kb-focus-text: #ffffff;
         }
 
         .interactive-keyboard-wrapper button {
-          background-color: var(--kb-bg);
-          border-radius: 0.125em;
-          box-shadow:
-            -0.2em -0.125em 0.125em var(--kb-shadow-1),
-            0 0 0 0.04em var(--kb-shadow-2),
-            0.02em 0.02em 0.02em var(--kb-shadow-3) inset,
-            -0.05em -0.05em 0.02em var(--kb-shadow-4) inset;
+          background-image: linear-gradient(180deg, var(--kb-key-top), var(--kb-key-bottom));
+          border-radius: 0.15em;
+          box-shadow: var(--kb-key-shadow);
           color: var(--kb-text);
           display: block;
           font-size: 1em;
           outline: transparent;
           position: relative;
+          transition: transform 60ms ease, box-shadow 60ms ease, filter 60ms ease;
           -webkit-appearance: none;
           appearance: none;
           -webkit-tap-highlight-color: transparent;
@@ -181,10 +190,9 @@ export function InteractiveKeyboard({ className, onKeyClick, onKeyPress, onPoint
 
         .interactive-keyboard-wrapper button:active,
         .interactive-keyboard-wrapper button[data-pressed] {
-          box-shadow:
-            0.1em 0.1em 0.1em var(--kb-active-shadow-1),
-            0 0 0 0.05em var(--kb-active-shadow-2),
-            -0.025em -0.05em 0.025em var(--kb-shadow-4) inset;
+          box-shadow: var(--kb-key-shadow-pressed);
+          transform: translateY(0.04em) scale(0.97);
+          filter: brightness(var(--kb-press-brightness));
         }
         .interactive-keyboard-wrapper button:focus-visible {
           background-color: var(--kb-focus-bg);
@@ -231,11 +239,11 @@ export function InteractiveKeyboard({ className, onKeyClick, onKeyPress, onPoint
         }
 
         :is(.dark) .interactive-keyboard-wrapper .ikb-keyboard {
-           background-image: linear-gradient(135deg, #2a2a2c, #161618);
-           box-shadow: 
+           background-image: linear-gradient(135deg, #1b1b1e, #070708);
+           box-shadow:
              0 2em 4em -1em rgba(0,0,0,0.6),
-             0 0 0 1px rgba(255,255,255,0.08) inset,
-             0 1px 1px rgba(255,255,255,0.15) inset;
+             0 0 0 1px rgba(255,255,255,0.07) inset,
+             0 1px 1px rgba(255,255,255,0.12) inset;
         }
 
         .ikb-row {
