@@ -1693,6 +1693,11 @@ export function InteractiveKeyboardDemo() {
       { prop: "onKeyPress", type: "(key: string) => void", defaultValue: "-", description: "Callback fired when a physical key is pressed while the cursor is over the keyboard. Returns the key's label." },
       { prop: "className", type: "string", defaultValue: "-", description: "Additional CSS classes for the keyboard wrapper." },
     ],
+    credits: {
+      author: "xevrion",
+      github: "https://github.com/xevrion",
+      description: "Added physical keyboard interactivity and redesigned the keycaps for the Interactive Keyboard component.",
+    },
   },
 
   "generate-button": {
