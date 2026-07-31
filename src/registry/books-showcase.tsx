@@ -89,6 +89,11 @@ export function BooksShowcase({
   const dpRef = useRef<HTMLDivElement | null>(null);
   const shiftCarouselRef = useRef<(dir: 1 | -1) => void>(() => { });
 
+  const onBookSelectRef = useRef(onBookSelect);
+  useEffect(() => {
+    onBookSelectRef.current = onBookSelect;
+  }, [onBookSelect]);
+
   const [uiMode, setUiMode] = useState<'hero' | 'opening' | 'detail' | 'closing'>('hero');
   const [selectedCfg, setSelectedCfg] = useState<BookCfg | null>(null);
   const [mounted, setMounted] = useState(false);
@@ -186,13 +191,16 @@ export function BooksShowcase({
     let renderer: THREE.WebGLRenderer;
     try {
       renderer = new THREE.WebGLRenderer({ canvas: canvasEl, antialias: true, alpha: true });
-    } catch (e) {
+    } catch (err) {
+      console.warn('BooksShowcase: WebGL renderer creation failed', err);
       const fail = document.createElement('div');
       fail.className =
         'absolute inset-0 z-50 flex items-center justify-center p-10 text-center text-lg leading-relaxed text-[var(--bs-lav)]';
       fail.textContent = 'This experience needs WebGL, which your browser blocked or does not support.';
       root.appendChild(fail);
-      return;
+      return () => {
+        fail.remove();
+      };
     }
 
     // container-relative sizing: this is a section, not a full page, so
@@ -1069,7 +1077,7 @@ export function BooksShowcase({
       book.exit = null;
       root!.classList.add('bs-transit');
       setSelectedCfg(book.cfg);
-      onBookSelect?.(book.cfg);
+      onBookSelectRef.current?.(book.cfg);
       computeSlots();
 
       let out = 0;
@@ -1103,7 +1111,7 @@ export function BooksShowcase({
       state.mode = 'closing';
       setUiMode('closing');
       root!.classList.remove('bs-detail-open');
-      onBookSelect?.(null);
+      onBookSelectRef.current?.(null);
       leaves.deactivate();
       orbit.drag = false;
       const b = state.selected;
@@ -1284,7 +1292,7 @@ export function BooksShowcase({
       }
       if (e.key === 'Enter' && state.hovered) open(state.hovered);
     };
-    window.addEventListener('keydown', onKeydown);
+    root.addEventListener('keydown', onKeydown);
 
     function castRay() {
       ray.setFromCamera({ x: ptr.ndcX, y: ptr.ndcY } as THREE.Vector2, camera);
@@ -1565,9 +1573,11 @@ export function BooksShowcase({
           });
         }
       });
+      scene.environment?.dispose();
+      scene.environment = null;
       renderer.dispose();
     };
-  }, [books, onBookSelect]);
+  }, [books]);
 
   const themeVars: React.CSSProperties = themeColors
     ? ({

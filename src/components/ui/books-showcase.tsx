@@ -89,6 +89,11 @@ export function BooksShowcase({
   const dpRef = useRef<HTMLDivElement | null>(null);
   const shiftCarouselRef = useRef<(dir: 1 | -1) => void>(() => { });
 
+  const onBookSelectRef = useRef(onBookSelect);
+  useEffect(() => {
+    onBookSelectRef.current = onBookSelect;
+  }, [onBookSelect]);
+
   const [uiMode, setUiMode] = useState<'hero' | 'opening' | 'detail' | 'closing'>('hero');
   const [selectedCfg, setSelectedCfg] = useState<BookCfg | null>(null);
   const [mounted, setMounted] = useState(false);
@@ -1072,7 +1077,7 @@ export function BooksShowcase({
       book.exit = null;
       root!.classList.add('bs-transit');
       setSelectedCfg(book.cfg);
-      onBookSelect?.(book.cfg);
+      onBookSelectRef.current?.(book.cfg);
       computeSlots();
 
       let out = 0;
@@ -1106,7 +1111,7 @@ export function BooksShowcase({
       state.mode = 'closing';
       setUiMode('closing');
       root!.classList.remove('bs-detail-open');
-      onBookSelect?.(null);
+      onBookSelectRef.current?.(null);
       leaves.deactivate();
       orbit.drag = false;
       const b = state.selected;
@@ -1572,7 +1577,7 @@ export function BooksShowcase({
       scene.environment = null;
       renderer.dispose();
     };
-  }, [books, onBookSelect]);
+  }, [books]);
 
   const themeVars: React.CSSProperties = themeColors
     ? ({
