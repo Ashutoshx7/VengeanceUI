@@ -1287,7 +1287,7 @@ export function BooksShowcase({
       }
       if (e.key === 'Enter' && state.hovered) open(state.hovered);
     };
-    window.addEventListener('keydown', onKeydown);
+    root.addEventListener('keydown', onKeydown);
 
     function castRay() {
       ray.setFromCamera({ x: ptr.ndcX, y: ptr.ndcY } as THREE.Vector2, camera);
