@@ -94,6 +94,7 @@ const DEMO_COMPONENTS: Record<string, React.ComponentType> = {
   "verse-cards": dynamic(() => import("@/components/docs/verse-cards-demo").then((m) => ({ default: m.VerseCardsDemo })), { ssr: false, loading: LOADING }),
   "search-modal": dynamic(() => import("@/components/docs/search-modal-demo").then((m) => ({ default: m.SearchModalDemo })), { ssr: false, loading: LOADING }),
   "circular-gallery": dynamic(() => import("@/components/docs/circular-gallery-demo").then((m) => ({ default: m.CircularGalleryDemo })), { ssr: false, loading: LOADING }),
+  "books-showcase": dynamic(() => import("@/components/docs/books-showcase-demo").then((m) => ({ default: m.default })), { ssr: false, loading: LOADING }),
   "highlight-grid": dynamic(() => import("@/components/docs/highlight-grid-demo").then((m) => ({ default: m.HighlightGridDemo })), { ssr: false, loading: LOADING }),
 };
 
