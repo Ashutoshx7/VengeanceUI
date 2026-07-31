@@ -186,13 +186,16 @@ export function BooksShowcase({
     let renderer: THREE.WebGLRenderer;
     try {
       renderer = new THREE.WebGLRenderer({ canvas: canvasEl, antialias: true, alpha: true });
-    } catch (e) {
+    } catch (err) {
+      console.warn('BooksShowcase: WebGL renderer creation failed', err);
       const fail = document.createElement('div');
       fail.className =
         'absolute inset-0 z-50 flex items-center justify-center p-10 text-center text-lg leading-relaxed text-[var(--bs-lav)]';
       fail.textContent = 'This experience needs WebGL, which your browser blocked or does not support.';
       root.appendChild(fail);
-      return;
+      return () => {
+        fail.remove();
+      };
     }
 
     // container-relative sizing: this is a section, not a full page, so
