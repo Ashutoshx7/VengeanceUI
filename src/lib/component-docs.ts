@@ -2044,4 +2044,65 @@ export function MegaMenuNavbarDemo() {
       github: "https://github.com/ALI-OUALA",
     },
   },
+  "books-showcase": {
+    dependencies: "npm install three clsx tailwind-merge",
+    includeUtils: true,
+    manualNotes: [
+      "The component relies on Three.js for 3D rendering. Ensure you have three installed.",
+      "Wrap the component in a container with a defined height, as it uses 100dvh internally.",
+      "The 'books' prop accepts an array of BookCfg objects. Each book requires at least an id, title, author, year, stars, desc, and optionally coverURL for images.",
+      "For best performance, cover images should be optimized webp/jpg files.",
+    ],
+    usageCode: `import { BooksShowcase } from "@/components/ui/books-showcase"
+
+const DEMO_BOOKS = [
+  {
+    id: "book1",
+    title: "The Psychology of Money",
+    author: "Morgan Housel",
+    year: "2020",
+    stars: 5,
+    desc: "Timeless lessons on wealth, greed, and happiness.",
+    spineBg: "#1e1e1e",
+    spineInk: "#ffffff",
+    spineFont: "700 42px Georgia",
+    backBg: "#1e1e1e",
+    backInk: "255,255,255",
+    edge: "#e0d6c8"
+  }
+];
+
+export function BooksShowcaseDemo() {
+  return (
+    <BooksShowcase books={DEMO_BOOKS} />
+  )
+}`,
+    props: [
+      { prop: "books", type: "BookCfg[]", defaultValue: "-", description: "Array of book configurations to display in the showcase." },
+      { prop: "heroTitle", type: "string", defaultValue: "'Books'", description: "The large background text shown when no book is focused." },
+      { prop: "showNav", type: "boolean", defaultValue: "true", description: "Whether to show the top navigation bar." },
+      { prop: "showDetailPanel", type: "boolean", defaultValue: "true", description: "Whether to show the details panel when a book is clicked." },
+      { prop: "className", type: "string", defaultValue: "-", description: "Additional CSS classes for the main wrapper." },
+      { prop: "onBookSelect", type: "(book: BookCfg | null) => void", defaultValue: "-", description: "Callback triggered when a book is selected or deselected." },
+    ],
+    additionalPropSections: [
+      {
+        title: "BookCfg",
+        data: [
+          { prop: "id", type: "string", defaultValue: "-", description: "Unique identifier for the book." },
+          { prop: "title", type: "string", defaultValue: "-", description: "Title of the book." },
+          { prop: "author", type: "string", defaultValue: "-", description: "Author of the book." },
+          { prop: "year", type: "string", defaultValue: "-", description: "Publication year." },
+          { prop: "stars", type: "number", defaultValue: "-", description: "Number of stars (out of 5) for the rating." },
+          { prop: "desc", type: "string", defaultValue: "-", description: "Short description or synopsis." },
+          { prop: "coverURL", type: "string", defaultValue: "null", description: "Optional URL for the front cover image (jpg/png/webp)." },
+          { prop: "spineBg", type: "string", defaultValue: "-", description: "Hex color for the spine background." },
+          { prop: "spineInk", type: "string", defaultValue: "-", description: "Hex color for the spine text." },
+          { prop: "backBg", type: "string", defaultValue: "-", description: "Hex color for the back cover background." },
+          { prop: "backInk", type: "string", defaultValue: "-", description: "RGB comma-separated color for back cover text (e.g., '255,255,255')." },
+          { prop: "edge", type: "string", defaultValue: "-", description: "Hex color for the page edges." },
+        ],
+      },
+    ],
+  },
 };
