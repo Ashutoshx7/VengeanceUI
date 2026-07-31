@@ -1568,6 +1568,8 @@ export function BooksShowcase({
           });
         }
       });
+      scene.environment?.dispose();
+      scene.environment = null;
       renderer.dispose();
     };
   }, [books, onBookSelect]);
