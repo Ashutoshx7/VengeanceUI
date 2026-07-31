@@ -1600,9 +1600,17 @@ export function BooksShowcase({
   const heroWordVisible = mounted && uiMode === 'hero';
   const canCarousel = showCarousel && books.length > 3;
 
+  const delayMap: Record<number, string> = {
+    50: 'delay-[50ms]',
+    130: 'delay-[130ms]',
+    210: 'delay-[210ms]',
+    270: 'delay-[270ms]',
+    330: 'delay-[330ms]',
+  };
+
   const dpChild = (delayMs: number) =>
     panelVisible
-      ? `opacity-100 translate-y-0 transition-[opacity,transform] duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)] delay-[${delayMs}ms]`
+      ? `opacity-100 translate-y-0 transition-[opacity,transform] duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${delayMap[delayMs] || ''}`
       : 'opacity-0 translate-y-[28px] transition-[opacity,transform] duration-[280ms] ease-out';
 
   return (

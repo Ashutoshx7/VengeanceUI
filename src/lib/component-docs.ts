@@ -2045,12 +2045,12 @@ export function MegaMenuNavbarDemo() {
     },
   },
   "books-showcase": {
-    dependencies: "npm install three clsx tailwind-merge",
-    includeUtils: true,
+    dependencies: "npm install three",
+    includeUtils: false,
     manualNotes: [
       "The component relies on Three.js for 3D rendering. Ensure you have three installed.",
-      "Wrap the component in a container with a defined height, as it uses 100dvh internally.",
-      "The 'books' prop accepts an array of BookCfg objects. Each book requires at least an id, title, author, year, stars, desc, and optionally coverURL for images.",
+      "The root element uses 100svh with a 560px minimum height. Pass className to override the height.",
+      "The 'books' prop accepts an array of BookCfg objects. Each book requires id, title, author, year, stars, and desc. Supply cover art through images.front, images.back, and images.spine.",
       "For best performance, cover images should be optimized webp/jpg files.",
     ],
     usageCode: `import { BooksShowcase } from "@/components/ui/books-showcase"
