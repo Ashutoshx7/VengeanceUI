@@ -70,7 +70,7 @@ export const COMPONENT_CATEGORIES: ComponentCategory[] = [
       { name: "Music Player", slug: "music-player", description: "Collapsible glass music player with equalizer and seekable progress", componentName: "music-player", isNew: true },
       { name: "Verse Cards", slug: "verse-cards", description: "Nav trigger that fans a deck of cards up with a GSAP reveal", componentName: "verse-cards", isNew: true },
       { name: "Circular Gallery", slug: "circular-gallery", description: "Relaxing 3D ring of images with drag-spin, parallax tilt, and center preview", componentName: "circular-gallery", isNew: true },
-      { name: "3D Books Showcase", slug: "books-showcase", description: "ThreeJS 3D interactive books showcase with procedural rendering", componentName: "books-showcase", isNew: true },
+      { name: "3D Books Showcase", slug: "books-showcase", description: "Three.js 3D interactive books showcase with procedural rendering", componentName: "books-showcase", isNew: true },
     ],
   },
   {
