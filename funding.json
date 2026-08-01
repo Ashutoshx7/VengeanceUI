@@ -6,7 +6,7 @@
     "role": "maintainer",
     "name": "Ashutosh Singh",
     "email": "ashutoshx002@gmail.com",
-    "description": "Ashutosh Singh is the creator and lead maintainer of VengeanceUI, an open-source animated React and Next.js component library. He maintains the project's codebase, component registry, documentation, contributor workflow, releases, testing infrastructure, and community support. His broader open-source experience includes sustained contributions to public developer tooling and participation in structured open-source mentorship programs.",
+    "description": "Ashutosh Singh is the creator and lead maintainer of VengeanceUI, an open-source animated React and Next.js component library. He maintains the codebase, component registry, documentation, releases, testing infrastructure, contributor workflow, and community support. His broader open-source experience includes sustained contributions to developer tooling and structured open-source mentorship programs.",
     "webpageUrl": {
       "url": "https://github.com/Ashutoshx7"
     }
@@ -15,7 +15,7 @@
     {
       "guid": "vengeanceui",
       "name": "VengeanceUI",
-      "description": "VengeanceUI is an MIT-licensed collection of animated, copy-paste-friendly React and Next.js components for building modern web interfaces. It provides live previews, implementation guidance, reusable source code, and a shadcn-compatible registry so developers can install and adapt components directly in their projects. The project serves frontend developers, students, designers who code, independent creators, and product teams. Funding will support a six-month maintenance cycle focused on accessibility, reduced-motion support, visual and cross-browser testing, performance of animation-heavy components, registry reliability, documentation, contributor onboarding, and a stable public release.",
+      "description": "VengeanceUI is an MIT-licensed open-source library of animated, copy-paste-friendly React and Next.js components for modern web interfaces. It provides live previews, reusable source code, implementation guidance, and a shadcn-compatible registry. The project has nearly 1,000 GitHub stars and 80 forks, serves 40,000+ monthly visitors, and receives 500,000+ monthly page views. Funding will support accessibility, reduced-motion support, automated visual and cross-browser testing, performance improvements, registry reliability, documentation, contributor onboarding, and a stable public release.",
       "webpageUrl": {
         "url": "https://www.vengenceui.com/"
       },
@@ -44,15 +44,15 @@
       {
         "guid": "grant-bank-transfer",
         "type": "bank",
-        "description": "Intended for grant disbursement. Banking and compliance details will be shared privately with the funding organization after approval."
+        "description": "Banking and compliance details will be shared privately with FOSS United after approval."
       }
     ],
     "plans": [
       {
         "guid": "six-month-maintenance-grant",
         "status": "active",
-        "name": "VengeanceUI accessibility, reliability and sustainability grant",
-        "description": "Requesting INR 240,000 for a six-month focused maintenance period. Budget: INR 180,000 for maintainer time; INR 20,000 for testing and infrastructure; INR 20,000 for accessibility and performance tooling; and INR 20,000 for documentation and contributor support.\n\nMilestones:\n1. Audit the existing component catalogue for keyboard usability, semantic markup, responsive behaviour, and reduced-motion support; publish the findings and fix the highest-impact issues.\n2. Add automated unit, visual-regression, and cross-browser coverage for the most-used components and critical website flows.\n3. Improve registry and CLI installation reliability, validation, error handling, and release checks.\n4. Publish clearer setup, contribution, component-authoring, testing, and accessibility documentation; create at least 20 well-scoped contributor issues.\n5. Profile and optimize animation-heavy and WebGL components for mobile devices, lower-powered hardware, and reduced bundle/runtime cost.\n6. Publish a stable release, a final public grant report, and a sustainability roadmap.\n\nCommunity commitments: publish at least one public progress update or technical article per quarter, acknowledge contributors, and present the work through a community talk, demo, or FOSS United update during the grant period.",
+        "name": "VengeanceUI six-month maintenance grant",
+        "description": "INR 240,000 for six months: INR 180,000 for maintainer time, INR 20,000 for testing and infrastructure, INR 20,000 for accessibility and performance, and INR 20,000 for documentation and contributor support. Work will cover accessibility and reduced-motion improvements, visual and cross-browser tests, registry reliability, performance optimization, contributor documentation, a stable release, and public progress reports.",
         "amount": 240000,
         "currency": "INR",
         "frequency": "one-time",
