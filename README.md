@@ -44,6 +44,10 @@
   </a>
 </p>
 
+<p align="center">
+  <strong>This project is tested with BrowserStack</strong>
+</p>
+
 ---
 
 
