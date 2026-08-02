@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
+import { cn } from '@/lib/utils';
 
 export interface BookCfg {
   id: string;
@@ -38,6 +39,8 @@ export interface BookCfg {
 export interface BooksShowcaseProps {
   books: BookCfg[];
   heroTitle?: string;
+  /** Small heading shown above the books. */
+  navTitle?: string;
   showNav?: boolean;
   showDetailPanel?: boolean;
   /** Show prev/next arrows when there are more books than fit on screen (3). Defaults to true. */
@@ -48,7 +51,12 @@ export interface BooksShowcaseProps {
     cream?: string;
     lav?: string;
     peri?: string;
+    /** Backwards-compatible background applied to both color schemes. */
     bg?: string;
+    bgLight?: string;
+    bgDark?: string;
+    foregroundLight?: string;
+    foregroundDark?: string;
   };
   className?: string;
   onBookSelect?: (book: BookCfg | null) => void;
@@ -75,6 +83,7 @@ const OPEN_BTN_ON = ['opacity-100', 'scale-100'];
 export function BooksShowcase({
   books = [],
   heroTitle = 'Books',
+  navTitle = 'Bestsellers',
   showNav = true,
   showDetailPanel = true,
   showCarousel = true,
@@ -212,7 +221,7 @@ export function BooksShowcase({
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 0.92;
     renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.shadowMap.type = THREE.PCFShadowMap;
     const ANISO = renderer.capabilities.getMaxAnisotropy();
 
     const scene = new THREE.Scene();
@@ -550,7 +559,8 @@ export function BooksShowcase({
     const BLOCK_D = 0.245,
       BLOCK_Z = -0.0205,
       PIVOT_Z = T / 2 + CT / 2,
-      BPIVOT_Z = -(T / 2 + CT / 2);
+      BPIVOT_Z = -(T / 2 + CT / 2),
+      HINGE_OVERLAP = 0.05;
 
     const coverGeo = new THREE.BoxGeometry(W + OV, H + OV * 2, CT);
     const blockGeo = new THREE.BoxGeometry(W - 0.015, H, BLOCK_D);
@@ -647,7 +657,7 @@ export function BooksShowcase({
       });
 
       const backPivot = new THREE.Group();
-      backPivot.position.set(-W / 2, 0, BPIVOT_Z);
+      backPivot.position.set(-W / 2 - HINGE_OVERLAP, 0, BPIVOT_Z);
       const backMesh = new THREE.Mesh(coverGeo, [mEdge, mEdge, mEdge, mEdge, endpaperMat, mBack]);
       backMesh.position.x = (W + OV) / 2;
       backMesh.castShadow = backMesh.receiveShadow = true;
@@ -655,7 +665,7 @@ export function BooksShowcase({
       float.add(backPivot);
 
       const pivot = new THREE.Group();
-      pivot.position.set(-W / 2, 0, PIVOT_Z);
+      pivot.position.set(-W / 2 - HINGE_OVERLAP, 0, PIVOT_Z);
       const frontMesh = new THREE.Mesh(coverGeo, [mEdge, mEdge, mEdge, mEdge, mFront, endpaperMat]);
       frontMesh.position.x = (W + OV) / 2;
       frontMesh.castShadow = frontMesh.receiveShadow = true;
@@ -848,22 +858,28 @@ export function BooksShowcase({
 
     function computeSlots() {
       const a = dims.w / Math.max(1, dims.h);
-      const fit = clamp(a / 1.75, 0.56, 1);
+      const portrait = a < 0.85;
+      const fit = portrait ? clamp(a / 1.08, 0.38, 0.74) : clamp(a / 1.62, 0.52, 1);
       bookRoot.scale.setScalar(fit);
-      bookRoot.position.y = -(1 - fit) * 0.55;
-      SLOTS.portrait = a < 0.85;
+      bookRoot.position.y = -(1 - fit) * 0.28;
+      SLOTS.portrait = portrait;
 
       SLOTS.hero = SLOTS.portrait
         ? [
-          { p: [-1.36, -1.0, -0.12], r: [-0.045, 0.4, 0.185], s: 1.39 },
-          { p: [0.2, -0.45, 0.6], r: [-0.05, -0.1, -0.035], s: 1.52 },
-          { p: [1.62, -1.1, -0.34], r: [-0.045, -0.42, -0.17], s: 1.39 },
+          { p: [-1.36, -0.58, -0.12], r: [-0.045, 0.4, 0.185], s: 1.25 },
+          { p: [0.2, -0.22, 0.6], r: [-0.05, -0.1, -0.035], s: 1.35 },
+          { p: [1.62, -0.62, -0.34], r: [-0.045, -0.42, -0.17], s: 1.25 },
         ]
         : [
-          { p: [-2.06, -1.23, -0.12], r: [-0.045, 0.4, 0.185], s: 1.39 },
-          { p: [0.3, -1.08, 0.6], r: [-0.05, -0.1, -0.035], s: 1.52 },
-          { p: [2.45, -1.41, -0.34], r: [-0.045, -0.42, -0.17], s: 1.39 },
+          { p: [-2.05, -0.58, -0.12], r: [-0.045, 0.4, 0.185], s: 1.22 },
+          { p: [0.25, -0.36, 0.6], r: [-0.05, -0.1, -0.035], s: 1.32 },
+          { p: [2.35, -0.64, -0.34], r: [-0.045, -0.42, -0.17], s: 1.22 },
         ];
+
+      if (!showDetailPanel) {
+        SLOTS.detail = { p: [0, -0.05, 0.75], r: [0.02, -0.34, 0.05], s: SLOTS.portrait ? 0.94 : 1.08 };
+        return;
+      }
 
       if (SLOTS.portrait) {
         const el = dpRef.current;
@@ -876,13 +892,13 @@ export function BooksShowcase({
         const T13 = 0.23087,
           camZp = 9.9,
           zw = 0.8 * fit,
-          rootY = -(1 - fit) * 0.55;
+          rootY = -(1 - fit) * 0.28;
         const yw = 0.1 + (1 - (2 * midPx) / dims.h) * T13 * (camZp - zw);
         const availW = (((freeBot - freeTop) * 0.92) / dims.h) * 2 * T13 * (camZp - zw);
-        const s = clamp(availW / fit / 2.3, 0.5, 1.15);
+        const s = clamp(availW / fit / 2.65, 0.42, 0.92);
         SLOTS.detail = { p: [0, (yw - rootY) / fit, 0.8], r: [-0.02, -0.4, 0.06], s };
       } else {
-        SLOTS.detail = { p: [-1.95, 0.0, 1.1], r: [0.02, -0.52, 0.1], s: 1.26 };
+        SLOTS.detail = { p: [-1.68, 0.0, 0.85], r: [0.02, -0.44, 0.08], s: 1.06 };
       }
     }
 
@@ -1035,9 +1051,9 @@ export function BooksShowcase({
 
     function camTo(mode: string) {
       if (mode === 'detail') {
-        camX.t = SLOTS.portrait ? 0 : -0.4;
-        camZ.t = SLOTS.portrait ? 9.9 : 8.9;
-        lookX.t = SLOTS.portrait ? 0 : -0.5;
+        camX.t = SLOTS.portrait ? 0 : -0.25;
+        camZ.t = SLOTS.portrait ? 10.4 : 9.6;
+        lookX.t = SLOTS.portrait ? 0 : -0.35;
         lookY.t = SLOTS.portrait ? 0 : 0.15;
       } else {
         camX.t = 0;
@@ -1099,6 +1115,13 @@ export function BooksShowcase({
       setT(() => leaves.activate(book), 1000);
       setT(() => {
         if (state.mode === 'opening') {
+          currentWindow.forEach((bi) => {
+            const sibling = bookInstances[bi];
+            if (sibling !== book) {
+              sibling.exit = null;
+              sibling.root.visible = false;
+            }
+          });
           root!.classList.add('bs-detail-open');
           state.mode = 'detail';
           setUiMode('detail');
@@ -1212,6 +1235,7 @@ export function BooksShowcase({
 
     const onPointerDown = (e: PointerEvent) => {
       if (ptr.id !== null) return;
+      root.focus({ preventScroll: true });
       ptr.id = e.pointerId;
       const { x: cx, y: cy } = localXY(e);
       ptr.cx = cx;
@@ -1307,10 +1331,11 @@ export function BooksShowcase({
     }
 
     // Frame loop
-    const clock = new THREE.Clock();
+    const timer = new THREE.Timer();
+    timer.connect(document);
     const idle = RM ? 0 : 1;
-    const DETAIL_OPEN_ANGLE = 1.18;
-    const DETAIL_OPEN_SWAY = 0.05;
+    const DETAIL_OPEN_ANGLE = 0.88;
+    const DETAIL_OPEN_SWAY = 0.035;
 
     function screenPos(b: Book) {
       b.root.getWorldPosition(tmpV).project(camera);
@@ -1379,8 +1404,10 @@ export function BooksShowcase({
         s.tiltY.t = clamp(dxN * 0.28, -0.15, 0.15);
         s.tiltX.t = clamp(-dyN * 0.1, -0.09, 0.1);
         s.lift.t = 0.3;
-        const edge = b.hitEdge != null ? b.hitEdge : 0.5;
-        coverBase = 0.085 + edge * 0.16 + clamp(dyN, 0, 1) * 0.09;
+        // Keep the jacket closed while hovering. Opening it here exposed the
+        // page block between the spine and front cover as a broken white seam.
+        // The cover still opens intentionally after the book is selected.
+        coverBase = 0;
       } else {
         s.tiltY.t = 0;
         s.tiltX.t = 0;
@@ -1431,11 +1458,16 @@ export function BooksShowcase({
     }
 
     let rafId = 0;
-    function animate() {
-      if (cancelled) return;
+    let isInViewport = true;
+    function animate(timestamp?: number) {
+      if (cancelled || !isInViewport || document.hidden) {
+        rafId = 0;
+        return;
+      }
       rafId = requestAnimationFrame(animate);
-      const dt = Math.min(clock.getDelta(), 0.05);
-      const t = clock.elapsedTime;
+      timer.update(timestamp);
+      const dt = Math.min(timer.getDelta(), 0.05);
+      const t = timer.getElapsed();
 
       if (ptr.seen && (ptr.type === 'mouse' || ptr.down)) castRay();
       let hov: Book | null = null;
@@ -1487,11 +1519,16 @@ export function BooksShowcase({
       renderer.render(scene, camera);
     }
 
+    function resumeAnimation() {
+      if (!rafId && !cancelled && isInViewport && !document.hidden) animate();
+    }
+
     // Entrance + resize
     function relayout() {
       const r = root!.getBoundingClientRect();
       dims.w = Math.max(1, Math.round(r.width));
       dims.h = Math.max(1, Math.round(r.height));
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, dims.w < 800 ? 1.5 : 2));
       renderer.setSize(dims.w, dims.h);
       camera.aspect = dims.w / dims.h;
       camera.updateProjectionMatrix();
@@ -1522,6 +1559,29 @@ export function BooksShowcase({
     camTo('hero');
     animate();
 
+    const visibilityObserver = new IntersectionObserver(
+      ([entry]) => {
+        isInViewport = entry.isIntersecting;
+        if (isInViewport) resumeAnimation();
+        else if (rafId) {
+          cancelAnimationFrame(rafId);
+          rafId = 0;
+        }
+      },
+      { rootMargin: '160px' },
+    );
+    visibilityObserver.observe(root);
+
+    const onVisibilityChange = () => {
+      if (document.hidden && rafId) {
+        cancelAnimationFrame(rafId);
+        rafId = 0;
+      } else {
+        resumeAnimation();
+      }
+    };
+    document.addEventListener('visibilitychange', onVisibilityChange);
+
     const onWindowResize = () => relayout();
     let orientationTimeout: ReturnType<typeof setTimeout> | null = null;
     const onOrientation = () => {
@@ -1545,6 +1605,9 @@ export function BooksShowcase({
       timeouts.forEach((id) => clearTimeout(id));
       if (orientationTimeout) clearTimeout(orientationTimeout);
 
+      visibilityObserver.disconnect();
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+      timer.dispose();
       ro.disconnect();
       window.removeEventListener('resize', onWindowResize);
       window.removeEventListener('orientationchange', onOrientation);
@@ -1553,7 +1616,7 @@ export function BooksShowcase({
       }
       window.removeEventListener('pointerup', onPointerUp);
       window.removeEventListener('pointercancel', cancelPointer as any);
-      window.removeEventListener('keydown', onKeydown);
+      root.removeEventListener('keydown', onKeydown);
       canvas.removeEventListener('contextmenu', onContextMenu);
       canvas.removeEventListener('pointerleave', onPointerLeave);
       canvas.removeEventListener('pointermove', onPointerMove);
@@ -1577,24 +1640,19 @@ export function BooksShowcase({
       scene.environment = null;
       renderer.dispose();
     };
-  }, [books]);
+  }, [books, showDetailPanel]);
 
-  const themeVars: React.CSSProperties = themeColors
-    ? ({
-      '--bs-navy': themeColors.navy ?? '#141a32',
-      '--bs-pink': themeColors.pink ?? '#f591ac',
-      '--bs-cream': themeColors.cream ?? '#fdfbf4',
-      '--bs-lav': themeColors.lav ?? '#c9d0ee',
-      '--bs-peri': themeColors.peri ?? '#96a2de',
-    } as React.CSSProperties)
-    : ({
-      '--bs-navy': '#141a32',
-      '--bs-pink': '#f591ac',
-      '--bs-cream': '#fdfbf4',
-      '--bs-lav': '#c9d0ee',
-      '--bs-peri': '#96a2de',
-    } as React.CSSProperties);
-  if (themeColors?.bg) (themeVars as any).background = themeColors.bg;
+  const themeVars = {
+    '--bs-navy': themeColors?.navy ?? '#141a32',
+    '--bs-pink': themeColors?.pink ?? '#f591ac',
+    '--bs-cream': themeColors?.cream ?? '#fdfbf4',
+    '--bs-lav': themeColors?.lav ?? '#c9d0ee',
+    '--bs-peri': themeColors?.peri ?? '#96a2de',
+    '--bs-bg-light': themeColors?.bgLight ?? themeColors?.bg ?? '#fafafa',
+    '--bs-bg-dark': themeColors?.bgDark ?? themeColors?.bg ?? '#18181b',
+    '--bs-fg-light': themeColors?.foregroundLight ?? '#18181b',
+    '--bs-fg-dark': themeColors?.foregroundDark ?? '#fafafa',
+  } as React.CSSProperties;
 
   const panelVisible = uiMode === 'detail';
   const heroWordVisible = mounted && uiMode === 'hero';
@@ -1616,7 +1674,19 @@ export function BooksShowcase({
   return (
     <div
       ref={rootRef}
-      className={`book-showcase relative isolate h-[100svh] min-h-[560px] overflow-hidden text-white font-sans bg-[#fafafa] dark:bg-[#1b1b1b] [-webkit-tap-highlight-color:transparent] ${className || ''}`}
+      tabIndex={0}
+      role="region"
+      aria-label={`${heroTitle} book showcase`}
+      data-state={uiMode}
+      className={cn(
+        'book-showcase relative isolate h-full min-h-[560px] overflow-hidden font-sans outline-none [container-type:size] [-webkit-tap-highlight-color:transparent]',
+        'focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--bs-peri)]',
+        'transition-colors duration-500 ease-out',
+        uiMode === 'hero'
+          ? 'bg-[var(--bs-bg-light)] text-[var(--bs-fg-light)] dark:bg-[var(--bs-bg-dark)] dark:text-[var(--bs-fg-dark)]'
+          : 'bg-[var(--bs-navy)] text-[var(--bs-cream)]',
+        className,
+      )}
       style={themeVars}
     >
       {/* hero word */}
@@ -1624,17 +1694,29 @@ export function BooksShowcase({
         className={`pointer-events-none absolute left-1/2 top-[18%] z-[1] -translate-x-1/2 select-none transition-all duration-500 ease-out ${heroWordVisible ? 'translate-y-0 opacity-100' : uiMode === 'hero' ? '-translate-y-0 translate-y-[60px] opacity-0' : '-translate-y-11 opacity-0'
           }`}
       >
-        <span className="block whitespace-nowrap text-[#1b1b1b] dark:text-[#fafafa] text-[min(22.5vw,45vh)] font-extrabold leading-[0.85] tracking-[-0.015em]">
+        <span className="block whitespace-nowrap text-current text-[clamp(4.5rem,22.5cqw,18rem)] font-extrabold leading-[0.85] tracking-[-0.015em]">
           {heroTitle}
         </span>
       </div>
 
-      <canvas ref={canvasRef} className="absolute inset-0 z-[2] block h-full w-full touch-none" />
+      <canvas ref={canvasRef} aria-hidden="true" className="absolute inset-0 z-[2] block h-full w-full touch-none" />
+
+      {books.length === 0 && (
+        <div className="absolute inset-0 z-10 flex items-center justify-center p-8 text-center text-sm text-current opacity-60">
+          Add at least one book to display the showcase.
+        </div>
+      )}
 
       {showNav && (
-        <nav className="pointer-events-none absolute inset-x-0 top-0 z-40 flex items-center justify-between px-[42px] py-[26px] max-[760px]:px-5 max-[760px]:py-[18px]">
-          <div className="pointer-events-auto text-[clamp(20px,2.2vw,29px)] font-extrabold tracking-[-0.01em] text-[#1b1b1b] dark:text-[#fafafa]">
-            Bestsellers
+        <nav
+          aria-hidden={uiMode !== 'hero'}
+          className={cn(
+            'pointer-events-none absolute inset-x-0 top-0 z-40 flex items-center justify-between px-[clamp(20px,4cqw,42px)] py-[clamp(18px,3cqh,26px)] transition-opacity duration-300',
+            uiMode === 'hero' ? 'opacity-100' : 'opacity-0',
+          )}
+        >
+          <div className="text-[clamp(20px,2.2cqw,29px)] font-extrabold tracking-[-0.01em] text-current">
+            {navTitle}
           </div>
         </nav>
       )}
@@ -1645,7 +1727,7 @@ export function BooksShowcase({
             type="button"
             aria-label="Previous books"
             onClick={() => shiftCarouselRef.current(-1)}
-            className={`absolute left-3 top-1/2 z-30 -translate-y-1/2 inline-flex h-11 w-11 items-center justify-center rounded-full bg-[var(--bs-cream)]/90 text-[var(--bs-navy)] shadow-lg transition-all duration-300 hover:scale-105 hover:bg-[var(--bs-cream)] md:left-6 md:h-12 md:w-12 ${uiMode === 'hero' ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
+            className={`absolute left-3 top-1/2 z-30 -translate-y-1/2 inline-flex h-11 w-11 items-center justify-center rounded-full bg-[var(--bs-cream)]/90 text-[var(--bs-navy)] shadow-lg transition-all duration-300 hover:scale-105 hover:bg-[var(--bs-cream)] @min-[768px]:left-6 @min-[768px]:h-12 @min-[768px]:w-12 ${uiMode === 'hero' ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
               }`}
           >
             <ChevronLeft />
@@ -1654,7 +1736,7 @@ export function BooksShowcase({
             type="button"
             aria-label="Next books"
             onClick={() => shiftCarouselRef.current(1)}
-            className={`absolute right-3 top-1/2 z-30 -translate-y-1/2 inline-flex h-11 w-11 items-center justify-center rounded-full bg-[var(--bs-cream)]/90 text-[var(--bs-navy)] shadow-lg transition-all duration-300 hover:scale-105 hover:bg-[var(--bs-cream)] md:right-6 md:h-12 md:w-12 ${uiMode === 'hero' ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
+            className={`absolute right-3 top-1/2 z-30 -translate-y-1/2 inline-flex h-11 w-11 items-center justify-center rounded-full bg-[var(--bs-cream)]/90 text-[var(--bs-navy)] shadow-lg transition-all duration-300 hover:scale-105 hover:bg-[var(--bs-cream)] @min-[768px]:right-6 @min-[768px]:h-12 @min-[768px]:w-12 ${uiMode === 'hero' ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
               }`}
           >
             <ChevronRight />
@@ -1683,7 +1765,7 @@ export function BooksShowcase({
       <button
         ref={closeBtnRef}
         aria-label="Close detail view"
-        className={`absolute left-1/2 top-[30px] z-40 -translate-x-1/2 inline-flex h-[52px] w-[52px] items-center justify-center rounded-full border-[1.5px] border-[var(--bs-cream)]/40 bg-transparent text-[17px] leading-none text-[var(--bs-cream)] transition-[opacity,border-color] duration-300 delay-150 hover:border-[var(--bs-cream)]/90 max-[760px]:left-auto max-[760px]:right-[18px] max-[760px]:top-[18px] max-[760px]:translate-x-0 [-webkit-tap-highlight-color:transparent] ${uiMode === 'detail' ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
+        className={`absolute left-1/2 top-[30px] z-40 -translate-x-1/2 inline-flex h-[52px] w-[52px] items-center justify-center rounded-full border-[1.5px] border-[var(--bs-cream)]/40 bg-transparent text-[17px] leading-none text-[var(--bs-cream)] transition-[opacity,border-color] duration-300 delay-150 hover:border-[var(--bs-cream)]/90 @max-[760px]:left-auto @max-[760px]:right-[18px] @max-[760px]:top-[18px] @max-[760px]:translate-x-0 [-webkit-tap-highlight-color:transparent] ${uiMode === 'detail' ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
           }`}
       >
         &#10005;
@@ -1693,16 +1775,16 @@ export function BooksShowcase({
         <div
           ref={dpRef}
           aria-live="polite"
-          className={`absolute right-[7%] top-1/2 z-[15] w-[min(560px,42%)] -translate-y-1/2 pointer-events-none max-[760px]:right-auto max-[760px]:left-1/2 max-[760px]:top-auto max-[760px]:bottom-[3.5%] max-[760px]:w-[min(560px,92vw)] max-[760px]:-translate-x-1/2 max-[760px]:translate-y-0 ${panelVisible ? 'visible' : 'invisible delay-[500ms]'
+          className={`absolute right-[7%] top-1/2 z-[15] w-[min(560px,42%)] -translate-y-1/2 pointer-events-none @max-[760px]:right-auto @max-[760px]:left-1/2 @max-[760px]:top-auto @max-[760px]:bottom-[3.5%] @max-[760px]:w-[min(560px,92cqw)] @max-[760px]:-translate-x-1/2 @max-[760px]:translate-y-0 ${panelVisible ? 'visible' : 'invisible delay-[500ms]'
             }`}
         >
-          <h1 className={`m-0 text-[var(--bs-pink)] text-[clamp(52px,5.6vw,92px)] font-extrabold leading-[0.98] tracking-[-0.015em] max-[760px]:text-[clamp(36px,9.5vw,54px)] ${dpChild(50)}`}>
+          <h1 className={`m-0 text-[var(--bs-pink)] text-[clamp(52px,5.6cqw,92px)] font-extrabold leading-[0.98] tracking-[-0.015em] @max-[760px]:text-[clamp(36px,9.5cqw,54px)] ${dpChild(50)}`}>
             {selectedCfg?.title}
           </h1>
-          <p className={`mt-[26px] max-w-[54ch] text-[var(--bs-lav)] text-[clamp(16px,1.25vw,19px)] leading-[1.65] max-[760px]:mt-4 max-[760px]:line-clamp-4 max-[760px]:text-[15px] ${dpChild(130)}`}>
+          <p className={`mt-[26px] max-w-[54ch] text-[var(--bs-lav)] text-[clamp(16px,1.25cqw,19px)] leading-[1.65] @max-[760px]:mt-4 @max-[760px]:line-clamp-4 @max-[760px]:text-[15px] ${dpChild(130)}`}>
             {selectedCfg?.desc}
           </p>
-          <div className={`mt-[34px] flex items-center gap-[18px] max-[760px]:mt-[18px] ${dpChild(210)}`}>
+          <div className={`mt-[34px] flex items-center gap-[18px] @max-[760px]:mt-[18px] ${dpChild(210)}`}>
             <div className="flex gap-[5px]">
               {[0, 1, 2, 3, 4].map((i) => (
                 <svg
@@ -1718,21 +1800,21 @@ export function BooksShowcase({
             <div className="text-[19px] italic text-[#98a4d6]">Goodreads</div>
             <div className="ml-auto text-[19px] italic text-[#98a4d6]">{selectedCfg?.year}</div>
           </div>
-          <div className={`mt-[26px] border-t border-[var(--bs-lav)]/[0.18] max-[760px]:mt-4 ${dpChild(270)}`} />
+          <div className={`mt-[26px] border-t border-[var(--bs-lav)]/[0.18] @max-[760px]:mt-4 ${dpChild(270)}`} />
           <div
-            className={`pointer-events-auto mt-8 inline-flex items-center gap-[10px] rounded-full bg-[#1a2140] p-[10px] shadow-[0_24px_60px_rgba(0,0,0,0.45)] max-[760px]:mt-[18px] max-[760px]:flex-wrap max-[760px]:rounded-[28px] ${dpChild(330)}`}
+            className={`pointer-events-auto mt-8 inline-flex items-center gap-[10px] rounded-full bg-[#1a2140] p-[10px] shadow-[0_24px_60px_rgba(0,0,0,0.45)] @max-[760px]:mt-[18px] @max-[760px]:flex-wrap @max-[760px]:rounded-[28px] ${dpChild(330)}`}
           >
-            <button className="inline-flex h-[54px] items-center gap-[10px] rounded-full bg-[var(--bs-cream)] px-[26px] text-[16.5px] font-semibold text-[var(--bs-navy)] transition-[transform,filter] duration-[220ms] ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-[1.04] hover:brightness-105 max-[760px]:h-12 max-[760px]:px-5 max-[760px]:text-[15px]">
+            <button className="inline-flex h-[54px] items-center gap-[10px] rounded-full bg-[var(--bs-cream)] px-[26px] text-[16.5px] font-semibold text-[var(--bs-navy)] transition-[transform,filter] duration-[220ms] ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-[1.04] hover:brightness-105 @max-[760px]:h-12 @max-[760px]:px-5 @max-[760px]:text-[15px]">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.7} className="h-5 w-5">
                 <circle cx="12" cy="12" r="9" />
                 <path d="M3 12h18M12 3c2.8 2.6 2.8 15.4 0 18M12 3c-2.8 2.6-2.8 15.4 0 18" />
               </svg>
               <span>English</span>
             </button>
-            <button className="inline-flex h-[54px] items-center gap-[10px] rounded-full bg-[var(--bs-peri)] px-[26px] text-[16.5px] font-semibold text-[#10152c] transition-[transform,filter] duration-[220ms] ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-[1.04] hover:brightness-105 max-[760px]:h-12 max-[760px]:px-5 max-[760px]:text-[15px]">
+            <button className="inline-flex h-[54px] items-center gap-[10px] rounded-full bg-[var(--bs-peri)] px-[26px] text-[16.5px] font-semibold text-[#10152c] transition-[transform,filter] duration-[220ms] ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-[1.04] hover:brightness-105 @max-[760px]:h-12 @max-[760px]:px-5 @max-[760px]:text-[15px]">
               Buy Now
             </button>
-            <button className="inline-flex h-[54px] items-center gap-[10px] rounded-full bg-[var(--bs-peri)] px-[26px] text-[16.5px] font-semibold text-[#10152c] transition-[transform,filter] duration-[220ms] ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-[1.04] hover:brightness-105 max-[760px]:h-12 max-[760px]:px-5 max-[760px]:text-[15px]">
+            <button className="inline-flex h-[54px] items-center gap-[10px] rounded-full bg-[var(--bs-peri)] px-[26px] text-[16.5px] font-semibold text-[#10152c] transition-[transform,filter] duration-[220ms] ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-[1.04] hover:brightness-105 @max-[760px]:h-12 @max-[760px]:px-5 @max-[760px]:text-[15px]">
               Buy Audiobook
             </button>
             <button

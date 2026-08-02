@@ -2046,10 +2046,12 @@ export function MegaMenuNavbarDemo() {
   },
   "books-showcase": {
     dependencies: "npm install three",
-    includeUtils: false,
+    includeUtils: true,
     manualNotes: [
       "The component relies on Three.js for 3D rendering. Ensure you have three installed.",
-      "The root element uses 100svh with a 560px minimum height. Pass className to override the height.",
+      "The root fills its parent and keeps a 560px minimum height. Give the parent an explicit height, or pass className (for example, h-[680px] or min-h-0) to control the stage.",
+      "Rendering pauses while the showcase is offscreen or the browser tab is hidden.",
+      "Light and dark backgrounds follow the site's .dark class and can be customized independently through themeColors.",
       "The 'books' prop accepts an array of BookCfg objects. Each book requires id, title, author, year, stars, and desc. Supply cover art through images.front, images.back, and images.spine.",
       "For best performance, cover images should be optimized webp/jpg files.",
     ],
@@ -2074,14 +2076,24 @@ const DEMO_BOOKS = [
 
 export function BooksShowcaseDemo() {
   return (
-    <BooksShowcase books={DEMO_BOOKS} />
+    <div className="h-[680px] w-full">
+      <BooksShowcase
+        books={DEMO_BOOKS}
+        heroTitle="Books"
+        navTitle="Bestsellers"
+        className="min-h-0"
+      />
+    </div>
   )
 }`,
     props: [
       { prop: "books", type: "BookCfg[]", defaultValue: "-", description: "Array of book configurations to display in the showcase." },
       { prop: "heroTitle", type: "string", defaultValue: "'Books'", description: "The large background text shown when no book is focused." },
+      { prop: "navTitle", type: "string", defaultValue: "'Bestsellers'", description: "The small heading displayed above the book collection." },
       { prop: "showNav", type: "boolean", defaultValue: "true", description: "Whether to show the top navigation bar." },
       { prop: "showDetailPanel", type: "boolean", defaultValue: "true", description: "Whether to show the details panel when a book is clicked." },
+      { prop: "showCarousel", type: "boolean", defaultValue: "true", description: "Whether to show carousel controls when more than three books are supplied." },
+      { prop: "themeColors", type: "BooksShowcaseTheme", defaultValue: "-", description: "Overrides accent colors plus independent light/dark backgrounds and foregrounds." },
       { prop: "className", type: "string", defaultValue: "-", description: "Additional CSS classes for the main wrapper." },
       { prop: "onBookSelect", type: "(book: BookCfg | null) => void", defaultValue: "-", description: "Callback triggered when a book is selected or deselected." },
     ],
@@ -2101,6 +2113,20 @@ export function BooksShowcaseDemo() {
           { prop: "backBg", type: "string", defaultValue: "-", description: "Hex color for the back cover background." },
           { prop: "backInk", type: "string", defaultValue: "-", description: "RGB comma-separated color for back cover text (e.g., '255,255,255')." },
           { prop: "edge", type: "string", defaultValue: "-", description: "Hex color for the page edges." },
+        ],
+      },
+      {
+        title: "themeColors",
+        data: [
+          { prop: "navy", type: "string", defaultValue: "'#141a32'", description: "Detail-view background and primary dark accent." },
+          { prop: "pink", type: "string", defaultValue: "'#f591ac'", description: "Detail title and rating accent." },
+          { prop: "cream", type: "string", defaultValue: "'#fdfbf4'", description: "High-contrast controls and labels." },
+          { prop: "lav", type: "string", defaultValue: "'#c9d0ee'", description: "Detail body copy and muted controls." },
+          { prop: "peri", type: "string", defaultValue: "'#96a2de'", description: "Primary action background." },
+          { prop: "bgLight", type: "string", defaultValue: "'#fafafa'", description: "Hero background in light mode." },
+          { prop: "bgDark", type: "string", defaultValue: "'#18181b'", description: "Hero background in dark mode." },
+          { prop: "foregroundLight", type: "string", defaultValue: "'#18181b'", description: "Hero text in light mode." },
+          { prop: "foregroundDark", type: "string", defaultValue: "'#fafafa'", description: "Hero text in dark mode." },
         ],
       },
     ],

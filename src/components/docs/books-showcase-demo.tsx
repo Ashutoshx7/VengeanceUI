@@ -81,8 +81,8 @@ const DEMO_BOOKS: BookCfg[] = [
 
 export function BooksShowcaseDemo() {
   return (
-    <div className="w-full h-full min-h-[700px]  relative">
-      <BooksShowcase books={DEMO_BOOKS} />
+    <div className="relative h-full min-h-0 w-full">
+      <BooksShowcase books={DEMO_BOOKS} className="h-full min-h-0" />
     </div>
   );
 }
