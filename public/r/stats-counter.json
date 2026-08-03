@@ -1,0 +1,16 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "stats-counter",
+  "type": "registry:ui",
+  "dependencies": [
+    "framer-motion"
+  ],
+  "files": [
+    {
+      "path": "components/ui/stats-counter.tsx",
+      "content": "\"use client\";\n\nimport { useEffect, useRef, useState } from \"react\";\nimport { useInView, useMotionValue, useSpring } from \"framer-motion\";\nimport { cn } from \"@/lib/utils\";\n\ninterface StatsCounterProps {\n  value: number;\n  duration?: number;\n  prefix?: string;\n  suffix?: string;\n  decimals?: number;\n  className?: string;\n}\n\nexport default function StatsCounter({\n  value,\n  duration = 1.5,\n  prefix = \"\",\n  suffix = \"\",\n  decimals = 0,\n  className,\n}: StatsCounterProps) {\n  const ref = useRef<HTMLSpanElement>(null);\n  const isInView = useInView(ref, { once: true, margin: \"-100px\" });\n  const motionValue = useMotionValue(0);\n  const springValue = useSpring(motionValue, { duration: duration * 1000, bounce: 0 });\n  const [displayValue, setDisplayValue] = useState(0);\n\n  useEffect(() => {\n    if (isInView) {\n      motionValue.set(value);\n    }\n  }, [isInView, value, motionValue]);\n\n  useEffect(() => {\n    const unsubscribe = springValue.on(\"change\", (latest) => {\n      setDisplayValue(latest);\n    });\n    return unsubscribe;\n  }, [springValue]);\n\n  return (\n    <span ref={ref} className={cn(\"tabular-nums\", className)}>\n      {prefix}\n      {displayValue.toFixed(decimals)}\n      {suffix}\n    </span>\n  );\n}\n",
+      "type": "registry:ui",
+      "target": "components/ui/stats-counter.tsx"
+    }
+  ]
+}
