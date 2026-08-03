@@ -56,6 +56,30 @@ export function AnimatedButtonDemo() {
     ],
   },
 
+  "stats-counter": {
+    dependencies: "npm install framer-motion clsx tailwind-merge",
+    includeUtils: true,
+    usageCode: `import StatsCounter from "@/components/ui/stats-counter"
+
+export function StatsCounterDemo() {
+  return (
+    <StatsCounter
+      value={12000}
+      suffix="+"
+      duration={2}
+    />
+  )
+}`,
+    props: [
+      { prop: "value", type: "number", defaultValue: "-", description: "The target number to count up to." },
+      { prop: "duration", type: "number", defaultValue: "1.5", description: "Duration of the count-up animation in seconds." },
+      { prop: "prefix", type: "string", defaultValue: "''", description: "Text shown before the number (e.g. '$')." },
+      { prop: "suffix", type: "string", defaultValue: "''", description: "Text shown after the number (e.g. '+', '%')." },
+      { prop: "decimals", type: "number", defaultValue: "0", description: "Number of decimal places to display." },
+      { prop: "className", type: "string", defaultValue: "-", description: "Additional CSS classes to apply." },
+    ],
+  },
+
   "animated-rays": {
     dependencies: "npm install framer-motion clsx tailwind-merge",
     includeUtils: true,

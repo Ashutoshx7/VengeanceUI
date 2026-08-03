@@ -30,6 +30,7 @@ const DEMO_COMPONENTS: Record<string, React.ComponentType> = {
 
   "animated-rays": dynamic(() => import("@/components/docs/animated-rays").then((m) => ({ default: m.AnimatedRaysDemo })), { ssr: false, loading: LOADING }),
   "animated-number": dynamic(() => import("@/components/docs/animated-number").then((m) => ({ default: m.AnimatedNumberDemo })), { ssr: false, loading: LOADING }),
+  "stats-counter": dynamic(() => import("@/components/docs/stats-counter-demo").then((m) => ({ default: m.StatsCounterDemo })), { ssr: false, loading: LOADING }),
   "flip-text": dynamic(() => import("@/components/docs/Fliptext-examples/flip-text-demo").then((m) => ({ default: m.default })), { ssr: false, loading: LOADING }),
   "flip-fade-text": dynamic(() => import("@/components/docs/flip-fade-text").then((m) => ({ default: m.FlipFadeTextDemo })), { ssr: false, loading: LOADING }),
   "morph-text": dynamic(() => import("@/components/docs/morph-text-demo").then((m) => ({ default: m.MorphTextDemo })), { ssr: false, loading: LOADING }),
