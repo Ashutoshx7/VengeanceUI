@@ -1039,6 +1039,16 @@
     ]
   },
   {
+    "name": "stats-counter",
+    "dependencies": [
+      "framer-motion"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/stats-counter.json"
+    ]
+  },
+  {
     "name": "staggered-grid",
     "dependencies": [
       "gsap"

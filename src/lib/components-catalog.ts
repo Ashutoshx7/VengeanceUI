@@ -41,6 +41,7 @@ export const COMPONENT_CATEGORIES: ComponentCategory[] = [
     icon: Type,
     items: [
       { name: "Animated Number", slug: "animated-number", description: "Smooth numeric transitions", componentName: "animated-number" },
+      { name: "Stats Counter", slug: "stats-counter", description: "Count-up number animation triggered on scroll", componentName: "stats-counter", isNew: true },
       { name: "Flip Text", slug: "flip-text", description: "Character flip text animation", componentName: "flip-text" },
       { name: "Flip Fade Text", slug: "flip-fade-text", description: "Word flip and fade cycle", componentName: "flip-fade-text" },
       { name: "Liquid Text", slug: "liquid-text", description: "Fluid displacement text effect", componentName: "liquid-text" },
