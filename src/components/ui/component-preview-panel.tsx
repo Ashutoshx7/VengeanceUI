@@ -61,7 +61,32 @@ export function ComponentPreviewPanel({ installCommand, children }: ComponentPre
           <div className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-neutral-100 dark:bg-zinc-800 text-neutral-400 dark:text-zinc-500">
             <Terminal className="h-3.5 w-3.5" />
           </div>
-          <span className="min-w-0 max-w-[42vw] truncate font-mono text-neutral-500 dark:text-zinc-400 lg:max-w-[500px]">{installCommand}</span>
+          <span className="min-w-0 max-w-[42vw] truncate font-mono text-neutral-500 dark:text-zinc-400 lg:max-w-[500px]">
+            {(() => {
+              const parts = installCommand.split(" ");
+              const shadcnIndex = parts.findIndex(p => p.includes("shadcn@latest") || p.includes("shadcn-ui@latest"));
+              const addIndex = parts.findIndex(p => p === "add");
+              
+              if (shadcnIndex === -1 || addIndex === -1) {
+                return installCommand;
+              }
+
+              const executor = parts.slice(0, shadcnIndex).join(" ");
+              const url = parts.slice(addIndex + 1).join(" ");
+
+              return (
+                <>
+                  <span className="text-indigo-500 dark:text-[#a0a0cc]">{executor}</span>
+                  {" "}
+                  <span className="text-cyan-600 dark:text-[#8bb8d0]">{parts[shadcnIndex]}</span>
+                  {" "}
+                  <span className="text-neutral-500 dark:text-[#a1a1aa]">add</span>
+                  {" "}
+                  <span className="text-amber-600 dark:text-[#c9a87c]">{url}</span>
+                </>
+              );
+            })()}
+          </span>
           <CopyButton code={installCommand} className="ml-auto h-7 w-7 shrink-0 border-neutral-200 dark:border-white/10 bg-transparent hover:bg-neutral-100 dark:hover:bg-white/10" />
           <button
             type="button"
@@ -96,7 +121,7 @@ export function ComponentPreviewPanel({ installCommand, children }: ComponentPre
                 type="button"
                 onClick={() => setIsFullscreen(false)}
                 className={cn(
-                  "absolute right-3 top-3 z-[10000] inline-flex h-9 w-9 items-center justify-center rounded-md border border-white/10 bg-black/70 text-white/70 shadow-lg backdrop-blur transition-colors hover:bg-black/85 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60",
+                  "absolute right-3 top-3 z-10000 inline-flex h-9 w-9 items-center justify-center rounded-md border border-white/10 bg-black/70 text-white/70 shadow-lg backdrop-blur transition-colors hover:bg-black/85 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60",
                   !isFullscreen && "hidden"
                 )}
                 aria-label="Exit fullscreen"

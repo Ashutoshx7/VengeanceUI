@@ -146,6 +146,27 @@
     --ring: var(--color-white);
   }
 
+  /* Shiki Dual-Theming Support for Tailwind */
+  .shiki, .shiki span {
+    color: var(--shiki-light);
+    font-style: var(--shiki-light-font-style);
+    font-weight: var(--shiki-light-font-weight);
+    text-decoration: var(--shiki-light-text-decoration);
+  }
+
+  .dark .shiki, .dark .shiki span {
+    color: var(--shiki-dark) !important;
+    font-style: var(--shiki-dark-font-style) !important;
+    font-weight: var(--shiki-dark-font-weight) !important;
+    text-decoration: var(--shiki-dark-text-decoration) !important;
+  }
+  
+  /* Ensure the pre tag background remains transparent so our container styles shine through */
+  .shiki {
+    background-color: transparent !important;
+  }
+
+
   * {
     @apply border-border outline-ring/50;
     scrollbar-width: none;
@@ -196,7 +217,7 @@
 
   .line {
     counter-increment: css-counter 1;
-    @apply relative pl-7 before:absolute before:text-white/20 before:inset-y-0 before:transition-colors before:duration-200 before:content-[counter(css-counter)] before:text-xs before:left-0 before:my-auto hover:before:text-white
+    @apply relative pl-7 before:absolute before:text-black/20 dark:before:text-white/20 before:inset-y-0 before:transition-colors before:duration-200 before:content-[counter(css-counter)] before:text-xs before:left-0 before:my-auto hover:before:text-black dark:hover:before:text-white;
   }
 }
 
