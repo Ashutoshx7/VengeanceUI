@@ -121,7 +121,7 @@ export function ComponentPreviewPanel({ installCommand, children }: ComponentPre
                 type="button"
                 onClick={() => setIsFullscreen(false)}
                 className={cn(
-                  "absolute right-3 top-3 z-10000 inline-flex h-9 w-9 items-center justify-center rounded-md border border-white/10 bg-black/70 text-white/70 shadow-lg backdrop-blur transition-colors hover:bg-black/85 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60",
+                  "absolute right-3 top-3 z-[10000] inline-flex h-9 w-9 items-center justify-center rounded-md border border-white/10 bg-black/70 text-white/70 shadow-lg backdrop-blur transition-colors hover:bg-black/85 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60",
                   !isFullscreen && "hidden"
                 )}
                 aria-label="Exit fullscreen"

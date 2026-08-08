@@ -173,7 +173,7 @@ export function CodeBlock({ code, language = "bash", className, expandable = fal
             "relative group/code overflow-hidden",
             // Match the new Shiki CodeBlock aesthetic for dark mode
             nested
-                ? "border-0 bg-transparent p-0 m-0 shadow-none rounded-none!"
+                ? "border-0 bg-transparent p-0 m-0 shadow-none !rounded-none"
                 : "rounded-md border border-neutral-200 dark:border-zinc-800/80 bg-neutral-50 dark:bg-black mb-4 shadow-sm",
             className
         )}>
@@ -205,7 +205,7 @@ export function CodeBlock({ code, language = "bash", className, expandable = fal
                 />
             </div>
             {expandable && !isExpanded && (
-                <div className="absolute inset-0 flex items-center justify-center z-10 bg-linear-to-t from-neutral-50 dark:from-zinc-950 via-neutral-50/40 dark:via-zinc-950/40 to-transparent pt-20">
+                <div className="absolute inset-0 flex items-center justify-center z-10 bg-gradient-to-t from-neutral-50 dark:from-zinc-950 via-neutral-50/40 dark:via-zinc-950/40 to-transparent pt-20">
                     <button
                         onClick={() => setIsExpanded(true)}
                         className="px-4 py-1.5 rounded-full bg-white/50 dark:bg-zinc-800/50 backdrop-blur-sm text-[12px] font-medium text-neutral-600 dark:text-neutral-300 border border-neutral-200 dark:border-zinc-700 shadow-sm hover:bg-neutral-100/80 dark:hover:bg-zinc-800/80 transition-all hover:scale-105 active:scale-95"

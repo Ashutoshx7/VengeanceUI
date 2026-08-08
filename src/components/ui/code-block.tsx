@@ -33,7 +33,7 @@ export async function CodeBlock({ fileName, code, language = "tsx", title }: Cod
     } else {
       try {
         codeString = fs.readFileSync(existingFilePath, "utf8");
-      } catch (e) {
+      } catch {
         console.warn(`[CodeBlock] Failed to read existing file: ${fileName}`);
         codeString = `// Error reading file: ${fileName}`;
       }
@@ -68,7 +68,7 @@ export async function CodeBlock({ fileName, code, language = "tsx", title }: Cod
       
       {/* The beautifully highlighted code */}
       <div
-        className="[counter-reset:css-counter] text-sm font-mono leading-relaxed overflow-x-auto p-4 scrollbar-hide selection:bg-neutral-200 dark:selection:bg-zinc-800 selection:text-black dark:selection:text-white [&>pre]:bg-transparent! [&>pre]:m-0! [&_code]:font-mono"
+        className="[counter-reset:css-counter] text-sm font-mono leading-relaxed overflow-x-auto p-4 scrollbar-hide selection:bg-neutral-200 dark:selection:bg-zinc-800 selection:text-black dark:selection:text-white [&>pre]:!bg-transparent [&>pre]:!m-0 [&_code]:font-mono"
         dangerouslySetInnerHTML={{ __html: html }}
       />
     </div>
