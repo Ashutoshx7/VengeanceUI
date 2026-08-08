@@ -1,6 +1,6 @@
 import * as React from "react";
-import { CopyButton } from "@/components/ui/copy-button";
 import { cn } from "@/lib/utils";
+import { CodeBlock } from "@/components/ui/code-block";
 
 export function DocsArticle({ children }: { children: React.ReactNode }) {
   return (
@@ -87,41 +87,20 @@ export function DocsCodeBlock({
   code,
   title,
   className,
+  language,
 }: {
   code: string;
   title?: string;
   className?: string;
+  language?: string;
 }) {
   const displayCode = code.trimEnd();
-  const lines = displayCode.split("\n");
+  const detectedLanguage = language || (displayCode.startsWith('{') ? 'json' : 'bash');
 
   return (
     <div className={cn("space-y-2", className)}>
-      {title ? (
-        <div className="font-mono text-sm font-medium text-neutral-700 dark:text-zinc-300">
-          {title}
-        </div>
-      ) : null}
-      <div className="group/code relative overflow-hidden rounded-md border border-zinc-800 bg-[#101116] shadow-[0_18px_44px_rgba(15,15,18,0.18)]">
-        <CopyButton
-          code={displayCode}
-          className="absolute right-3 top-3 border-zinc-700 bg-zinc-900/80 opacity-0 backdrop-blur transition-opacity group-hover/code:opacity-100"
-        />
-        <pre className="overflow-x-auto p-5 pr-14 text-sm leading-6 text-zinc-100">
-          <code className="table min-w-max font-mono">
-            {lines.map((line, index) => (
-              <span className="table-row" key={`${index}-${line}`}>
-                <span className="table-cell w-8 select-none pr-5 text-right text-xs text-zinc-600">
-                  {index + 1}
-                </span>
-                <span className="table-cell whitespace-pre text-zinc-100">
-                  {line || " "}
-                </span>
-              </span>
-            ))}
-          </code>
-        </pre>
-      </div>
+      <CodeBlock code={displayCode} title={title} language={detectedLanguage} />
     </div>
   );
 }
+

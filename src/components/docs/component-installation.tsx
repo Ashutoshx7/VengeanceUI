@@ -161,7 +161,8 @@ export function CodeBlock({ code, language = "bash", className, expandable = fal
     const [isMounted, setIsMounted] = React.useState(false)
 
     React.useEffect(() => {
-        setIsMounted(true)
+        const timer = setTimeout(() => setIsMounted(true), 0)
+        return () => clearTimeout(timer)
     }, [])
 
     // Use light theme by default on server/initial render to prevent hydration mismatch
@@ -170,31 +171,21 @@ export function CodeBlock({ code, language = "bash", className, expandable = fal
     return (
         <div className={cn(
             "relative group/code overflow-hidden",
-            // Adaptable styling: Light Mode (Standard) vs Dark Mode (Pitch Black)
+            // Match the new Shiki CodeBlock aesthetic for dark mode
             nested
                 ? "border-0 bg-transparent p-0 m-0 shadow-none !rounded-none"
-                : "rounded-sm border border-neutral-200 dark:border-[#222] bg-neutral-50 dark:bg-zinc-950 mb-4",
+                : "rounded-md border border-neutral-200 dark:border-zinc-800/80 bg-neutral-50 dark:bg-black mb-4 shadow-sm",
             className
         )}>
-            {hideCopy ? null : title ? (
-                <div className="flex items-center justify-between px-3 py-2 border-b border-neutral-200 dark:border-[#222] bg-white dark:bg-zinc-900/80 rounded-t-sm">
+            {hideCopy || nested ? null : (
+                <div className="flex items-center justify-between px-4 py-2.5 border-b border-neutral-200 dark:border-zinc-800/80 bg-white dark:bg-zinc-900/50 backdrop-blur rounded-t-sm">
                     <div className="flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-500 fill-emerald-500 rotate-180"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" /></svg>
-                        <span className="text-sm text-neutral-500 dark:text-neutral-400 font-medium">{title}</span>
+                        <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                        <span className="text-xs font-mono font-medium text-neutral-500 dark:text-zinc-300">{title || "code"}</span>
                     </div>
                     <button
                         onClick={() => copy(code)}
-                        className="flex items-center justify-center w-7 h-7 rounded-sm hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-400 dark:text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300 transition-all"
-                        aria-label="Copy code"
-                    >
-                        {hasCopied ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
-                    </button>
-                </div>
-            ) : hideCopy ? null : (
-                <div className="absolute right-3 top-3 z-20 opacity-0 group-hover/code:opacity-100 transition-opacity duration-200">
-                    <button
-                        onClick={() => copy(code)}
-                        className="flex items-center justify-center w-7 h-7 rounded-md bg-white/50 dark:bg-neutral-800/50 backdrop-blur-md border border-neutral-200 dark:border-[#222] text-neutral-400 dark:text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-200 transition-all active:scale-95"
+                        className="flex items-center justify-center w-7 h-7 rounded-sm border-none bg-transparent hover:bg-neutral-100 dark:hover:bg-zinc-800 text-neutral-400 dark:text-zinc-500 hover:text-neutral-700 dark:hover:text-zinc-300 transition-all"
                         aria-label="Copy code"
                     >
                         {hasCopied ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
@@ -202,7 +193,7 @@ export function CodeBlock({ code, language = "bash", className, expandable = fal
                 </div>
             )}
             <div className={cn(
-                "relative text-base font-mono leading-relaxed overflow-x-auto scrollbar-hide",
+                "relative text-sm font-mono leading-relaxed overflow-x-auto scrollbar-hide selection:bg-zinc-800 selection:text-white",
                 !nested && "p-4",
                 expandable && !isExpanded && "max-h-32 overflow-hidden",
             )}>
@@ -271,8 +262,8 @@ export const Dependencies = ({ step, title, children, copyText, id }: Dependenci
     const processedChildren = React.useMemo(() => {
         return React.Children.map(children, (child) => {
             if (React.isValidElement(child) && child.type === CodeBlock) {
-                // Pass nested={true} to remove borders/styles from inner block
-                return React.cloneElement(child as React.ReactElement<any>, { hideCopy: true, nested: true })
+                const childProps = (child as any).props as CodeBlockProps
+                return <CodeBlock {...childProps} hideCopy={true} nested={true} />
             }
             return child
         })
