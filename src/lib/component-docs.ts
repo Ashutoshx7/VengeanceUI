@@ -236,6 +236,51 @@ export function StaggerTextDemo() {
     },
   },
 
+  "gooey-text-reveal": {
+    dependencies: "npm install gsap @gsap/react",
+    manualNotes: [
+      "This is a client component because GSAP splits and animates rendered DOM text.",
+      "Direct child elements are animated automatically. Add data-gooey-reveal-item to target specific nested elements.",
+      "Pass a scrollable element or ref through scroller when the component lives inside a modal, panel, or nested scroll area.",
+      "The component respects prefers-reduced-motion and rebuilds its line split when the container width changes.",
+      "The reveal does not set a text color, so it automatically inherits your light or dark theme color.",
+    ],
+    usageCode: `import { GooeyTextReveal } from "@/components/ui/gooey-text-reveal"
+
+export function GooeyTextRevealExample() {
+  return (
+    <GooeyTextReveal
+      mode="scroll"
+      duration={1.4}
+      stagger={0.12}
+      blurAmount={0.4}
+      className="max-w-4xl"
+    >
+      <h2 className="text-6xl font-semibold leading-none">
+        Old light takes its time becoming visible.
+      </h2>
+    </GooeyTextReveal>
+  )
+}`,
+    props: [
+      { prop: "children", type: "React.ReactNode", defaultValue: "-", description: "Text-bearing React elements to split into animated lines." },
+      { prop: "mode", type: "'immediate' | 'scroll' | 'scrub'", defaultValue: "'immediate'", description: "Determines whether the animation runs on mount, on scroll entry, or in sync with scroll progress." },
+      { prop: "delay", type: "number", defaultValue: "0", description: "Delay in seconds for immediate and scroll reveals." },
+      { prop: "duration", type: "number", defaultValue: "1.5", description: "Duration of each line reveal in seconds." },
+      { prop: "stagger", type: "number", defaultValue: "0.1", description: "Delay in seconds between consecutive lines." },
+      { prop: "blurAmount", type: "number", defaultValue: "0.35", description: "Starting blur in em units." },
+      { prop: "ease", type: "string", defaultValue: "'power3.out'", description: "GSAP easing expression used by the tween." },
+      { prop: "start", type: "string", defaultValue: "'top 80%'", description: "ScrollTrigger start position for scroll and scrub modes." },
+      { prop: "end", type: "string", defaultValue: "'bottom 75%'", description: "ScrollTrigger end position for scrub mode." },
+      { prop: "scroller", type: "string | HTMLElement | React.RefObject<HTMLElement | null>", defaultValue: "-", description: "Optional scrollable ancestor. Defaults to the browser viewport." },
+      { prop: "once", type: "boolean", defaultValue: "true", description: "Runs a scroll reveal only once. Set false to reverse when leaving." },
+      { prop: "disabled", type: "boolean", defaultValue: "false", description: "Renders untouched content without splitting or animation." },
+      { prop: "onComplete", type: "() => void", defaultValue: "-", description: "Callback fired when the reveal tween completes." },
+      { prop: "className", type: "string", defaultValue: "-", description: "Additional classes for the wrapper. Standard div attributes are also forwarded." },
+      { prop: "ref", type: "React.Ref<HTMLDivElement>", defaultValue: "-", description: "Forwarded ref for the rendered wrapper element." },
+    ],
+  },
+
   "reveal-loader": {
     dependencies: "npm install @gsap/react gsap clsx tailwind-merge",
     includeUtils: true,

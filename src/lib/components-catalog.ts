@@ -48,6 +48,7 @@ export const COMPONENT_CATEGORIES: ComponentCategory[] = [
       { name: "Morph Text", slug: "morph-text", description: "Blur-morph word rotation effect", componentName: "morph-text" },
       { name: "ASCII Glitch Ripple", slug: "ascii-glitch-ripple", description: "Dynamic character-scramble wave ripple hover effect", componentName: "ascii-glitch-ripple" },
       { name: "Stagger Text", slug: "stagger-text", description: "Letters or words stagger reveal animation", componentName: "stagger-text" },
+      { name: "Gooey Text Reveal", slug: "gooey-text-reveal", description: "Line-aware gooey blur reveal with load, scroll, and scrub modes", componentName: "gooey-text-reveal", isNew: true },
     ],
   },
   {

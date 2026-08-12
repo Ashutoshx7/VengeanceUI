@@ -1229,5 +1229,16 @@
     "files": [
       "public/r/mega-menu-navbar.json"
     ]
+  },
+  {
+    "name": "gooey-text-reveal",
+    "dependencies": [
+      "gsap",
+      "@gsap/react"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/gooey-text-reveal.json"
+    ]
   }
 ]
