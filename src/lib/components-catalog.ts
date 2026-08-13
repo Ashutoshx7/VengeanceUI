@@ -86,6 +86,7 @@ export const COMPONENT_CATEGORIES: ComponentCategory[] = [
       { name: "Glow Border Card", slug: "glow-border-card", description: "Card with animated glow border", componentName: "glow-border-card" },
       { name: "Testimonials Card", slug: "testimonials-card", description: "Animated testimonial stack", componentName: "testimonials-card" },
       { name: "Highlight Grid", slug: "highlight-grid", description: "Grid with a colored highlight that glides behind the hovered cell", componentName: "highlight-grid", isNew: true },
+      { name: "Developer Service Bento", slug: "research-bento-grid", description: "Animated developer-service showcase with interactive pricing and pause states", componentName: "research-bento-grid", isNew: true },
     ],
   },
   {

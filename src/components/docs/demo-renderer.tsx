@@ -98,6 +98,7 @@ const DEMO_COMPONENTS: Record<string, React.ComponentType> = {
   "circular-gallery": dynamic(() => import("@/components/docs/circular-gallery-demo").then((m) => ({ default: m.CircularGalleryDemo })), { ssr: false, loading: LOADING }),
   "books-showcase": dynamic(() => import("@/components/docs/books-showcase-demo").then((m) => ({ default: m.default })), { ssr: false, loading: LOADING }),
   "highlight-grid": dynamic(() => import("@/components/docs/highlight-grid-demo").then((m) => ({ default: m.HighlightGridDemo })), { ssr: false, loading: LOADING }),
+  "research-bento-grid": dynamic(() => import("@/components/docs/research-bento-grid-demo").then((m) => ({ default: m.ResearchBentoGridDemo })), { ssr: false, loading: LOADING }),
 };
 
 export function DemoRenderer({ slug }: { slug: string }) {

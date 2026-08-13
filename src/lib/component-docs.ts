@@ -35,6 +35,54 @@ export interface ComponentDocData {
  *   4. Props table
  */
 export const COMPONENT_DOCS: Record<string, ComponentDocData> = {
+  "research-bento-grid": {
+    dependencies: "npm install framer-motion react-icons clsx tailwind-merge",
+    includeUtils: true,
+    manualNotes: [
+      "This is a client component because the design selector and pause control keep interactive state.",
+      "The grid responds to its own container: it stacks in narrow placements and switches to an asymmetric twelve-column layout once enough space is available.",
+      "Wide and fullscreen placements center the same compact 1120px two-row composition instead of stretching the cards across the viewport.",
+      "Colors automatically follow the parent light or dark theme while preserving the neon interaction accent.",
+      "Motion automatically respects the user's reduced-motion preference.",
+      "Pricing, currency, brands, copy, labels, animation timing, and interactive state are all configurable through typed props.",
+    ],
+    usageCode: `import { ResearchBentoGrid } from "@/components/ui/research-bento-grid"
+
+export function DeveloperServiceShowcase() {
+  return (
+    <div className="h-[680px] w-full">
+      <ResearchBentoGrid
+        monthlyPrice={1990}
+        previousPrice={32000}
+        currency="USD"
+        defaultSelectedBrand={0}
+        onPausedChange={(paused) => console.log({ paused })}
+        onSelectedBrandChange={(index) => console.log({ index })}
+      />
+    </div>
+  )
+}`,
+    props: [
+      { prop: "monthlyPrice", type: "number", defaultValue: "1990", description: "Highlighted subscription price shown on the invoice." },
+      { prop: "previousPrice", type: "number", defaultValue: "32000", description: "Struck-through comparison price shown beside the subscription price." },
+      { prop: "currency", type: "string", defaultValue: "'USD'", description: "ISO 4217 currency code used to format invoice prices." },
+      { prop: "locale", type: "string", defaultValue: "'en-US'", description: "Locale passed to Intl.NumberFormat for invoice prices." },
+      { prop: "paused", type: "boolean", defaultValue: "-", description: "Controlled Pause or Resume state." },
+      { prop: "defaultPaused", type: "boolean", defaultValue: "false", description: "Initial state of the Pause or Resume control." },
+      { prop: "selectedBrand", type: "number", defaultValue: "-", description: "Controlled index of the selected developer brand." },
+      { prop: "defaultSelectedBrand", type: "number", defaultValue: "1", description: "Initial selected brand index when uncontrolled." },
+      { prop: "brands", type: "readonly ResearchBentoBrand[]", defaultValue: "developer brands", description: "One or more named icon components displayed in the showcase." },
+      { prop: "copy", type: "Partial<ResearchBentoGridCopy>", defaultValue: "developer copy", description: "Overrides card titles and descriptions." },
+      { prop: "autoPlay", type: "boolean", defaultValue: "true", description: "Enables automatic brand rotation, invoice cycling, and cursor spotlight animation." },
+      { prop: "brandRotationInterval", type: "number", defaultValue: "2600", description: "Milliseconds between automatic brand selections." },
+      { prop: "spotlightInterval", type: "number", defaultValue: "4400", description: "Milliseconds between automatic Pause-button spotlight cycles." },
+      { prop: "userLabel", type: "string", defaultValue: "'You'", description: "Label displayed beside the active cursor." },
+      { prop: "collaboratorLabel", type: "string", defaultValue: "'Razvan'", description: "Label displayed beside the collaborator cursor." },
+      { prop: "className", type: "string", defaultValue: "-", description: "Additional classes for the component root." },
+      { prop: "onPausedChange", type: "(paused: boolean) => void", defaultValue: "-", description: "Called whenever the subscription pause state changes." },
+      { prop: "onSelectedBrandChange", type: "(index: number) => void", defaultValue: "-", description: "Called whenever a brand is selected manually or automatically." },
+    ],
+  },
   "my-animated-button": {
     dependencies: "npm install framer-motion clsx tailwind-merge",
     includeUtils: true,

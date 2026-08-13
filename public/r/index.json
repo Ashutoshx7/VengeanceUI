@@ -820,6 +820,17 @@
     ]
   },
   {
+    "name": "research-bento-grid",
+    "dependencies": [
+      "framer-motion",
+      "react-icons"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/research-bento-grid.json"
+    ]
+  },
+  {
     "name": "resizable",
     "dependencies": [
       "lucide-react"
