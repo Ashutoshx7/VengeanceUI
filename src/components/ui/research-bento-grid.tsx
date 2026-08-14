@@ -543,7 +543,7 @@ export function ResearchBentoGrid({
   brandRotationInterval = 2600,
   spotlightInterval = 4400,
   userLabel = "You",
-  collaboratorLabel = "Razvan",
+  collaboratorLabel = "X7",
   className,
   onPausedChange,
   onSelectedBrandChange,

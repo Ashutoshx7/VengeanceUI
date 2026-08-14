@@ -77,7 +77,7 @@ export function DeveloperServiceShowcase() {
       { prop: "brandRotationInterval", type: "number", defaultValue: "2600", description: "Milliseconds between automatic brand selections." },
       { prop: "spotlightInterval", type: "number", defaultValue: "4400", description: "Milliseconds between automatic Pause-button spotlight cycles." },
       { prop: "userLabel", type: "string", defaultValue: "'You'", description: "Label displayed beside the active cursor." },
-      { prop: "collaboratorLabel", type: "string", defaultValue: "'Razvan'", description: "Label displayed beside the collaborator cursor." },
+      { prop: "collaboratorLabel", type: "string", defaultValue: "'X7'", description: "Label displayed beside the collaborator cursor." },
       { prop: "className", type: "string", defaultValue: "-", description: "Additional classes for the component root." },
       { prop: "onPausedChange", type: "(paused: boolean) => void", defaultValue: "-", description: "Called whenever the subscription pause state changes." },
       { prop: "onSelectedBrandChange", type: "(index: number) => void", defaultValue: "-", description: "Called whenever a brand is selected manually or automatically." },
