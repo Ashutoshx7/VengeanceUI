@@ -35,6 +35,97 @@ export interface ComponentDocData {
  *   4. Props table
  */
 export const COMPONENT_DOCS: Record<string, ComponentDocData> = {
+  "team-reveal-grid": {
+    dependencies: "npm install clsx tailwind-merge",
+    includeUtils: true,
+    manualNotes: [
+      "This is a client component because it manages the active team member and optional automatic rotation.",
+      "Each member accepts a regular image URL. When no image is provided, the component renders a polished initial-based portrait.",
+      "Pointer, touch, and keyboard input all update the same controlled or uncontrolled active state.",
+      "The layout responds to its own container, adapts to light and dark themes, and respects reduced-motion preferences.",
+    ],
+    usageCode: `"use client"
+
+import { TeamRevealGrid } from "@/components/ui/team-reveal-grid"
+
+const members = [
+  {
+    id: "maya",
+    name: "Maya Chen",
+    role: "Product Engineer",
+    expertise: "Turns early product ideas into resilient interfaces.",
+    image: "/team/maya.jpg",
+    accent: "#fb4f43",
+  },
+  // Add more team members...
+]
+
+export function TeamSection() {
+  return (
+    <TeamRevealGrid
+      members={members}
+      title="Meet the team"
+      defaultActiveMemberId="maya"
+      onActiveMemberChange={(id) => console.log({ id })}
+    />
+  )
+}`,
+    props: [
+      { prop: "eyebrow", type: "string", defaultValue: "'The people behind the product'", description: "Small label displayed above the heading." },
+      { prop: "title", type: "string", defaultValue: "'Meet the team'", description: "Main section heading with an animated underline." },
+      { prop: "description", type: "string", defaultValue: "team description", description: "Supporting copy below the heading." },
+      { prop: "members", type: "readonly TeamRevealMember[]", defaultValue: "six sample members", description: "Team profiles, roles, expertise, images, and accents." },
+      { prop: "activeMemberId", type: "string | null", defaultValue: "-", description: "Controlled id of the revealed member." },
+      { prop: "defaultActiveMemberId", type: "string | null", defaultValue: "first member", description: "Initial revealed member when uncontrolled." },
+      { prop: "onActiveMemberChange", type: "(memberId: string | null) => void", defaultValue: "-", description: "Called when pointer, keyboard, touch, or autoplay selects a member." },
+      { prop: "autoPlay", type: "boolean", defaultValue: "true", description: "Cycles the reveal while the component is idle." },
+      { prop: "rotationInterval", type: "number", defaultValue: "2800", description: "Milliseconds between automatic member changes; values below 1200 are clamped." },
+      { prop: "className", type: "string", defaultValue: "-", description: "Additional classes for the section root." },
+    ],
+    additionalPropSections: [
+      {
+        title: "TeamRevealMember",
+        data: [
+          { prop: "id", type: "string", defaultValue: "-", description: "Stable member identifier." },
+          { prop: "name", type: "string", defaultValue: "-", description: "Member name and image fallback label." },
+          { prop: "role", type: "string", defaultValue: "-", description: "Member role." },
+          { prop: "expertise", type: "string", defaultValue: "-", description: "Short detail revealed by the active card." },
+          { prop: "image", type: "string", defaultValue: "-", description: "Optional local path, data URL, or remote image URL." },
+          { prop: "imageAlt", type: "string", defaultValue: "member name", description: "Optional image alternative text." },
+          { prop: "imagePosition", type: "string", defaultValue: "'center top'", description: "CSS object-position value for portrait cropping." },
+          { prop: "accent", type: "string", defaultValue: "'#fb4f43'", description: "Any CSS color used for the active treatment." },
+        ],
+      },
+    ],
+    credits: {
+      author: "Rohit Mehta",
+      twitter: "https://x.com/rohitmehta_twt",
+      description: "Designed the original Team Reveal Grid component aesthetic.",
+    },
+  },
+  "why-us-bento": {
+    dependencies: "npm install framer-motion @phosphor-icons/react clsx tailwind-merge",
+    includeUtils: true,
+    manualNotes: [
+      "This client component presents a feature bento grid with isometric graphics, card stack rotation, avatar hover expansion, and animated pipeline arrows.",
+      "Uses Framer Motion variants for hover micro-animations across all five grid cards.",
+      "The team avatar stack accepts customizable character image URLs (defaults to Aizen, Batman, Johan, Shinji, etc.).",
+      "Fully responsive layout supporting both light and dark themes.",
+    ],
+    usageCode: `"use client"
+
+import { WhyUsBento } from "@/components/ui/why-us-bento"
+
+export function FeatureSection() {
+  return (
+    <WhyUsBento />
+  )
+}`,
+    props: [
+      { prop: "className", type: "string", defaultValue: "-", description: "Additional classes for the outer container section." },
+      { prop: "teamAvatars", type: "string[]", defaultValue: "character avatars", description: "Array of avatar image URLs displayed in card 03." },
+    ],
+  },
   "research-bento-grid": {
     dependencies: "npm install framer-motion react-icons clsx tailwind-merge",
     includeUtils: true,

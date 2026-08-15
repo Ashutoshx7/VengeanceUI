@@ -1107,6 +1107,14 @@
     ]
   },
   {
+    "name": "team-reveal-grid",
+    "dependencies": [],
+    "type": "registry:ui",
+    "files": [
+      "public/r/team-reveal-grid.json"
+    ]
+  },
+  {
     "name": "testinomial-card2",
     "dependencies": [],
     "type": "registry:ui",
