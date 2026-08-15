@@ -5,48 +5,91 @@ import type { ComponentEntry, ComponentIndex } from "./types.js";
 
 const packageRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
 
-let cached: ComponentIndex | null = null;
+interface IndexLookups {
+  index: ComponentIndex;
+  bySlug: Map<string, ComponentEntry>;
+  byComponentName: Map<string, ComponentEntry>;
+  byDisplayName: Map<string, ComponentEntry>;
+  byRegistryName: Map<string, string>;
+}
+
+let cached: IndexLookups | null = null;
 
 export function getPackageRoot() {
   return packageRoot;
 }
 
-export function loadIndex(): ComponentIndex {
+function buildLookups(index: ComponentIndex): IndexLookups {
+  const bySlug = new Map<string, ComponentEntry>();
+  const byComponentName = new Map<string, ComponentEntry>();
+  const byDisplayName = new Map<string, ComponentEntry>();
+
+  for (const entry of index.components) {
+    bySlug.set(entry.slug.toLowerCase(), entry);
+    byComponentName.set(entry.componentName.toLowerCase(), entry);
+    byDisplayName.set(entry.name.toLowerCase(), entry);
+  }
+
+  // Generator lookups must agree with components (catches index drift).
+  for (const [slug, componentName] of Object.entries(index.lookups.bySlug)) {
+    const entry = bySlug.get(slug.toLowerCase());
+    if (!entry || entry.componentName !== componentName) {
+      throw new Error(
+        `index lookups.bySlug mismatch for "${slug}" → "${componentName}"`,
+      );
+    }
+  }
+  for (const [componentName, slug] of Object.entries(
+    index.lookups.byComponentName,
+  )) {
+    const entry = byComponentName.get(componentName.toLowerCase());
+    if (!entry || entry.slug !== slug) {
+      throw new Error(
+        `index lookups.byComponentName mismatch for "${componentName}" → "${slug}"`,
+      );
+    }
+  }
+
+  const byRegistryName = new Map<string, string>();
+  for (const entry of index.registry) {
+    byRegistryName.set(entry.name.toLowerCase(), entry.name);
+  }
+
+  return { index, bySlug, byComponentName, byDisplayName, byRegistryName };
+}
+
+function getLookups(): IndexLookups {
   if (cached) return cached;
   const raw = readFileSync(join(packageRoot, "data/index.json"), "utf8");
-  cached = JSON.parse(raw) as ComponentIndex;
+  const index = JSON.parse(raw) as ComponentIndex;
+  cached = buildLookups(index);
   return cached;
 }
 
-/** Resolve by catalog slug or registry componentName. */
+export function loadIndex(): ComponentIndex {
+  return getLookups().index;
+}
+
+/** Resolve by catalog slug, registry componentName, or display name. */
 export function resolveComponent(query: string): ComponentEntry | null {
-  const index = loadIndex();
   const normalized = query.trim().toLowerCase();
+  if (!normalized) return null;
 
-  const bySlug = index.components.find((c) => c.slug.toLowerCase() === normalized);
-  if (bySlug) return bySlug;
-
-  const byName = index.components.find(
-    (c) => c.componentName.toLowerCase() === normalized,
+  const lookups = getLookups();
+  return (
+    lookups.bySlug.get(normalized) ??
+    lookups.byComponentName.get(normalized) ??
+    lookups.byDisplayName.get(normalized) ??
+    null
   );
-  if (byName) return byName;
-
-  const byDisplay = index.components.find(
-    (c) => c.name.toLowerCase() === normalized,
-  );
-  if (byDisplay) return byDisplay;
-
-  return null;
 }
 
 export function resolveRegistryName(query: string): string | null {
   const component = resolveComponent(query);
   if (component) return component.componentName;
 
-  const index = loadIndex();
   const normalized = query.trim().toLowerCase();
-  const registryHit = index.registry.find(
-    (r) => r.name.toLowerCase() === normalized,
-  );
-  return registryHit?.name ?? null;
+  if (!normalized) return null;
+
+  return getLookups().byRegistryName.get(normalized) ?? null;
 }

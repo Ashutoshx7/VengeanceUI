@@ -22,11 +22,23 @@ assert(
 
 const bySlug = resolveComponent("my-animated-button");
 const byName = resolveComponent("animated-button");
+const byDisplay = resolveComponent("Animated Button");
+const byCase = resolveComponent("My-Animated-Button");
 assert(bySlug?.componentName === "animated-button", "slug resolve failed");
 assert(byName?.slug === "my-animated-button", "name resolve failed");
+assert(byDisplay?.componentName === "animated-button", "display resolve failed");
+assert(byCase?.componentName === "animated-button", "case resolve failed");
+assert(
+  bySlug === byName && byName === byDisplay && byDisplay === byCase,
+  "resolve paths should return the same entry",
+);
 
 const install = getShadcnAddCommand(
   resolveRegistryName("my-animated-button")!,
+);
+assert(
+  resolveRegistryName("ANIMATED-BUTTON") === "animated-button",
+  "registry name case resolve failed",
 );
 assert(
   install ===
