@@ -1,42 +1,179 @@
 "use client";
-
 import React from "react";
+import { motion } from "framer-motion";
+import {
+  Database,
+  Browser,
+  Cube,
+  Brain,
+  FileCode,
+  HardDrive,
+  DeviceMobile,
+  Cloud,
+} from "@phosphor-icons/react";
 
-export interface SVGProps extends React.SVGProps<SVGSVGElement> {}
+export default function IsometricBoxes02({
+  className,
+  ...props
+}: React.SVGProps<SVGSVGElement>) {
+  // Random staggered sequence (0 to 7) for the 8 boxes
+  const order = [3, 0, 6, 1, 7, 2, 4, 5];
 
-export default function IsometricBoxes02({ className = "", ...props }: SVGProps) {
+  const boxes = [
+    { 
+      id: "ai-ml", title: "AI / ML", Icon: Brain, x: 182.6, y: 27.5,
+      lines: ["M141 31.5V123.5", "M183 41.5V124", "M224 31V129.5"],
+      base: "M173.975 13.01C178.758 10.2486 186.512 10.2486 191.295 13.01L221.106 30.221L224.5 27.5C224.5 27.5 225 32 225 34.2649C225 36.5656 224.549 38.8112 221.606 40.51L191.295 58.01C186.512 60.7712 178.757 60.7713 173.975 58.01L143.664 40.51C140.45 38.6545 140.5 36.5 140.504 33.6614C140.505 32.5517 141 28 141 28L143.581 30.5598C143.609 30.5435 143.636 30.5262 143.664 30.51L173.975 13.01Z",
+      face: "M144.093 22.75L174.404 5.25C178.948 2.62665 186.315 2.62665 190.859 5.25L221.17 22.75C225.713 25.3734 225.713 29.6266 221.17 32.25L190.859 49.75C186.315 52.3734 178.948 52.3734 174.404 49.75L144.093 32.25C139.549 29.6266 139.549 25.3734 144.093 22.75Z"
+    },
+    { 
+      id: "backend", title: "Backend", Icon: HardDrive, x: 137.6, y: 70.5,
+      lines: ["M96 78V209", "M138 88V213", "M179 77L180 217"],
+      base: "M128.975 56.01C133.758 53.2486 141.512 53.2486 146.295 56.01L176.106 73.221L179.5 70.5C179.5 70.5 180 75 180 77.2649C180 79.5656 179.549 81.8112 176.606 83.51L146.295 101.01C141.512 103.771 133.757 103.771 128.975 101.01L98.6641 83.51C95.4502 81.6545 95.5 79.5 95.5039 76.6614C95.5055 75.5517 96 71 96 71L98.5811 73.5598C98.6088 73.5435 98.6361 73.5262 98.6641 73.51L128.975 56.01Z",
+      face: "M99.0933 65.75L129.404 48.25C133.948 45.6266 141.315 45.6266 145.859 48.25L176.17 65.75C180.713 68.3734 180.713 72.6266 176.17 75.25L145.859 92.75C141.315 95.3734 133.948 95.3734 129.404 92.75L99.0933 75.25C94.5495 72.6266 94.5495 68.3734 99.0933 65.75Z"
+    },
+    { 
+      id: "mobile", title: "Mobile", Icon: DeviceMobile, x: 227.6, y: 70.5,
+      lines: ["M186 80V225", "M228 90V221", "M269 79L269.993 230"],
+      base: "M218.975 56.01C223.758 53.2486 231.512 53.2486 236.295 56.01L266.106 73.221L269.5 70.5C269.5 70.5 270 75 270 77.2649C270 79.5656 269.549 81.8112 266.606 83.51L236.295 101.01C231.512 103.771 223.757 103.771 218.975 101.01L188.664 83.51C185.45 81.6545 185.5 79.5 185.504 76.6614C185.505 75.5517 186 71 186 71L188.581 73.5598C188.609 73.5435 188.636 73.5262 188.664 73.51L218.975 56.01Z",
+      face: "M189.093 65.75L219.404 48.25C223.948 45.6266 231.315 45.6266 235.859 48.25L266.17 65.75C270.713 68.3734 270.713 72.6266 266.17 75.25L235.859 92.75C231.315 95.3734 223.948 95.3734 219.404 92.75L189.093 75.25C184.549 72.6266 184.549 68.3734 189.093 65.75Z"
+    },
+    { 
+      id: "web", title: "Web", Icon: Browser, x: 92.6, y: 113.5,
+      lines: ["M51 113.5V205.5", "M93 123.5V206", "M134 113V211.5"],
+      base: "M83.9746 99.01C88.7576 96.2486 96.512 96.2486 101.295 99.01L131.106 116.221L134.5 113.5C134.5 113.5 135 118 135 120.265C135 122.566 134.549 124.811 131.606 126.51L101.295 144.01C96.512 146.771 88.7574 146.771 83.9746 144.01L53.6641 126.51C50.4502 124.654 50.5 122.5 50.5039 119.661C50.5055 118.552 51 114 51 114L53.5811 116.56C53.6088 116.544 53.6361 116.526 53.6641 116.51L83.9746 99.01Z",
+      face: "M54.0933 108.75L84.4042 91.25C88.9479 88.6266 96.3149 88.6266 100.859 91.25L131.17 108.75C135.713 111.373 135.713 115.627 131.17 118.25L100.859 135.75C96.3149 138.373 88.9479 138.373 84.4042 135.75L54.0933 118.25C49.5495 115.627 49.5495 111.373 54.0933 108.75Z"
+    },
+    { 
+      id: "core", title: "Core", Icon: Cube, x: 182.6, y: 113.5,
+      lines: ["M141 120V212", "M183 130V212.5", "M224 119.5V218"],
+      base: "M173.975 99.01C178.758 96.2486 186.512 96.2486 191.295 99.01L221.106 116.221L224.5 113.5C224.5 113.5 225 118 225 120.265C225 122.566 224.549 124.811 221.606 126.51L191.295 144.01C186.512 146.771 178.757 146.771 173.975 144.01L143.664 126.51C140.45 124.654 140.5 122.5 140.504 119.661C140.505 118.552 141 114 141 114L143.581 116.56C143.609 116.544 143.636 116.526 143.664 116.51L173.975 99.01Z",
+      face: "M144.093 108.75L174.404 91.25C178.948 88.6266 186.315 88.6266 190.859 91.25L221.17 108.75C225.713 111.373 225.713 115.627 221.17 118.25L190.859 135.75C186.315 138.373 178.948 138.373 174.404 135.75L144.093 118.25C139.549 115.627 139.549 111.373 144.093 108.75Z"
+    },
+    { 
+      id: "contracts", title: "Contracts", Icon: FileCode, x: 272.6, y: 113.5,
+      lines: ["M231 118.5V210.5", "M273 128.5V211", "M314 121L314 216"],
+      base: "M263.975 99.01C268.758 96.2486 276.513 96.2486 281.295 99.01L311.106 116.221L314.5 113.5C314.5 113.5 315 118 315.001 120.265C315.001 122.566 314.549 124.811 311.607 126.51L281.295 144.01C276.513 146.771 268.758 146.771 263.975 144.01L233.665 126.51C230.451 124.654 230.5 122.5 230.504 119.661C230.506 118.552 231 114 231 114L233.582 116.56C233.609 116.544 233.637 116.526 233.665 116.51L263.975 99.01Z",
+      face: "M234.093 108.75L264.404 91.25C268.948 88.6266 276.315 88.6266 280.859 91.25L311.17 108.75C315.713 111.373 315.713 115.627 311.17 118.25L280.859 135.75C276.315 138.373 268.948 138.373 264.404 135.75L234.093 118.25C229.549 115.627 229.549 111.373 234.093 108.75Z"
+    },
+    { 
+      id: "data", title: "Data", Icon: Database, x: 47.6, y: 156.5,
+      lines: ["M6 157V207", "M48 165V215", "M89 165V215"],
+      base: "M38.9746 142.01C43.7576 139.249 51.512 139.249 56.295 142.01L86.1055 159.221L89.4999 156.5C89.4999 156.5 89.9999 161 90 163.265C90.0002 165.566 89.5489 167.811 86.6065 169.51L56.295 187.01C51.512 189.771 43.7574 189.771 38.9746 187.01L8.6641 169.51C5.45019 167.654 5.5 165.5 5.50394 162.661C5.50548 161.552 6 157 6 157L8.58109 159.56C8.6088 159.544 8.63605 159.526 8.6641 159.51L38.9746 142.01Z",
+      face: "M9.09327 151.75L39.4042 134.25C43.9479 131.627 51.3149 131.627 55.8586 134.25L86.1695 151.75C90.7133 154.373 90.7133 158.627 86.1695 161.25L55.8586 178.75C51.3149 181.373 43.9479 181.373 39.4042 178.75L9.09327 161.25C4.54949 158.627 4.54949 154.373 9.09327 151.75Z"
+    },
+    { 
+      id: "infra", title: "Infra", Icon: Cloud, x: 317.6, y: 156.5,
+      lines: ["M276 167V217", "M318 168V218", "M359 166V216"],
+      base: "M308.975 142.01C313.758 139.249 321.513 139.249 326.295 142.01L356.106 159.221L359.5 156.5C359.5 156.5 360 161 360.001 163.265C360.001 165.566 359.549 167.811 356.607 169.51L326.295 187.01C321.513 189.771 313.758 189.771 308.975 187.01L278.665 169.51C275.451 167.654 275.5 165.5 275.504 162.661C275.506 161.552 276 157 276 157L278.582 159.56C278.609 159.544 278.637 159.526 278.665 159.51L308.975 142.01Z",
+      face: "M279.093 151.75L309.404 134.25C313.948 131.627 321.315 131.627 325.859 134.25L356.17 151.75C360.713 154.373 360.713 158.627 356.17 161.25L325.859 178.75C321.315 181.373 313.948 181.373 309.404 178.75L279.093 161.25C274.549 158.627 274.549 154.373 279.093 151.75Z"
+    },
+  ].map((box, i) => ({
+    ...box,
+    customDelay: order[i] * 0.25
+  }));
+
+  const baseVar = {
+    initial: { fill: "#D9D9D9", stroke: "#D9D9D9", transition: { duration: 0.3 } },
+    hover: (delay: number) => ({
+      fill: ["#D9D9D9", "#737373", "#D9D9D9"],
+      stroke: ["#D9D9D9", "#737373", "#D9D9D9"],
+      transition: { duration: 2, times: [0, 0.125, 1], repeat: Infinity, delay }
+    })
+  };
+
+  const linesVar = {
+    initial: { stroke: "#D9D9D9", transition: { duration: 0.3 } },
+    hover: (delay: number) => ({
+      stroke: ["#D9D9D9", "#737373", "#D9D9D9"],
+      transition: { duration: 2, times: [0, 0.125, 1], repeat: Infinity, delay }
+    })
+  };
+
+  const faceVar = {
+    initial: { stroke: "#D9D9D9", transition: { duration: 0.3 } },
+    hover: (delay: number) => ({
+      stroke: ["#D9D9D9", "#737373", "#D9D9D9"],
+      transition: { duration: 2, times: [0, 0.125, 1], repeat: Infinity, delay }
+    })
+  };
+
+  const contentVar = {
+    initial: { color: "#d4d4d4", transition: { duration: 0.3 } },
+    hover: (delay: number) => ({
+      color: ["#d4d4d4", "#737373", "#d4d4d4"],
+      transition: { duration: 2, times: [0, 0.125, 1], repeat: Infinity, delay }
+    })
+  };
+
   return (
     <svg
-      viewBox="0 0 320 220"
+      viewBox="0 0 366 198"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
       {...props}
     >
-      {/* Bottom Base Box */}
-      <g>
-        <polygon points="160,80 270,140 160,200 50,140" fill="currentColor" className="text-neutral-100 dark:text-neutral-900" stroke="currentColor" strokeWidth="1.5" />
-        <polygon points="50,140 160,200 160,215 50,155" fill="currentColor" className="text-neutral-300 dark:text-neutral-950" stroke="currentColor" strokeWidth="1.5" />
-        <polygon points="160,200 270,140 270,155 160,215" fill="currentColor" className="text-neutral-200 dark:text-neutral-800" stroke="currentColor" strokeWidth="1.5" />
-      </g>
+      {/* 1. All Bases */}
+      {boxes.map((b) => (
+        <motion.path
+          key={`base-${b.id}`}
+          d={b.base}
+          custom={b.customDelay}
+          variants={baseVar}
+        />
+      ))}
 
-      {/* Middle Layer Box */}
-      <g>
-        <polygon points="160,50 240,95 160,140 80,95" fill="currentColor" className="text-neutral-200 dark:text-neutral-850" stroke="currentColor" strokeWidth="1.5" />
-        <polygon points="80,95 160,140 160,165 80,120" fill="currentColor" className="text-neutral-400 dark:text-neutral-950" stroke="currentColor" strokeWidth="1.5" />
-        <polygon points="160,140 240,95 240,120 160,165" fill="currentColor" className="text-neutral-300 dark:text-neutral-900" stroke="currentColor" strokeWidth="1.5" />
-      </g>
+      {/* 2. All Dashed Lines */}
+      {boxes.map((b) => (
+        <React.Fragment key={`lines-${b.id}`}>
+          {b.lines.map((l, i) => (
+            <motion.path
+              key={i}
+              d={l}
+              strokeDasharray="4 4"
+              custom={b.customDelay}
+              variants={linesVar}
+            />
+          ))}
+        </React.Fragment>
+      ))}
 
-      {/* Top Main Box */}
-      <g>
-        <polygon points="160,20 210,50 160,80 110,50" fill="currentColor" className="text-neutral-50 dark:text-neutral-800" stroke="currentColor" strokeWidth="1.5" />
-        <path d="M135,35 L185,65 M185,35 L135,65" stroke="currentColor" strokeWidth="0.75" strokeOpacity="0.3" className="text-neutral-400" />
-        <polygon points="110,50 160,80 160,110 110,80" fill="currentColor" className="text-neutral-300 dark:text-neutral-900" stroke="currentColor" strokeWidth="1.5" />
-        <polygon points="160,80 210,50 210,80 160,110" fill="currentColor" className="text-neutral-200 dark:text-neutral-950" stroke="currentColor" strokeWidth="1.5" />
-      </g>
+      {/* 3. All Top Faces */}
+      {boxes.map((b) => (
+        <motion.path
+          key={`face-${b.id}`}
+          d={b.face}
+          fill="white"
+          custom={b.customDelay}
+          variants={faceVar}
+        />
+      ))}
 
-      {/* Floating Accent Gem / Node */}
-      <circle cx="160" cy="18" r="4" fill="currentColor" className="text-red-500 animate-pulse" />
+      {/* 4. All Icons & Text */}
+      {boxes.map((b) => (
+        <motion.g
+          key={`content-${b.id}`}
+          transform={`translate(${b.x}, ${b.y}) scale(1, 0.57735) rotate(-45)`}
+          className="pointer-events-none"
+          custom={b.customDelay}
+          variants={contentVar}
+        >
+          <g transform="translate(-10, -14)">
+            <b.Icon width="20" height="20" weight="fill" color="currentColor" />
+          </g>
+          <text
+            x="0"
+            y="14"
+            fontSize="8"
+            fontWeight="bold"
+            fill="currentColor"
+            textAnchor="middle"
+          >
+            {b.title}
+          </text>
+        </motion.g>
+      ))}
     </svg>
   );
 }
