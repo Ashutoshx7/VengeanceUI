@@ -9,24 +9,25 @@ Pairs with the Cursor skill at `.cursor/skills/vengeance-ui/`.
 ```bash
 cd packages/mcp
 npm install
-npm run generate-index   # if catalog/docs/registry changed
 npm run build
 ```
 
-### Cursor `mcp.json` (local clone)
+`build` regenerates `data/index.json` then compiles. Re-run it whenever catalog/docs/registry sources change.
+
+### Cursor `mcp.json` (project-level `.cursor/mcp.json`)
 
 ```json
 {
   "mcpServers": {
     "vengeance-ui": {
       "command": "node",
-      "args": ["packages/mcp/dist/index.js"]
+      "args": ["${workspaceFolder}/packages/mcp/dist/index.js"]
     }
   }
 }
 ```
 
-Use an absolute path to `dist/index.js` if your Cursor config is not rooted at the repo.
+For global `~/.cursor/mcp.json`, use an absolute path to `dist/index.js` instead of `${workspaceFolder}`.
 
 ### After npm publish
 
@@ -43,14 +44,14 @@ Use an absolute path to `dist/index.js` if your Cursor config is not rooted at t
 
 ## Tools
 
-| Tool | Description |
-|------|-------------|
-| `list_categories` | Marketing catalog categories |
-| `search_components` | Search by name / slug / description / category |
-| `get_component` | Full docs entry (slug **or** `componentName`) |
-| `get_install_command` | `shadcn add https://www.vengenceui.com/r/{name}.json` |
-| `get_component_source` | Live registry JSON from the site |
-| `list_registry` | All registry names (includes blocks) |
+| Tool                   | Description                                           |
+| ---------------------- | ----------------------------------------------------- |
+| `list_categories`      | Marketing catalog categories                          |
+| `search_components`    | Search by name / slug / description / category        |
+| `get_component`        | Full docs entry (slug **or** `componentName`)         |
+| `get_install_command`  | `shadcn add https://www.vengenceui.com/r/{name}.json` |
+| `get_component_source` | Live registry JSON from the site                      |
+| `list_registry`        | All registry names (includes blocks)                  |
 
 ## Generate index
 

@@ -44,5 +44,3 @@ next-env.d.ts
 vengeance-ui-v2/
 VengenceUI
 
-# local agent handoff tracker (not for remote)
-HANDOFF.md

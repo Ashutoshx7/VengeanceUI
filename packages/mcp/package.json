@@ -12,11 +12,12 @@
     "data"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "npm run generate-index && tsc",
     "generate-index": "node ./scripts/generate-index.mjs",
     "start": "node ./dist/index.js",
     "smoke": "npm run build && node ./dist/smoke.js",
-    "prepare-dev": "npm run generate-index && npm run build"
+    "prepare-dev": "npm run build",
+    "prepack": "npm run build"
   },
   "engines": {
     "node": ">=20.9.0"

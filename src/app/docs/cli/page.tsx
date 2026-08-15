@@ -130,21 +130,25 @@ Options:
           props/usage, and get install commands.
         </DocsParagraph>
         <DocsParagraph>
-          Local Cursor config (from a clone of this repository):
+          Project-level Cursor config at{" "}
+          <InlineCode>.cursor/mcp.json</InlineCode> (from a clone of this
+          repository):
         </DocsParagraph>
         <DocsCodeBlock
-          title="mcp.json"
+          title=".cursor/mcp.json"
           code={`{
   "mcpServers": {
     "vengeance-ui": {
       "command": "node",
-      "args": ["packages/mcp/dist/index.js"]
+      "args": ["\${workspaceFolder}/packages/mcp/dist/index.js"]
     }
   }
 }`}
         />
         <DocsParagraph>
-          Build the server first:{" "}
+          For global <InlineCode>~/.cursor/mcp.json</InlineCode>, use an
+          absolute path to <InlineCode>dist/index.js</InlineCode>. Build the
+          server first:{" "}
           <InlineCode>cd packages/mcp && npm install && npm run build</InlineCode>
           . When the package is published to npm, you can switch to{" "}
           <InlineCode>npx -y vengeanceui-mcp</InlineCode>. See{" "}
