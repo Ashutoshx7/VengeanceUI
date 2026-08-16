@@ -2,6 +2,8 @@
 
 # dependencies
 /node_modules
+node_modules
+packages/mcp/dist
 /.pnp
 .pnp.*
 .yarn/*
@@ -41,3 +43,4 @@ yarn-error.log*
 next-env.d.ts
 vengeance-ui-v2/
 VengenceUI
+

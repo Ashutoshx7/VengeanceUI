@@ -119,6 +119,43 @@ Options:
           }}
         />
       </DocsSection>
+
+      <DocsSection title="Cursor agent skill + MCP">
+        <DocsParagraph>
+          This repo ships a Cursor skill at{" "}
+          <InlineCode>.cursor/skills/vengeance-ui/</InlineCode> so agents prefer
+          registry components over reinventing UI. Pair it with the{" "}
+          <InlineCode>vengeanceui-mcp</InlineCode> server under{" "}
+          <InlineCode>packages/mcp</InlineCode> to search the catalog, read
+          props/usage, and get install commands.
+        </DocsParagraph>
+        <DocsParagraph>
+          Project-level Cursor config at{" "}
+          <InlineCode>.cursor/mcp.json</InlineCode> (from a clone of this
+          repository):
+        </DocsParagraph>
+        <DocsCodeBlock
+          title=".cursor/mcp.json"
+          code={`{
+  "mcpServers": {
+    "vengeance-ui": {
+      "command": "node",
+      "args": ["\${workspaceFolder}/packages/mcp/dist/index.js"]
+    }
+  }
+}`}
+        />
+        <DocsParagraph>
+          For global <InlineCode>~/.cursor/mcp.json</InlineCode>, use an
+          absolute path to <InlineCode>dist/index.js</InlineCode>. Build the
+          server first:{" "}
+          <InlineCode>cd packages/mcp && npm install && npm run build</InlineCode>
+          . When the package is published to npm, you can switch to{" "}
+          <InlineCode>npx -y vengeanceui-mcp</InlineCode>. See{" "}
+          <InlineCode>packages/mcp/README.md</InlineCode> for tools and index
+          regeneration.
+        </DocsParagraph>
+      </DocsSection>
     </DocsArticle>
   );
 }

@@ -1,0 +1,34 @@
+{
+  "name": "vengeanceui-mcp",
+  "version": "0.1.0",
+  "description": "MCP server for searching and installing VengeanceUI registry components",
+  "type": "module",
+  "bin": {
+    "vengeanceui-mcp": "./dist/index.js"
+  },
+  "main": "./dist/index.js",
+  "files": [
+    "dist",
+    "data"
+  ],
+  "scripts": {
+    "build": "npm run generate-index && tsc",
+    "generate-index": "node ./scripts/generate-index.mjs",
+    "start": "node ./dist/index.js",
+    "smoke": "npm run build && node ./dist/smoke.js",
+    "prepare-dev": "npm run build",
+    "prepack": "npm run build"
+  },
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1",
+    "zod": "^3.25.28"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.50",
+    "typescript": "^5.8.3"
+  },
+  "license": "MIT"
+}
