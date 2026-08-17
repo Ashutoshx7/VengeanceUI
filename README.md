@@ -127,19 +127,19 @@ It is made for developers who want to move fast without compromising design.
 
 ## Star History
 
-<a href="https://star-history.com/#Ashutoshx7/VengeanceUI&Date">
+<a href="https://star-history.dera.page/#Ashutoshx7/VengeanceUI&Date">
   <picture>
     <source
       media="(prefers-color-scheme: dark)"
-      srcset="https://api.star-history.com/svg?repos=Ashutoshx7/VengeanceUI&type=Date&theme=dark&legend=top-left"
+      srcset="https://star-history.dera.page/svg?repos=Ashutoshx7/VengeanceUI&type=Date&theme=dark&legend=top-left"
     />
     <source
       media="(prefers-color-scheme: light)"
-      srcset="https://api.star-history.com/svg?repos=Ashutoshx7/VengeanceUI&type=Date&legend=top-left"
+      srcset="https://star-history.dera.page/svg?repos=Ashutoshx7/VengeanceUI&type=Date&legend=top-left"
     />
     <img
       alt="Star History Chart"
-      src="https://api.star-history.com/svg?repos=Ashutoshx7/VengeanceUI&type=Date&legend=top-left"
+      src="https://star-history.dera.page/svg?repos=Ashutoshx7/VengeanceUI&type=Date&legend=top-left"
     />
   </picture>
 </a>
