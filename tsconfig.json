@@ -30,5 +30,5 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules", "VengenceUI", "codegrid-gooey-text-reveal"]
+  "exclude": ["node_modules", "packages", "VengenceUI", "codegrid-gooey-text-reveal"]
 }
