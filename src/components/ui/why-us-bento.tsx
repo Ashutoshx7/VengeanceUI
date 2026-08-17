@@ -240,23 +240,9 @@ export function WhyUsBento({
                     </div>
 
                     {i < PIPELINE_STEPS.length - 1 && (
-                      <motion.div
-                        className="mt-0.5"
-                        variants={{
-                          initial: { color: "#d4d4d4", transition: { duration: 0.2 } },
-                          hover: { 
-                            color: ["#d4d4d4", "#000000", "#d4d4d4"],
-                            transition: {
-                              duration: 1.2,
-                              times: [0, 0.1, 1],
-                              repeat: Infinity,
-                              delay: i * 0.3,
-                            }
-                          }
-                        }}
-                      >
+                      <div className="mt-0.5 text-neutral-300 dark:text-neutral-600 group-hover:text-black dark:group-hover:text-white transition-colors duration-300">
                         <CaretRight size={9} weight="fill" />
-                      </motion.div>
+                      </div>
                     )}
                   </React.Fragment>
                 ))}

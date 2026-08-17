@@ -85,6 +85,9 @@ export function HighlightGrid({
 
     const rect = el.getBoundingClientRect();
     const crect = grid.getBoundingClientRect();
+    if (rect.width === 0 || rect.height === 0) return;
+
+    highlight.style.opacity = "1";
     highlight.style.transform = `translate(${rect.left - crect.left}px, ${rect.top - crect.top}px)`;
     highlight.style.width = `${rect.width}px`;
     highlight.style.height = `${rect.height}px`;
@@ -94,29 +97,40 @@ export function HighlightGrid({
 
   // Park on the first cell initially, and keep the highlight aligned on resize.
   useEffect(() => {
-    if (highlightFirst && gridRows[0]?.[0]) {
-      const first = gridRows[0][0];
-      const h = highlightRef.current;
-      if (h) {
-        // Skip the entry slide on the very first placement by momentarily
-        // zeroing the duration — without touching the other transition
-        // longhands, so every later move still animates.
-        h.style.transitionDuration = "0s";
-        moveTo(first.gi, first.color);
-        requestAnimationFrame(() => {
-          if (h) h.style.transitionDuration = `${transitionDuration}ms`;
-        });
+    let rafId: number;
+    const updatePosition = () => {
+      if (activeRef.current) {
+        moveTo(activeRef.current.gi, activeRef.current.color);
+      } else if (highlightFirst && gridRows[0]?.[0]) {
+        const first = gridRows[0][0];
+        const h = highlightRef.current;
+        if (h) {
+          h.style.transitionDuration = "0s";
+          moveTo(first.gi, first.color);
+          rafId = requestAnimationFrame(() => {
+            if (h) h.style.transitionDuration = `${transitionDuration}ms`;
+          });
+        }
       }
-    }
-
-    const onResize = () => {
-      if (activeRef.current) moveTo(activeRef.current.gi, activeRef.current.color);
     };
+
+    rafId = requestAnimationFrame(updatePosition);
+
+    let resizeRaf: number;
+    const onResize = () => {
+      cancelAnimationFrame(resizeRaf);
+      resizeRaf = requestAnimationFrame(() => {
+        if (activeRef.current) moveTo(activeRef.current.gi, activeRef.current.color);
+      });
+    };
+
     const grid = gridRef.current;
     const ro = grid ? new ResizeObserver(onResize) : null;
     if (grid && ro) ro.observe(grid);
     window.addEventListener("resize", onResize);
     return () => {
+      cancelAnimationFrame(rafId);
+      cancelAnimationFrame(resizeRaf);
       ro?.disconnect();
       window.removeEventListener("resize", onResize);
     };
@@ -125,24 +139,24 @@ export function HighlightGrid({
   return (
     <div
       className={cn(
-        "relative flex h-full w-full items-center justify-center overflow-hidden",
+        "relative flex h-full w-full items-center justify-center min-h-[320px] p-4 sm:p-8 overflow-hidden",
         className,
       )}
     >
       <div
         ref={gridRef}
-        className="relative mx-auto flex h-[60%] w-[90%] flex-col border border-black/15 dark:border-white/20"
+        className="relative mx-auto flex h-full min-h-[240px] max-h-[360px] w-full max-w-[640px] flex-col border border-neutral-300 dark:border-white/20 rounded-2xl overflow-hidden bg-neutral-100/50 dark:bg-neutral-900/50 backdrop-blur-xs shadow-sm"
       >
         {/* Sliding highlight — solid accent (which fades between cells) with a
             fixed radiant gradient sheen layered over it. */}
         <div
           ref={highlightRef}
           aria-hidden
-          className="pointer-events-none absolute left-0 top-0 z-0"
+          className="pointer-events-none absolute left-0 top-0 z-0 opacity-0 rounded-lg"
           style={{
             backgroundImage:
               "radial-gradient(120% 120% at 50% 0%, rgba(255,255,255,0.28), rgba(255,255,255,0) 52%), linear-gradient(180deg, rgba(255,255,255,0) 55%, rgba(0,0,0,0.22))",
-            transitionProperty: "transform, width, height, background-color",
+            transitionProperty: "transform, width, height, background-color, opacity",
             transitionDuration: `${transitionDuration}ms`,
             transitionTimingFunction: "ease",
           }}
@@ -152,8 +166,8 @@ export function HighlightGrid({
           <div
             key={r}
             className={cn(
-              "flex flex-1",
-              r < gridRows.length - 1 && "border-b border-black/15 dark:border-white/20",
+              "flex flex-1 min-h-[60px]",
+              r < gridRows.length - 1 && "border-b border-neutral-300 dark:border-white/20",
             )}
           >
             {row.map((cell, c) => {
@@ -170,14 +184,14 @@ export function HighlightGrid({
                     moveTo(cell.gi, cell.color);
                   }}
                   className={cn(
-                    "flex h-full flex-1 items-center justify-center",
-                    c < row.length - 1 && "border-r border-black/15 dark:border-white/20",
+                    "flex h-full flex-1 items-center justify-center cursor-pointer p-3 text-center",
+                    c < row.length - 1 && "border-r border-neutral-300 dark:border-white/20",
                   )}
                 >
                   <p
                     className={cn(
-                      "relative z-[2] font-mono text-[13px] font-medium uppercase transition-colors duration-200",
-                      isActive ? "text-white" : "text-neutral-600 dark:text-white/70",
+                      "relative z-[2] font-mono text-[12px] sm:text-[13px] font-semibold uppercase tracking-wider transition-colors duration-200 select-none",
+                      isActive ? "text-white drop-shadow-xs" : "text-neutral-700 dark:text-white/80",
                     )}
                   >
                     ( {cell.label} )

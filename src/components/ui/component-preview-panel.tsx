@@ -132,7 +132,7 @@ export function ComponentPreviewPanel({ installCommand, children }: ComponentPre
               <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-black/5 dark:bg-white/10" />
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_0%,rgba(0,0,0,0.03),transparent_32%),radial-gradient(circle_at_80%_100%,rgba(0,0,0,0.02),transparent_34%)] dark:bg-[radial-gradient(circle_at_20%_0%,rgba(255,255,255,0.08),transparent_32%),radial-gradient(circle_at_80%_100%,rgba(255,255,255,0.04),transparent_34%)]" />
 
-              <div className="relative z-10 w-full min-h-full my-auto flex justify-center items-center p-2 sm:p-4">
+              <div className="relative z-10 w-full h-full min-h-full flex justify-center items-center p-2 sm:p-4">
                 {children}
               </div>
             </div>

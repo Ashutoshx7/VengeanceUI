@@ -49,10 +49,12 @@ const TEAM: readonly TeamRevealMember[] = [
 
 export function TeamRevealGridDemo() {
   return (
-    <TeamRevealGrid
-      members={TEAM}
-      className="rounded-xl"
-    />
+    <div className="w-full max-w-full overflow-x-hidden rounded-xl p-2 sm:p-4">
+      <TeamRevealGrid
+        members={TEAM}
+        className="py-2 md:py-6"
+      />
+    </div>
   );
 }
 

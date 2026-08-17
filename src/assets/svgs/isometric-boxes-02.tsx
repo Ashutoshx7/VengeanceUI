@@ -73,39 +73,6 @@ export default function IsometricBoxes02({
     customDelay: order[i] * 0.25
   }));
 
-  const baseVar = {
-    initial: { fill: "#D9D9D9", stroke: "#D9D9D9", transition: { duration: 0.3 } },
-    hover: (delay: number) => ({
-      fill: ["#D9D9D9", "#737373", "#D9D9D9"],
-      stroke: ["#D9D9D9", "#737373", "#D9D9D9"],
-      transition: { duration: 2, times: [0, 0.125, 1], repeat: Infinity, delay }
-    })
-  };
-
-  const linesVar = {
-    initial: { stroke: "#D9D9D9", transition: { duration: 0.3 } },
-    hover: (delay: number) => ({
-      stroke: ["#D9D9D9", "#737373", "#D9D9D9"],
-      transition: { duration: 2, times: [0, 0.125, 1], repeat: Infinity, delay }
-    })
-  };
-
-  const faceVar = {
-    initial: { stroke: "#D9D9D9", transition: { duration: 0.3 } },
-    hover: (delay: number) => ({
-      stroke: ["#D9D9D9", "#737373", "#D9D9D9"],
-      transition: { duration: 2, times: [0, 0.125, 1], repeat: Infinity, delay }
-    })
-  };
-
-  const contentVar = {
-    initial: { color: "#d4d4d4", transition: { duration: 0.3 } },
-    hover: (delay: number) => ({
-      color: ["#d4d4d4", "#737373", "#d4d4d4"],
-      transition: { duration: 2, times: [0, 0.125, 1], repeat: Infinity, delay }
-    })
-  };
-
   return (
     <svg
       viewBox="0 0 366 198"
@@ -114,13 +81,42 @@ export default function IsometricBoxes02({
       className={className}
       {...props}
     >
+      <style>{`
+        .iso-base { fill: #D9D9D9; stroke: #D9D9D9; transition: fill 0.3s, stroke 0.3s; }
+        .iso-stroke { stroke: #D9D9D9; transition: stroke 0.3s; }
+        .iso-color { color: #d4d4d4; transition: color 0.3s; }
+
+        .group:hover .iso-base {
+          animation: isoPulseFillStroke 2s ease-in-out infinite;
+        }
+        .group:hover .iso-stroke {
+          animation: isoPulseStroke 2s ease-in-out infinite;
+        }
+        .group:hover .iso-color {
+          animation: isoPulseColor 2s ease-in-out infinite;
+        }
+
+        @keyframes isoPulseFillStroke {
+          0%, 100% { fill: #D9D9D9; stroke: #D9D9D9; }
+          12.5% { fill: #737373; stroke: #737373; }
+        }
+        @keyframes isoPulseStroke {
+          0%, 100% { stroke: #D9D9D9; }
+          12.5% { stroke: #737373; }
+        }
+        @keyframes isoPulseColor {
+          0%, 100% { color: #d4d4d4; }
+          12.5% { color: #737373; }
+        }
+      `}</style>
+
       {/* 1. All Bases */}
       {boxes.map((b) => (
-        <motion.path
+        <path
           key={`base-${b.id}`}
           d={b.base}
-          custom={b.customDelay}
-          variants={baseVar}
+          className="iso-base"
+          style={{ animationDelay: `${b.customDelay}s` }}
         />
       ))}
 
@@ -128,12 +124,12 @@ export default function IsometricBoxes02({
       {boxes.map((b) => (
         <React.Fragment key={`lines-${b.id}`}>
           {b.lines.map((l, i) => (
-            <motion.path
+            <path
               key={i}
               d={l}
               strokeDasharray="4 4"
-              custom={b.customDelay}
-              variants={linesVar}
+              className="iso-stroke"
+              style={{ animationDelay: `${b.customDelay}s` }}
             />
           ))}
         </React.Fragment>
@@ -141,23 +137,22 @@ export default function IsometricBoxes02({
 
       {/* 3. All Top Faces */}
       {boxes.map((b) => (
-        <motion.path
+        <path
           key={`face-${b.id}`}
           d={b.face}
           fill="white"
-          custom={b.customDelay}
-          variants={faceVar}
+          className="iso-stroke"
+          style={{ animationDelay: `${b.customDelay}s` }}
         />
       ))}
 
       {/* 4. All Icons & Text */}
       {boxes.map((b) => (
-        <motion.g
+        <g
           key={`content-${b.id}`}
           transform={`translate(${b.x}, ${b.y}) scale(1, 0.57735) rotate(-45)`}
-          className="pointer-events-none"
-          custom={b.customDelay}
-          variants={contentVar}
+          className="pointer-events-none iso-color"
+          style={{ animationDelay: `${b.customDelay}s` }}
         >
           <g transform="translate(-10, -14)">
             <b.Icon width="20" height="20" weight="fill" color="currentColor" />
@@ -172,7 +167,7 @@ export default function IsometricBoxes02({
           >
             {b.title}
           </text>
-        </motion.g>
+        </g>
       ))}
     </svg>
   );
