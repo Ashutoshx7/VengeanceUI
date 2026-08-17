@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-15T04:38:46.581Z",
+  "generatedAt": "2026-08-17T12:26:29.941Z",
   "registryBaseUrl": "https://www.vengenceui.com/r",
   "categories": [
     {
@@ -16,7 +16,7 @@
     },
     {
       "name": "Layout & Cards",
-      "count": 8
+      "count": 10
     },
     {
       "name": "Tooltip & Marquee",
@@ -2917,6 +2917,176 @@
       "additionalPropSections": null
     },
     {
+      "name": "Team Reveal Grid",
+      "slug": "team-reveal-grid",
+      "componentName": "team-reveal-grid",
+      "category": "Layout & Cards",
+      "description": "Stateful team portraits with auto-cycling expertise reveals",
+      "isNew": true,
+      "inCatalog": true,
+      "registryDependencies": [],
+      "dependencies": "npm install clsx tailwind-merge",
+      "includeUtils": true,
+      "manualNotes": [
+        "This is a client component because it manages the active team member and optional automatic rotation.",
+        "Each member accepts a regular image URL. When no image is provided, the component renders a polished initial-based portrait.",
+        "Pointer, touch, and keyboard input all update the same controlled or uncontrolled active state.",
+        "The layout responds to its own container, adapts to light and dark themes, and respects reduced-motion preferences."
+      ],
+      "usageCode": "\"use client\"\n\nimport { TeamRevealGrid } from \"@/components/ui/team-reveal-grid\"\n\nconst members = [\n  {\n    id: \"maya\",\n    name: \"Maya Chen\",\n    role: \"Product Engineer\",\n    expertise: \"Turns early product ideas into resilient interfaces.\",\n    image: \"/team/maya.jpg\",\n    accent: \"#fb4f43\",\n  },\n  // Add more team members...\n]\n\nexport function TeamSection() {\n  return (\n    <TeamRevealGrid\n      members={members}\n      title=\"Meet the team\"\n      defaultActiveMemberId=\"maya\"\n      onActiveMemberChange={(id) => console.log({ id })}\n    />\n  )\n}",
+      "props": [
+        {
+          "prop": "eyebrow",
+          "type": "string",
+          "defaultValue": "'The people behind the product'",
+          "description": "Small label displayed above the heading."
+        },
+        {
+          "prop": "title",
+          "type": "string",
+          "defaultValue": "'Meet the team'",
+          "description": "Main section heading with an animated underline."
+        },
+        {
+          "prop": "description",
+          "type": "string",
+          "defaultValue": "team description",
+          "description": "Supporting copy below the heading."
+        },
+        {
+          "prop": "members",
+          "type": "readonly TeamRevealMember[]",
+          "defaultValue": "six sample members",
+          "description": "Team profiles, roles, expertise, images, and accents."
+        },
+        {
+          "prop": "activeMemberId",
+          "type": "string | null",
+          "defaultValue": "-",
+          "description": "Controlled id of the revealed member."
+        },
+        {
+          "prop": "defaultActiveMemberId",
+          "type": "string | null",
+          "defaultValue": "first member",
+          "description": "Initial revealed member when uncontrolled."
+        },
+        {
+          "prop": "onActiveMemberChange",
+          "type": "(memberId: string | null) => void",
+          "defaultValue": "-",
+          "description": "Called when pointer, keyboard, touch, or autoplay selects a member."
+        },
+        {
+          "prop": "autoPlay",
+          "type": "boolean",
+          "defaultValue": "true",
+          "description": "Cycles the reveal while the component is idle."
+        },
+        {
+          "prop": "rotationInterval",
+          "type": "number",
+          "defaultValue": "2800",
+          "description": "Milliseconds between automatic member changes; values below 1200 are clamped."
+        },
+        {
+          "prop": "className",
+          "type": "string",
+          "defaultValue": "-",
+          "description": "Additional classes for the section root."
+        }
+      ],
+      "additionalPropSections": [
+        {
+          "title": "TeamRevealMember",
+          "data": [
+            {
+              "prop": "id",
+              "type": "string",
+              "defaultValue": "-",
+              "description": "Stable member identifier."
+            },
+            {
+              "prop": "name",
+              "type": "string",
+              "defaultValue": "-",
+              "description": "Member name and image fallback label."
+            },
+            {
+              "prop": "role",
+              "type": "string",
+              "defaultValue": "-",
+              "description": "Member role."
+            },
+            {
+              "prop": "expertise",
+              "type": "string",
+              "defaultValue": "-",
+              "description": "Short detail revealed by the active card."
+            },
+            {
+              "prop": "image",
+              "type": "string",
+              "defaultValue": "-",
+              "description": "Optional local path, data URL, or remote image URL."
+            },
+            {
+              "prop": "imageAlt",
+              "type": "string",
+              "defaultValue": "member name",
+              "description": "Optional image alternative text."
+            },
+            {
+              "prop": "imagePosition",
+              "type": "string",
+              "defaultValue": "'center top'",
+              "description": "CSS object-position value for portrait cropping."
+            },
+            {
+              "prop": "accent",
+              "type": "string",
+              "defaultValue": "'#fb4f43'",
+              "description": "Any CSS color used for the active treatment."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Why Us Bento Grid",
+      "slug": "why-us-bento",
+      "componentName": "why-us-bento",
+      "category": "Layout & Cards",
+      "description": "Interactive 5-panel bento grid with isometric graphics, character avatars, and step pipeline",
+      "isNew": true,
+      "inCatalog": true,
+      "registryDependencies": [],
+      "dependencies": "npm install framer-motion @phosphor-icons/react clsx tailwind-merge",
+      "includeUtils": true,
+      "manualNotes": [
+        "This client component presents a feature bento grid with isometric graphics, card stack rotation, avatar hover expansion, and animated pipeline arrows.",
+        "Uses Framer Motion variants for hover micro-animations across all five grid cards.",
+        "The team avatar stack accepts customizable character image URLs (defaults to Aizen, Batman, Johan, Shinji, etc.).",
+        "Fully responsive layout supporting both light and dark themes."
+      ],
+      "usageCode": "\"use client\"\n\nimport { WhyUsBento } from \"@/components/ui/why-us-bento\"\n\nexport function FeatureSection() {\n  return (\n    <WhyUsBento />\n  )\n}",
+      "props": [
+        {
+          "prop": "className",
+          "type": "string",
+          "defaultValue": "-",
+          "description": "Additional classes for the outer container section."
+        },
+        {
+          "prop": "teamAvatars",
+          "type": "string[]",
+          "defaultValue": "character avatars",
+          "description": "Array of avatar image URLs displayed in card 03."
+        }
+      ],
+      "additionalPropSections": null
+    },
+    {
       "name": "Cursor Card",
       "slug": "cursor-card",
       "componentName": "cursor-card",
@@ -5768,6 +5938,15 @@
       "description": "Animated testimonial stack"
     },
     {
+      "name": "team-reveal-grid",
+      "type": "registry:ui",
+      "dependencies": [],
+      "inCatalog": true,
+      "slug": "team-reveal-grid",
+      "category": "Layout & Cards",
+      "description": "Stateful team portraits with auto-cycling expertise reveals"
+    },
+    {
       "name": "testinomial-card2",
       "type": "registry:ui",
       "dependencies": [],
@@ -5974,6 +6153,8 @@
       "testimonials-card": "testimonials-card",
       "highlight-grid": "highlight-grid",
       "research-bento-grid": "research-bento-grid",
+      "team-reveal-grid": "team-reveal-grid",
+      "why-us-bento": "why-us-bento",
       "cursor-card": "cursor-card",
       "elastic-stack": "elastic-stack",
       "logo-slider": "logo-slider",
@@ -6048,6 +6229,8 @@
       "testimonials-card": "testimonials-card",
       "highlight-grid": "highlight-grid",
       "research-bento-grid": "research-bento-grid",
+      "team-reveal-grid": "team-reveal-grid",
+      "why-us-bento": "why-us-bento",
       "cursor-card": "cursor-card",
       "elastic-stack": "elastic-stack",
       "logo-slider": "logo-slider",

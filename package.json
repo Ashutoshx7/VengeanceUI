@@ -2,6 +2,9 @@
   "name": "vengeance-ui-v2",
   "version": "0.1.0",
   "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
   "engines": {
     "node": ">=20.9.0"
   },

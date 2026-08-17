@@ -25,31 +25,25 @@ function errorText(message: string) {
 }
 
 export function registerTools(server: McpServer) {
-  server.registerTool(
+  server.tool(
     "list_categories",
-    {
-      description:
-        "List VengeanceUI marketing catalog categories and component counts.",
-    },
+    "List VengeanceUI marketing catalog categories and component counts.",
     async () => text(listCategories()),
   );
 
-  server.registerTool(
+  server.tool(
     "search_components",
+    "Search VengeanceUI catalog components by name, slug, description, or category.",
     {
-      description:
-        "Search VengeanceUI catalog components by name, slug, description, or category.",
-      inputSchema: {
-        query: z
-          .string()
-          .describe("Search text (name, slug, description, category)"),
-        category: z
-          .string()
-          .optional()
-          .describe("Optional exact category name filter"),
-      },
-    },
-    async ({ query, category }) => {
+      query: z
+        .string()
+        .describe("Search text (name, slug, description, category)"),
+      category: z
+        .string()
+        .optional()
+        .describe("Optional exact category name filter"),
+    } as any,
+    async ({ query, category }: { query: string; category?: string }) => {
       const results = searchComponents(query, category).map((c) => ({
         name: c.name,
         slug: c.slug,
@@ -62,18 +56,15 @@ export function registerTools(server: McpServer) {
     },
   );
 
-  server.registerTool(
+  server.tool(
     "get_component",
+    "Get full catalog/docs for a component by slug or registry componentName (e.g. my-animated-button or animated-button).",
     {
-      description:
-        "Get full catalog/docs for a component by slug or registry componentName (e.g. my-animated-button or animated-button).",
-      inputSchema: {
-        name: z
-          .string()
-          .describe("Catalog slug or registry componentName"),
-      },
-    },
-    async ({ name }) => {
+      name: z
+        .string()
+        .describe("Catalog slug or registry componentName"),
+    } as any,
+    async ({ name }: { name: string }) => {
       const component = resolveComponent(name);
       if (!component) {
         return errorText(
@@ -84,22 +75,19 @@ export function registerTools(server: McpServer) {
     },
   );
 
-  server.registerTool(
+  server.tool(
     "get_install_command",
+    "Return the shadcn CLI add command for a VengeanceUI registry component.",
     {
-      description:
-        "Return the shadcn CLI add command for a VengeanceUI registry component.",
-      inputSchema: {
-        name: z
-          .string()
-          .describe("Catalog slug or registry componentName"),
-        packageManager: z
-          .enum(["npm", "pnpm", "bun", "yarn"])
-          .optional()
-          .describe("Package manager (default npm)"),
-      },
-    },
-    async ({ name, packageManager }) => {
+      name: z
+        .string()
+        .describe("Catalog slug or registry componentName"),
+      packageManager: z
+        .enum(["npm", "pnpm", "bun", "yarn"])
+        .optional()
+        .describe("Package manager (default npm)"),
+    } as any,
+    async ({ name, packageManager }: { name: string; packageManager?: "npm" | "pnpm" | "bun" | "yarn" }) => {
       const componentName = resolveRegistryName(name);
       if (!componentName) {
         return errorText(`Unknown component or registry item: ${name}`);
@@ -114,18 +102,15 @@ export function registerTools(server: McpServer) {
     },
   );
 
-  server.registerTool(
+  server.tool(
     "get_component_source",
+    "Fetch live registry JSON (including source files) from www.vengenceui.com/r/{name}.json.",
     {
-      description:
-        "Fetch live registry JSON (including source files) from www.vengenceui.com/r/{name}.json.",
-      inputSchema: {
-        name: z
-          .string()
-          .describe("Catalog slug or registry componentName"),
-      },
-    },
-    async ({ name }) => {
+      name: z
+        .string()
+        .describe("Catalog slug or registry componentName"),
+    } as any,
+    async ({ name }: { name: string }) => {
       const componentName = resolveRegistryName(name);
       if (!componentName) {
         return errorText(`Unknown component or registry item: ${name}`);
@@ -141,12 +126,9 @@ export function registerTools(server: McpServer) {
     },
   );
 
-  server.registerTool(
+  server.tool(
     "list_registry",
-    {
-      description:
-        "List all shadcn registry entry names (includes blocks not in the marketing catalog).",
-    },
+    "List all shadcn registry entry names (includes blocks not in the marketing catalog).",
     async () => text({ count: listRegistry().length, items: listRegistry() }),
   );
 }
