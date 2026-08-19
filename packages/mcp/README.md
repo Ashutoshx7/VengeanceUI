@@ -12,7 +12,17 @@ In your app (no clone required):
 npx vengeanceui init
 ```
 
-That writes the agent skill, MCP config (`npx -y vengeanceui-mcp`), and instructions. See `packages/cli` for `init cursor`, `init claude`, and `init mcp`.
+That writes the agent skill, MCP config (`npx -y vengeanceui-mcp`), and instructions.
+
+Granular:
+
+```bash
+npx vengeanceui init cursor
+npx vengeanceui init claude
+npx vengeanceui init mcp
+```
+
+Docs: [CLI](https://www.vengenceui.com/docs/cli).
 
 ## Contributor setup
 

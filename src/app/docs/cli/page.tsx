@@ -177,8 +177,7 @@ npx vengeanceui init -y`}
         <DocsParagraph>
           Build the server first:{" "}
           <InlineCode>cd packages/mcp && npm install && npm run build</InlineCode>
-          . See <InlineCode>packages/cli/README.md</InlineCode> and{" "}
-          <InlineCode>packages/mcp/README.md</InlineCode> for details.
+          .
         </DocsParagraph>
       </DocsSection>
     </DocsArticle>

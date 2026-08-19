@@ -164,6 +164,29 @@ await withTemp(async (dir) => {
 });
 
 await withTemp(async (dir) => {
+  const custom = { command: "node", args: ["local-mcp.js"] };
+  await mkdir(join(dir, ".cursor"), { recursive: true });
+  await writeFile(
+    join(dir, ".cursor/mcp.json"),
+    JSON.stringify({ mcpServers: { "vengeance-ui": custom } }, null, 2) + "\n",
+    "utf8",
+  );
+  const skipped = run(dir, ["init", "mcp"]);
+  assert(skipped.stdout.includes("skipped"), "conflicting mcp should be skipped");
+  assert(
+    JSON.stringify((await readJson(join(dir, ".cursor/mcp.json"))).mcpServers["vengeance-ui"]) ===
+      JSON.stringify(custom),
+    "should keep custom vengeance-ui entry without --force",
+  );
+  run(dir, ["init", "mcp", "--force"]);
+  assert(
+    JSON.stringify((await readJson(join(dir, ".cursor/mcp.json"))).mcpServers["vengeance-ui"]) ===
+      JSON.stringify(MCP_ENTRY),
+    "force should replace vengeance-ui entry",
+  );
+});
+
+await withTemp(async (dir) => {
   const out = run(dir, ["init", "--dry-run"]);
   assert(out.stdout.includes("DRY RUN"), "dry-run should show banner");
   assert(out.stdout.includes("would write"), "dry-run should log file actions");
