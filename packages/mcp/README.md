@@ -12,7 +12,7 @@ In your app (no clone required):
 npx vengeanceui init
 ```
 
-That writes the agent skill, MCP config (`npx -y vengeanceui-mcp`), and instructions.
+In a terminal this prompts for Cursor, Claude, both, or MCP only. `-y` (or a non-TTY) writes both skills, both MCP configs (`npx -y vengeanceui-mcp`), and `AGENTS.md` / `CLAUDE.md`.
 
 Granular:
 
