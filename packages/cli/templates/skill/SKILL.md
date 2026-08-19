@@ -23,14 +23,14 @@ If MCP is unavailable, use the install URL pattern in [install.md](install.md) a
 
 ## MCP tools
 
-| Tool | Purpose |
-|------|---------|
-| `list_categories` | Catalog categories |
-| `search_components` | Find by name/slug/description |
-| `get_component` | Props, usage, deps (slug **or** componentName) |
-| `get_install_command` | `shadcn add` URL for a package manager |
-| `get_component_source` | Live registry JSON + source |
-| `list_registry` | All registry names (includes blocks) |
+| Tool                   | Purpose                                        |
+| ---------------------- | ---------------------------------------------- |
+| `list_categories`      | Catalog categories                             |
+| `search_components`    | Find by name/slug/description                  |
+| `get_component`        | Props, usage, deps (slug **or** componentName) |
+| `get_install_command`  | `shadcn add` URL for a package manager         |
+| `get_component_source` | Live registry JSON + source                    |
+| `list_registry`        | All registry names (includes blocks)           |
 
 ## Slug vs componentName
 

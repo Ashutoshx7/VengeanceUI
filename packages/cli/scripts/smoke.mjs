@@ -23,6 +23,7 @@ function run(cwd, args) {
   const result = spawnSync(process.execPath, [cli, ...args], {
     encoding: "utf8",
     cwd,
+    env: { ...process.env, NO_COLOR: "1" },
   });
   if (result.status !== 0) {
     throw new Error(
@@ -61,18 +62,10 @@ async function withTemp(fn) {
 
 await withTemp(async (dir) => {
   const result = run(dir, ["init"]);
-  assert(
-    result.stdout.includes("✔ Installed VengeanceUI agent skill"),
-    "missing skill checkmark",
-  );
-  assert(
-    result.stdout.includes("✔ Configured MCP server"),
-    "missing mcp checkmark",
-  );
-  assert(
-    result.stdout.includes("✔ Added VengeanceUI instructions"),
-    "missing instructions checkmark",
-  );
+  assert(result.stdout.includes("✔  Agent skill"), "missing skill checkmark");
+  assert(result.stdout.includes("✔  MCP server"), "missing mcp checkmark");
+  assert(result.stdout.includes("✔  Instructions"), "missing instructions checkmark");
+  assert(result.stdout.includes("wrote"), "first run should write");
 
   const skillMd = await readFile(
     join(dir, ".cursor/skills/vengeance-ui/SKILL.md"),
@@ -111,7 +104,8 @@ await withTemp(async (dir) => {
   assert(claudeMd.includes("vengenceui.com/r/{componentName}.json"), "install url");
 
   const again = run(dir, ["init"]);
-  assert(again.stdout.includes("✔ Installed VengeanceUI agent skill"), "idempotent");
+  assert(again.stdout.includes("✔  Agent skill"), "idempotent");
+  assert(again.stdout.includes("unchanged"), "second run should be unchanged");
 });
 
 await withTemp(async (dir) => {
@@ -135,9 +129,9 @@ await withTemp(async (dir) => {
 
 await withTemp(async (dir) => {
   const out = run(dir, ["init", "mcp"]);
-  assert(out.stdout.includes("✔ Configured MCP server"), "mcp checkmark");
-  assert(!out.stdout.includes("agent skill"), "mcp-only should not install skill");
-  assert(!out.stdout.includes("instructions"), "mcp-only should not add instructions");
+  assert(out.stdout.includes("✔  MCP server"), "mcp checkmark");
+  assert(!out.stdout.includes("Agent skill"), "mcp-only should not install skill");
+  assert(!out.stdout.includes("Instructions"), "mcp-only should not add instructions");
   assert(await exists(join(dir, ".cursor/mcp.json")), "cursor mcp");
   assert(await exists(join(dir, ".mcp.json")), "claude mcp");
   assert(!(await exists(join(dir, ".cursor/skills"))), "no cursor skill");
@@ -171,7 +165,8 @@ await withTemp(async (dir) => {
 
 await withTemp(async (dir) => {
   const out = run(dir, ["init", "--dry-run"]);
-  assert(out.stdout.includes("[dry-run]"), "dry-run should log actions");
+  assert(out.stdout.includes("DRY RUN"), "dry-run should show banner");
+  assert(out.stdout.includes("would write"), "dry-run should log file actions");
   assert(!(await exists(join(dir, ".cursor"))), "dry-run must not write cursor");
   assert(!(await exists(join(dir, ".mcp.json"))), "dry-run must not write mcp");
   assert(!(await exists(join(dir, "AGENTS.md"))), "dry-run must not write AGENTS.md");
@@ -181,11 +176,12 @@ await withTemp(async (dir) => {
   run(dir, ["init", "cursor"]);
   const skillPath = join(dir, ".cursor/skills/vengeance-ui/SKILL.md");
   await writeFile(skillPath, "edited locally\n", "utf8");
-  run(dir, ["init", "cursor"]);
+  const skipped = run(dir, ["init", "cursor"]);
   assert(
     (await readFile(skillPath, "utf8")) === "edited locally\n",
     "should not overwrite without --force",
   );
+  assert(skipped.stdout.includes("skipped"), "edited skill should be skipped");
   run(dir, ["init", "cursor", "--force"]);
   const restored = await readFile(skillPath, "utf8");
   assert(restored.startsWith("---"), "force should restore skill frontmatter");
@@ -203,6 +199,14 @@ await withTemp(async (dir) => {
     (await readFile(join(dir, "AGENTS.md"), "utf8")) === once,
     "should not duplicate instruction block",
   );
+});
+
+await withTemp(async (dir) => {
+  const out = run(dir, ["init", "cursor", "--no-mcp"]);
+  assert(await exists(join(dir, ".cursor/skills/vengeance-ui/SKILL.md")), "skill");
+  assert(await exists(join(dir, "AGENTS.md")), "AGENTS.md");
+  assert(!(await exists(join(dir, ".cursor/mcp.json"))), "mcp skipped");
+  assert(!out.stdout.includes("✔  MCP server"), "no mcp section");
 });
 
 console.log("smoke ok");

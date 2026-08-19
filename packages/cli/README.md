@@ -10,28 +10,36 @@ This does **not** install UI components. Use the [shadcn CLI](https://www.vengen
 npx vengeanceui init
 ```
 
+In a terminal this uses arrow-key prompts (↑/↓, Enter):
+
 ```text
-✔ Installed VengeanceUI agent skill
-✔ Configured MCP server
-✔ Added VengeanceUI instructions
+? Agent
+❯ Cursor     skill, AGENTS.md
+  Claude     skill, CLAUDE.md
+  Both       Cursor + Claude
+  MCP only   server config
+
+? Configure MCP server? (Y/n)
 ```
 
-Granular commands:
+Pass a target or `-y` to skip:
 
 ```bash
-npx vengeanceui init mcp
 npx vengeanceui init cursor
 npx vengeanceui init claude
+npx vengeanceui init mcp
+npx vengeanceui init -y
 ```
 
-| Command | Writes |
-| --- | --- |
-| `init` | Cursor + Claude skills, both MCP configs, `AGENTS.md` + `CLAUDE.md` |
-| `init cursor` | `.cursor/skills/vengeance-ui/`, `.cursor/mcp.json`, `AGENTS.md` |
-| `init claude` | `.claude/skills/vengeance-ui/`, `.mcp.json`, `CLAUDE.md` |
-| `init mcp` | `.cursor/mcp.json` and `.mcp.json` only |
+| Command       | Writes                                                              |
+| ------------- | ------------------------------------------------------------------- |
+| `init`        | Prompts, then writes the chosen agent files                         |
+| `init -y`     | Cursor + Claude skills, both MCP configs, `AGENTS.md` + `CLAUDE.md` |
+| `init cursor` | `.cursor/skills/vengeance-ui/`, `.cursor/mcp.json`, `AGENTS.md`     |
+| `init claude` | `.claude/skills/vengeance-ui/`, `.mcp.json`, `CLAUDE.md`            |
+| `init mcp`    | `.cursor/mcp.json` and `.mcp.json` only                             |
 
-Options: `--cwd <path>`, `--force`, `--dry-run`.
+Options: `--cwd <path>`, `-y` / `--yes`, `--no-mcp`, `--force`, `--dry-run`.
 
 MCP configs point at:
 

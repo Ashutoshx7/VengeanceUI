@@ -25,5 +25,9 @@
     "@types/node": "^20.17.50",
     "typescript": "^5.8.3"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@inquirer/prompts": "^7.10.1",
+    "interactive-commander": "^0.6.0"
+  }
 }

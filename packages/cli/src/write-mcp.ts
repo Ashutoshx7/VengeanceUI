@@ -1,7 +1,7 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
-import { dry } from "./log.js";
 import { MCP_SERVER_KEY, mcpServerEntry } from "./paths.js";
+import type { WriteStatus } from "./status.js";
 import type { WriteContext } from "./write-skill.js";
 
 type McpFile = {
@@ -15,8 +15,8 @@ function serialize(data: McpFile) {
 
 export async function writeMcp(
   filePath: string,
-  ctx: WriteContext,
-): Promise<void> {
+  ctx: WriteContext
+): Promise<WriteStatus> {
   let existing: McpFile = {};
   try {
     const raw = await readFile(filePath, "utf8");
@@ -36,14 +36,11 @@ export async function writeMcp(
   const current = servers[MCP_SERVER_KEY];
   const next = { ...mcpServerEntry };
   const same =
-    current && JSON.stringify(current) === JSON.stringify(next);
+    Boolean(current) && JSON.stringify(current) === JSON.stringify(next);
 
-  if (same) {
-    return;
-  }
-  if (current && !ctx.force) {
-    return;
-  }
+  if (same) return "unchanged";
+  if (current && !ctx.force) return "skipped";
+  if (ctx.dryRun) return "would-write";
 
   const nextFile: McpFile = {
     ...existing,
@@ -52,13 +49,8 @@ export async function writeMcp(
       [MCP_SERVER_KEY]: next,
     },
   };
-  const out = serialize(nextFile);
-
-  if (ctx.dryRun) {
-    dry(`write ${filePath}`);
-    return;
-  }
 
   await mkdir(dirname(filePath), { recursive: true });
-  await writeFile(filePath, out, "utf8");
+  await writeFile(filePath, serialize(nextFile), "utf8");
+  return "wrote";
 }

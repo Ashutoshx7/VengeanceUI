@@ -1,7 +1,10 @@
 import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import { dry } from "./log.js";
 import { skillTemplateDir } from "./paths.js";
+import {
+  combineStatuses,
+  type WriteStatus,
+} from "./status.js";
 
 export type WriteContext = {
   cwd: string;
@@ -9,19 +12,23 @@ export type WriteContext = {
   dryRun: boolean;
 };
 
-async function copyDir(from: string, to: string, ctx: WriteContext) {
+async function copyDir(
+  from: string,
+  to: string,
+  ctx: WriteContext,
+): Promise<WriteStatus> {
   const entries = await readdir(from, { withFileTypes: true });
+  const statuses: WriteStatus[] = [];
+
   if (!ctx.dryRun) {
     await mkdir(to, { recursive: true });
-  } else {
-    dry(`mkdir ${to}`);
   }
 
   for (const entry of entries) {
     const src = join(from, entry.name);
     const dest = join(to, entry.name);
     if (entry.isDirectory()) {
-      await copyDir(src, dest, ctx);
+      statuses.push(await copyDir(src, dest, ctx));
       continue;
     }
 
@@ -34,23 +41,28 @@ async function copyDir(from: string, to: string, ctx: WriteContext) {
     }
 
     if (existing !== null && existing === contents) {
+      statuses.push("unchanged");
       continue;
     }
     if (existing !== null && !ctx.force) {
+      statuses.push("skipped");
       continue;
     }
 
     if (ctx.dryRun) {
-      dry(`write ${dest}`);
+      statuses.push("would-write");
       continue;
     }
     await writeFile(dest, contents, "utf8");
+    statuses.push("wrote");
   }
+
+  return combineStatuses(statuses);
 }
 
 export async function writeSkill(
   destDir: string,
   ctx: WriteContext,
-): Promise<void> {
-  await copyDir(skillTemplateDir, destDir, ctx);
+): Promise<WriteStatus> {
+  return copyDir(skillTemplateDir, destDir, ctx);
 }

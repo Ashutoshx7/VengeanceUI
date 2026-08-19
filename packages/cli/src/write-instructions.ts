@@ -1,10 +1,10 @@
 import { readFile, writeFile } from "node:fs/promises";
-import { dry } from "./log.js";
 import {
   INSTRUCTION_BEGIN,
   INSTRUCTION_END,
   instructionsTemplatePath,
 } from "./paths.js";
+import type { WriteStatus } from "./status.js";
 import type { WriteContext } from "./write-skill.js";
 
 function wrap(body: string) {
@@ -28,7 +28,7 @@ function replaceBlock(source: string, block: string) {
 export async function writeInstructions(
   filePath: string,
   ctx: WriteContext,
-): Promise<void> {
+): Promise<WriteStatus> {
   const body = await readFile(instructionsTemplatePath, "utf8");
   const block = wrap(body);
 
@@ -49,21 +49,15 @@ export async function writeInstructions(
         `Found ${INSTRUCTION_BEGIN} in ${filePath} but no matching ${INSTRUCTION_END}`,
       );
     }
-    if (replaced === existing) {
-      return;
-    }
-    if (!ctx.force) {
-      return;
-    }
+    if (replaced === existing) return "unchanged";
+    if (!ctx.force) return "skipped";
     next = replaced;
   } else {
     const sep = existing.endsWith("\n") ? "\n" : "\n\n";
     next = `${existing}${sep}${block}`;
   }
 
-  if (ctx.dryRun) {
-    dry(`write ${filePath}`);
-    return;
-  }
+  if (ctx.dryRun) return "would-write";
   await writeFile(filePath, next, "utf8");
+  return "wrote";
 }

@@ -123,8 +123,9 @@ Options:
       <DocsSection title="Agent skill + MCP">
         <DocsParagraph>
           Install the VengeanceUI agent skill, MCP server config, and
-          instructions in your project with one command. Agents then prefer
-          registry components over reinventing UI.
+          instructions. In a terminal, <InlineCode>init</InlineCode> lets you
+          arrow through Cursor, Claude, both, or MCP only, then confirm MCP
+          config.
         </DocsParagraph>
         <PackageCommand
           commands={{
@@ -135,17 +136,23 @@ Options:
           }}
         />
         <DocsCodeBlock
-          code={`✔ Installed VengeanceUI agent skill
-✔ Configured MCP server
-✔ Added VengeanceUI instructions`}
+          code={`? Agent
+❯ Cursor     skill, AGENTS.md
+  Claude     skill, CLAUDE.md
+  Both       Cursor + Claude
+  MCP only   server config
+
+? Configure MCP server? (Y/n)`}
         />
         <DocsParagraph>
-          Granular commands if you only want one integration:
+          Skip the prompts with a target, or <InlineCode>-y</InlineCode> for
+          Cursor + Claude + MCP (also the default when stdin is not a TTY):
         </DocsParagraph>
         <DocsCodeBlock
           code={`npx vengeanceui init cursor
 npx vengeanceui init claude
-npx vengeanceui init mcp`}
+npx vengeanceui init mcp
+npx vengeanceui init -y`}
         />
         <DocsParagraph>
           MCP configs use <InlineCode>npx -y vengeanceui-mcp</InlineCode>. This
