@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-17T12:26:29.941Z",
+  "generatedAt": "2026-08-20T21:34:05.621Z",
   "registryBaseUrl": "https://www.vengenceui.com/r",
   "categories": [
     {
@@ -3235,13 +3235,13 @@
       "dependencies": "npm install clsx tailwind-merge",
       "includeUtils": true,
       "manualNotes": null,
-      "usageCode": "import { StackedLogos } from \"@/components/ui/stacked-logos\"\n\nexport function StackedLogosDemo() {\n  return (\n    <StackedLogos\n      logos={[\n        { src: \"/logo1.svg\", alt: \"Logo 1\" },\n        { src: \"/logo2.svg\", alt: \"Logo 2\" },\n      ]}\n    />\n  )\n}",
+      "usageCode": "import { StackedLogos } from \"@/components/ui/stacked-logos\"\n\nconst logoGroups = [\n  [\n    <img key=\"acme\" src=\"/logos/acme.svg\" alt=\"Acme\" />,\n    <img key=\"globex\" src=\"/logos/globex.svg\" alt=\"Globex\" />,\n  ],\n  [\n    <img key=\"initech\" src=\"/logos/initech.svg\" alt=\"Initech\" />,\n    <img key=\"umbrella\" src=\"/logos/umbrella.svg\" alt=\"Umbrella\" />,\n  ],\n]\n\nexport function StackedLogosDemo() {\n  return <StackedLogos logoGroups={logoGroups} />\n}",
       "props": [
         {
-          "prop": "logos",
-          "type": "Logo[]",
+          "prop": "logoGroups",
+          "type": "React.ReactNode[][]",
           "defaultValue": "-",
-          "description": "Array of logo objects."
+          "description": "Required groups of logo nodes. Each inner array is animated within one grid column."
         },
         {
           "prop": "className",
@@ -3254,6 +3254,18 @@
           "type": "number",
           "defaultValue": "30",
           "description": "Duration of the animation cycle in seconds."
+        },
+        {
+          "prop": "stagger",
+          "type": "number",
+          "defaultValue": "0",
+          "description": "Animation timing offset between logo groups."
+        },
+        {
+          "prop": "logoWidth",
+          "type": "string",
+          "defaultValue": "'200px'",
+          "description": "Width of each logo group column."
         }
       ],
       "additionalPropSections": null

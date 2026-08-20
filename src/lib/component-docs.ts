@@ -1122,20 +1122,26 @@ export function LogoSliderDemo() {
     includeUtils: true,
     usageCode: `import { StackedLogos } from "@/components/ui/stacked-logos"
 
+const logoGroups = [
+  [
+    <img key="acme" src="/logos/acme.svg" alt="Acme" />,
+    <img key="globex" src="/logos/globex.svg" alt="Globex" />,
+  ],
+  [
+    <img key="initech" src="/logos/initech.svg" alt="Initech" />,
+    <img key="umbrella" src="/logos/umbrella.svg" alt="Umbrella" />,
+  ],
+]
+
 export function StackedLogosDemo() {
-  return (
-    <StackedLogos
-      logos={[
-        { src: "/logo1.svg", alt: "Logo 1" },
-        { src: "/logo2.svg", alt: "Logo 2" },
-      ]}
-    />
-  )
+  return <StackedLogos logoGroups={logoGroups} />
 }`,
     props: [
-      { prop: "logos", type: "Logo[]", defaultValue: "-", description: "Array of logo objects." },
+      { prop: "logoGroups", type: "React.ReactNode[][]", defaultValue: "-", description: "Required groups of logo nodes. Each inner array is animated within one grid column." },
       { prop: "className", type: "string", defaultValue: "-", description: "Additional CSS classes." },
       { prop: "duration", type: "number", defaultValue: "30", description: "Duration of the animation cycle in seconds." },
+      { prop: "stagger", type: "number", defaultValue: "0", description: "Animation timing offset between logo groups." },
+      { prop: "logoWidth", type: "string", defaultValue: "'200px'", description: "Width of each logo group column." },
     ],
   },
 
