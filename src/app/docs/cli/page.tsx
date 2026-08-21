@@ -120,19 +120,48 @@ Options:
         />
       </DocsSection>
 
-      <DocsSection title="Cursor agent skill + MCP">
+      <DocsSection title="Agent skill + MCP">
         <DocsParagraph>
-          This repo ships a Cursor skill at{" "}
-          <InlineCode>.cursor/skills/vengeance-ui/</InlineCode> so agents prefer
-          registry components over reinventing UI. Pair it with the{" "}
-          <InlineCode>vengeanceui-mcp</InlineCode> server under{" "}
-          <InlineCode>packages/mcp</InlineCode> to search the catalog, read
-          props/usage, and get install commands.
+          Install the VengeanceUI agent skill, MCP server config, and
+          instructions. In a terminal, <InlineCode>init</InlineCode> lets you
+          arrow through Cursor, Claude, both, or MCP only, then confirm MCP
+          config.
+        </DocsParagraph>
+        <PackageCommand
+          commands={{
+            npm: "npx vengeanceui init",
+            pnpm: "pnpm dlx vengeanceui init",
+            yarn: "yarn dlx vengeanceui init",
+            bun: "bunx vengeanceui init",
+          }}
+        />
+        <DocsCodeBlock
+          code={`? Agent
+❯ Cursor     skill, AGENTS.md
+  Claude     skill, CLAUDE.md
+  Both       Cursor + Claude
+  MCP only   server config
+
+? Configure MCP server? (Y/n)`}
+        />
+        <DocsParagraph>
+          Skip the prompts with a target, or <InlineCode>-y</InlineCode> for
+          Cursor + Claude + MCP (also the default when stdin is not a TTY):
+        </DocsParagraph>
+        <DocsCodeBlock
+          code={`npx vengeanceui init cursor
+npx vengeanceui init claude
+npx vengeanceui init mcp
+npx vengeanceui init -y`}
+        />
+        <DocsParagraph>
+          MCP configs use <InlineCode>npx -y vengeanceui-mcp</InlineCode>. This
+          does not replace shadcn <InlineCode>init</InlineCode> /{" "}
+          <InlineCode>add</InlineCode> for installing components.
         </DocsParagraph>
         <DocsParagraph>
-          Project-level Cursor config at{" "}
-          <InlineCode>.cursor/mcp.json</InlineCode> (from a clone of this
-          repository):
+          Contributors cloning this repo can keep using a local MCP build at{" "}
+          <InlineCode>packages/mcp</InlineCode>:
         </DocsParagraph>
         <DocsCodeBlock
           title=".cursor/mcp.json"
@@ -146,14 +175,9 @@ Options:
 }`}
         />
         <DocsParagraph>
-          For global <InlineCode>~/.cursor/mcp.json</InlineCode>, use an
-          absolute path to <InlineCode>dist/index.js</InlineCode>. Build the
-          server first:{" "}
+          Build the server first:{" "}
           <InlineCode>cd packages/mcp && npm install && npm run build</InlineCode>
-          . When the package is published to npm, you can switch to{" "}
-          <InlineCode>npx -y vengeanceui-mcp</InlineCode>. See{" "}
-          <InlineCode>packages/mcp/README.md</InlineCode> for tools and index
-          regeneration.
+          .
         </DocsParagraph>
       </DocsSection>
     </DocsArticle>

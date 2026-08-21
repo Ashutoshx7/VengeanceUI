@@ -1,0 +1,33 @@
+{
+  "name": "vengeanceui",
+  "version": "0.1.0",
+  "description": "CLI to install the VengeanceUI agent skill, MCP server config, and agent instructions",
+  "type": "module",
+  "bin": {
+    "vengeanceui": "./dist/index.js"
+  },
+  "main": "./dist/index.js",
+  "files": [
+    "dist",
+    "templates"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "start": "node ./dist/index.js",
+    "smoke": "npm run build && node ./scripts/smoke.mjs",
+    "prepare-dev": "npm run build",
+    "prepack": "npm run build"
+  },
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.50",
+    "typescript": "^5.8.3"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@inquirer/prompts": "^7.10.1",
+    "interactive-commander": "^0.6.0"
+  }
+}

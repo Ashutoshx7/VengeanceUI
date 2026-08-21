@@ -4,7 +4,27 @@ MCP server for [VengeanceUI](https://www.vengenceui.com): search the component c
 
 Pairs with the Cursor skill at `.cursor/skills/vengeance-ui/`.
 
-## Setup
+## Consumer setup
+
+In your app (no clone required):
+
+```bash
+npx vengeanceui init
+```
+
+In a terminal this prompts for Cursor, Claude, both, or MCP only. `-y` (or a non-TTY) writes both skills, both MCP configs (`npx -y vengeanceui-mcp`), and `AGENTS.md` / `CLAUDE.md`.
+
+Granular:
+
+```bash
+npx vengeanceui init cursor
+npx vengeanceui init claude
+npx vengeanceui init mcp
+```
+
+Docs: [CLI](https://www.vengenceui.com/docs/cli).
+
+## Contributor setup
 
 ```bash
 cd packages/mcp
@@ -14,7 +34,7 @@ npm run build
 
 `build` regenerates `data/index.json` then compiles. Re-run it whenever catalog/docs/registry sources change.
 
-### Cursor `mcp.json` (project-level `.cursor/mcp.json`)
+### Cursor `mcp.json` (from a clone of this repository)
 
 ```json
 {
