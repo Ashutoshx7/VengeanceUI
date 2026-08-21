@@ -4,7 +4,7 @@ import { InteractiveCommand, InteractiveOption } from "interactive-commander";
 import { runInit } from "./init.js";
 import { error } from "./log.js";
 import { promptAgent, promptMcp } from "./prompt.js";
-import { toTarget } from "./types.js";
+import { resolveSetupFromArgv, toTarget } from "./types.js";
 
 const program = new InteractiveCommand()
   .name("vengeanceui")
@@ -23,6 +23,8 @@ program
     )
       .choices(["cursor", "claude", "both", "mcp"])
       .prompt(async (current, _option, command) => {
+        const fromArgv = resolveSetupFromArgv(process.argv);
+        if (fromArgv) return fromArgv;
         const positional = command.args[0];
         if (typeof positional === "string" && positional.length > 0) {
           return positional;
@@ -39,6 +41,7 @@ program
         if (command.getOptionValue("yes")) return true;
         const setup =
           (command.getOptionValue("setup") as string | undefined) ??
+          resolveSetupFromArgv(process.argv) ??
           command.args[0] ??
           "both";
         if (setup === "mcp") return true;

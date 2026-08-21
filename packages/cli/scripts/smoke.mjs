@@ -11,6 +11,7 @@ import {
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { resolveSetupFromArgv } from "../dist/types.js";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const cli = join(root, "dist", "index.js");
@@ -28,6 +29,20 @@ function run(cwd, args) {
   if (result.status !== 0) {
     throw new Error(
       `cli failed (${args.join(" ")}):\n${result.stdout}\n${result.stderr}`,
+    );
+  }
+  return result;
+}
+
+function runExpectFail(cwd, args) {
+  const result = spawnSync(process.execPath, [cli, ...args], {
+    encoding: "utf8",
+    cwd,
+    env: { ...process.env, NO_COLOR: "1" },
+  });
+  if (result.status === 0) {
+    throw new Error(
+      `cli should have failed (${args.join(" ")}):\n${result.stdout}\n${result.stderr}`,
     );
   }
   return result;
@@ -187,6 +202,22 @@ await withTemp(async (dir) => {
 });
 
 await withTemp(async (dir) => {
+  const mcpPath = join(dir, ".cursor/mcp.json");
+  const invalid = '{\n  "mcpServers": "invalid"\n}\n';
+  await mkdir(join(dir, ".cursor"), { recursive: true });
+  await writeFile(mcpPath, invalid, "utf8");
+  const failed = runExpectFail(dir, ["init", "mcp"]);
+  assert(
+    failed.stderr.includes("mcpServers must be a JSON object"),
+    "should reject non-object mcpServers",
+  );
+  assert(
+    (await readFile(mcpPath, "utf8")) === invalid,
+    "should not rewrite invalid mcp.json",
+  );
+});
+
+await withTemp(async (dir) => {
   const out = run(dir, ["init", "--dry-run"]);
   assert(out.stdout.includes("DRY RUN"), "dry-run should show banner");
   assert(out.stdout.includes("would write"), "dry-run should log file actions");
@@ -231,5 +262,35 @@ await withTemp(async (dir) => {
   assert(!(await exists(join(dir, ".cursor/mcp.json"))), "mcp skipped");
   assert(!out.stdout.includes("✔  MCP server"), "no mcp section");
 });
+
+{
+  const node = "node";
+  const bin = "/tmp/vengeanceui";
+  assert(
+    resolveSetupFromArgv([node, bin, "init", "cursor"]) === "cursor",
+    "argv init cursor",
+  );
+  assert(
+    resolveSetupFromArgv([node, bin, "cursor"]) === "cursor",
+    "argv default-command cursor",
+  );
+  assert(
+    resolveSetupFromArgv([node, bin, "init", "--setup", "claude"]) === "claude",
+    "argv --setup claude",
+  );
+  assert(
+    resolveSetupFromArgv([node, bin, "init", "-s", "mcp"]) === "mcp",
+    "argv -s mcp",
+  );
+  assert(
+    resolveSetupFromArgv([node, bin, "init", "--cwd", "/tmp", "both"]) ===
+      "both",
+    "argv skips --cwd value",
+  );
+  assert(
+    resolveSetupFromArgv([node, bin, "init", "-y"]) === undefined,
+    "argv bare init has no setup",
+  );
+}
 
 console.log("smoke ok");

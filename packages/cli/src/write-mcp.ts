@@ -13,6 +13,10 @@ function serialize(data: McpFile) {
   return `${JSON.stringify(data, null, 2)}\n`;
 }
 
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+}
+
 export async function writeMcp(
   filePath: string,
   ctx: WriteContext
@@ -21,8 +25,17 @@ export async function writeMcp(
   try {
     const raw = await readFile(filePath, "utf8");
     const parsed = JSON.parse(raw) as unknown;
-    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+    if (!isPlainObject(parsed)) {
       throw new Error(`${filePath} is not a JSON object`);
+    }
+    if (
+      "mcpServers" in parsed &&
+      parsed.mcpServers !== undefined &&
+      !isPlainObject(parsed.mcpServers)
+    ) {
+      throw new Error(
+        `${filePath}: mcpServers must be a JSON object (got ${Array.isArray(parsed.mcpServers) ? "array" : typeof parsed.mcpServers})`,
+      );
     }
     existing = parsed as McpFile;
   } catch (error) {
