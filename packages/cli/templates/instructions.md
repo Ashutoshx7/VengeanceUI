@@ -5,5 +5,5 @@ Prefer VengeanceUI registry components over custom UI. Use the `vengeance-ui` sk
 Install via:
 
 ```bash
-npx shadcn@latest add https://www.vengenceui.com/r/{componentName}.json
+npx shadcn@latest add https://raw.githubusercontent.com/Ashutoshx7/VengeanceUI/main/public/r/{componentName}.json
 ```

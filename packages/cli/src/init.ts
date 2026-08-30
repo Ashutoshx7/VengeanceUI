@@ -93,7 +93,7 @@ export async function runInit(opts: Options) {
 
   if (!opts.dryRun) {
     done(
-      "npx shadcn@latest add https://www.vengenceui.com/r/{name}.json",
+      "npx shadcn@latest add https://raw.githubusercontent.com/Ashutoshx7/VengeanceUI/main/public/r/{name}.json",
     );
   } else {
     console.log();

@@ -89,10 +89,10 @@ Options:
         </DocsParagraph>
         <PackageCommand
           commands={{
-            npm: "npx shadcn@latest add https://www.vengenceui.com/r/animated-rays.json -c ./apps/web",
-            pnpm: "pnpm dlx shadcn@latest add https://www.vengenceui.com/r/animated-rays.json -c ./apps/web",
-            yarn: "yarn dlx shadcn@latest add https://www.vengenceui.com/r/animated-rays.json -c ./apps/web",
-            bun: "bunx shadcn@latest add https://www.vengenceui.com/r/animated-rays.json -c ./apps/web",
+            npm: `${addAnimatedRaysCommand} -c ./apps/web`,
+            pnpm: `${addAnimatedRaysCommand.replace(/^npx/, "pnpm dlx")} -c ./apps/web`,
+            yarn: `${addAnimatedRaysCommand.replace(/^npx/, "yarn dlx")} -c ./apps/web`,
+            bun: `${addAnimatedRaysCommand.replace(/^npx/, "bunx")} -c ./apps/web`,
           }}
         />
       </DocsSection>
@@ -106,7 +106,7 @@ Options:
           title="components.json"
           code={`{
   "registries": {
-    "@vengeanceui": "https://www.vengenceui.com/r/{name}.json"
+    "@vengeanceui": "https://raw.githubusercontent.com/Ashutoshx7/VengeanceUI/main/public/r/{name}.json"
   }
 }`}
         />
