@@ -116,7 +116,12 @@ await withTemp(async (dir) => {
   const claudeMd = await readFile(join(dir, "CLAUDE.md"), "utf8");
   assert(agents.includes("<!-- BEGIN:vengeance-ui -->"), "agents marker");
   assert(agents.includes("<!-- END:vengeance-ui -->"), "agents end marker");
-  assert(claudeMd.includes("vengenceui.com/r/{componentName}.json"), "install url");
+  assert(
+    claudeMd.includes(
+      "raw.githubusercontent.com/Ashutoshx7/VengeanceUI/main/public/r/{componentName}.json",
+    ),
+    "install url",
+  );
 
   const again = run(dir, ["init"]);
   assert(again.stdout.includes("✔  Agent skill"), "idempotent");

@@ -159,7 +159,8 @@ function main() {
 
   const index = {
     generatedAt: new Date().toISOString(),
-    registryBaseUrl: "https://www.vengenceui.com/r",
+    registryBaseUrl:
+      "https://raw.githubusercontent.com/Ashutoshx7/VengeanceUI/main/public/r",
     categories: categories.map((c) => ({
       name: c.name,
       count: c.items.length,

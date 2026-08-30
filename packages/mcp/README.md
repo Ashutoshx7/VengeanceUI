@@ -69,8 +69,8 @@ For global `~/.cursor/mcp.json`, use an absolute path to `dist/index.js` instead
 | `list_categories`      | Marketing catalog categories                          |
 | `search_components`    | Search by name / slug / description / category        |
 | `get_component`        | Full docs entry (slug **or** `componentName`)         |
-| `get_install_command`  | `shadcn add https://www.vengenceui.com/r/{name}.json` |
-| `get_component_source` | Live registry JSON from the site                      |
+| `get_install_command`  | `shadcn add https://raw.githubusercontent.com/Ashutoshx7/VengeanceUI/main/public/r/{name}.json` |
+| `get_component_source` | Registry JSON from the repository                     |
 | `list_registry`        | All registry names (includes blocks)                  |
 
 ## Generate index

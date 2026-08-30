@@ -26,18 +26,18 @@ npx shadcn@latest init
 
 ## Add a component
 
-Registry base: `https://www.vengenceui.com/r`
+Registry base: `https://raw.githubusercontent.com/Ashutoshx7/VengeanceUI/main/public/r`
 
 ```bash
-npx shadcn@latest add https://www.vengenceui.com/r/{componentName}.json
+npx shadcn@latest add https://raw.githubusercontent.com/Ashutoshx7/VengeanceUI/main/public/r/{componentName}.json
 ```
 
 Examples:
 
 ```bash
-npx shadcn@latest add https://www.vengenceui.com/r/animated-button.json
-pnpm dlx shadcn@latest add https://www.vengenceui.com/r/gooey-text-reveal.json
-bunx shadcn@latest add https://www.vengenceui.com/r/spotlight-navbar.json
+npx shadcn@latest add https://raw.githubusercontent.com/Ashutoshx7/VengeanceUI/main/public/r/animated-button.json
+pnpm dlx shadcn@latest add https://raw.githubusercontent.com/Ashutoshx7/VengeanceUI/main/public/r/gooey-text-reveal.json
+bunx shadcn@latest add https://raw.githubusercontent.com/Ashutoshx7/VengeanceUI/main/public/r/spotlight-navbar.json
 ```
 
 Prefer MCP `get_install_command` so the package manager and **componentName** (not docs slug) are correct.
