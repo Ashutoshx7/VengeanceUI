@@ -15,6 +15,12 @@ interface RegistryItem {
   files?: RegistryFile[];
 }
 
+interface SourceRequestState {
+  componentName: string;
+  source: string | null;
+  error: string | null;
+}
+
 interface DeferredSourceCodeProps {
   componentName: string;
   fallbackSource?: string;
@@ -39,10 +45,11 @@ export function DeferredSourceCode({
   expandable = false,
   className,
 }: DeferredSourceCodeProps) {
-  const [fetchedSource, setFetchedSource] = React.useState<string | null>(null);
-  const [error, setError] = React.useState<string | null>(null);
+  const [requestState, setRequestState] = React.useState<SourceRequestState | null>(null);
   const [expanded, setExpanded] = React.useState(!expandable);
-  const source = fallbackSource ?? fetchedSource;
+  const activeRequest = requestState?.componentName === componentName ? requestState : null;
+  const source = fallbackSource ?? activeRequest?.source ?? null;
+  const error = fallbackSource ? null : activeRequest?.error ?? null;
 
   React.useEffect(() => {
     if (fallbackSource) return;
@@ -60,10 +67,14 @@ export function DeferredSourceCode({
         const item = (await response.json()) as RegistryItem;
         const content = selectSource(item.files ?? [], componentName);
         if (!content) throw new Error("The registry item does not contain source code");
-        setFetchedSource(content);
+        setRequestState({ componentName, source: content, error: null });
       } catch (loadError) {
         if (controller.signal.aborted) return;
-        setError(loadError instanceof Error ? loadError.message : "Unable to load source code");
+        setRequestState({
+          componentName,
+          source: null,
+          error: loadError instanceof Error ? loadError.message : "Unable to load source code",
+        });
       }
     }
 
