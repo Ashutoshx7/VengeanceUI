@@ -29,7 +29,19 @@ const INTERACTION_DEFERRED_PREVIEWS = new Set([
 
 function readFallbackSource(componentName: string) {
   const registryItem = path.join(process.cwd(), "public", "r", `${componentName}.json`);
-  if (fs.existsSync(registryItem)) return undefined;
+  if (fs.existsSync(registryItem)) {
+    try {
+      const item = JSON.parse(fs.readFileSync(registryItem, "utf8")) as {
+        files?: Array<{ content?: unknown }>;
+      };
+      const hasUsableSource = item.files?.some(
+        (file) => typeof file.content === "string" && file.content.trim().length > 0,
+      );
+      if (hasUsableSource) return undefined;
+    } catch {
+      // A malformed registry record should not hide a valid local source file.
+    }
+  }
 
   const fileName = `${componentName}.tsx`;
   const candidates = [
