@@ -114,14 +114,35 @@ export function CircularGallery({
     // ── Rotation: eased current chasing a target, nudged by auto-spin + drag ──
     let current = 0;
     let target = 0;
+    let isInViewport = true;
+    let isPageVisible = !document.hidden;
+    const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let reducedMotion = reducedMotionQuery.matches;
 
     const tick = () => {
+      if (!isInViewport || !isPageVisible) return;
       const { autoRotate: auto, autoRotateSpeed: speed } = optsRef.current;
-      if (auto && !dragging) target += (speed / 60) * gsap.ticker.deltaRatio();
+      if (auto && !reducedMotion && !dragging) target += (speed / 60) * gsap.ticker.deltaRatio();
       current += (target - current) * 0.05;
       for (let i = 0; i < setZ.length; i++) setZ[i](baseAngles[i] + current);
     };
     gsap.ticker.add(tick);
+
+    const visibilityObserver = new IntersectionObserver(
+      ([entry]) => {
+        isInViewport = entry.isIntersecting;
+      },
+      { rootMargin: "160px" },
+    );
+    const onVisibilityChange = () => {
+      isPageVisible = !document.hidden;
+    };
+    const onReducedMotionChange = (event: MediaQueryListEvent) => {
+      reducedMotion = event.matches;
+    };
+    visibilityObserver.observe(root);
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    reducedMotionQuery.addEventListener("change", onReducedMotionChange);
 
     // ── Drag to spin ─────────────────────────────────────────────────────
     let dragging = false;
@@ -166,6 +187,9 @@ export function CircularGallery({
 
     return () => {
       gsap.ticker.remove(tick);
+      visibilityObserver.disconnect();
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+      reducedMotionQuery.removeEventListener("change", onReducedMotionChange);
       root.removeEventListener("pointerdown", onPointerDown);
       root.removeEventListener("pointermove", onPointerMove);
       root.removeEventListener("pointerup", endDrag);

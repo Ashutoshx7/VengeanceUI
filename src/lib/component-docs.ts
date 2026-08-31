@@ -1575,7 +1575,7 @@ export function WaveGridBackgroundDemo() {
     manualNotes: [
       "Provide a starting image via `src`, and/or let visitors supply their own with the built-in upload control (`allowUpload`, on by default). The uploaded image immediately regenerates the particle pattern.",
       "Bright pixels become particles and dark ones are discarded (tune the cutoff with `threshold`); high-contrast images (light shapes on black) look best.",
-      "Uploaded images are downscaled to `maxDimension` (default 480px) before sampling, so any size stays performant — one kept pixel becomes one particle.",
+      "Uploaded images are downscaled to `maxDimension` (default 320px) before sampling, so any size stays performant — one kept pixel becomes one particle.",
       "External `src` images must be same-origin or CORS-enabled (the component reads pixels via a canvas). Uploaded files are read locally as object URLs, so no CORS applies.",
       "Built on raw Three.js + GSAP (no React Three Fiber). It fills its parent, so give the wrapper an explicit height. Everything — including the WebGL context — is disposed on unmount.",
     ],
@@ -1595,7 +1595,7 @@ export function InteractiveParticlesDemo() {
       { prop: "allowUpload", type: "boolean", defaultValue: "true", description: "Show an 'Upload image' control so users can supply their own image." },
       { prop: "uploadLabel", type: "string", defaultValue: "'Upload image'", description: "Label for the upload control." },
       { prop: "onUpload", type: "(file: File) => void", defaultValue: "-", description: "Fired with the uploaded File whenever the user picks an image." },
-      { prop: "maxDimension", type: "number", defaultValue: "480", description: "Longest edge the source is downscaled to before sampling (caps particle count)." },
+      { prop: "maxDimension", type: "number", defaultValue: "320", description: "Longest edge the source is downscaled to before sampling (caps particle count)." },
       { prop: "background", type: "string", defaultValue: "'#000000'", description: "Wrapper background color." },
       { prop: "color", type: "string", defaultValue: "'#ffffff'", description: "Particle tint. Keeps the image's greyscale tones by default." },
       { prop: "size", type: "number", defaultValue: "1.2", description: "Steady-state particle size multiplier." },

@@ -20,7 +20,7 @@ function CustomVideoPlayer() {
     const containerRef = useRef<HTMLDivElement>(null);
     const progressBarRef = useRef<HTMLDivElement>(null);
 
-    const [isPlaying, setIsPlaying] = useState(true);
+    const [isPlaying, setIsPlaying] = useState(false);
     const [isMuted, setIsMuted] = useState(true);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
@@ -37,6 +37,25 @@ function CustomVideoPlayer() {
         return () => {
             document.removeEventListener("fullscreenchange", handleFullscreenChange);
         };
+    }, []);
+
+    useEffect(() => {
+        const container = containerRef.current;
+        const video = videoRef.current;
+        if (!container || !video) return;
+
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.intersectionRatio < 0.05 && !video.paused) {
+                    video.pause();
+                    setIsPlaying(false);
+                }
+            },
+            { threshold: 0.05 },
+        );
+
+        observer.observe(container);
+        return () => observer.disconnect();
     }, []);
 
     useEffect(() => {
@@ -138,9 +157,10 @@ function CustomVideoPlayer() {
             <video
                 ref={videoRef}
                 src="/video/showcase.mp4"
+                poster="/video/showcase-poster.webp"
+                preload="none"
                 loop
                 muted={isMuted}
-                autoPlay
                 playsInline
                 className="w-full h-full object-cover pointer-events-none"
                 onTimeUpdate={handleTimeUpdate}
@@ -320,6 +340,8 @@ export default function Hero() {
                                 <DialogDescription className="sr-only">A video demonstrating Next-Gen UI interactions, animations, and features of Vengeance UI.</DialogDescription>
                                 <video
                                     src="/video/showcase.mp4"
+                                    poster="/video/showcase-poster.webp"
+                                    preload="metadata"
                                     controls
                                     autoPlay
                                     className="w-full h-full aspect-video"

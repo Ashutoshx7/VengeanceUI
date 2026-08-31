@@ -111,6 +111,18 @@ const nextConfig: NextConfig = {
                     { key: 'Cache-Control', value: 'public, max-age=300, s-maxage=86400, stale-while-revalidate=604800' },
                 ],
             },
+            {
+                source: '/video/:path*',
+                headers: [
+                    { key: 'Cache-Control', value: 'public, max-age=86400, s-maxage=86400, must-revalidate' },
+                ],
+            },
+            ...['books-showcase', 'circular-gallery', 'interactive-particles'].map((directory) => ({
+                source: `/${directory}/:path*`,
+                headers: [
+                    { key: 'Cache-Control', value: 'public, max-age=86400, s-maxage=86400, must-revalidate' },
+                ],
+            })),
         ];
     },
     experimental: {

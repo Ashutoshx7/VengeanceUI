@@ -65,9 +65,23 @@ export function TabsTrigger({ value, children, className }: { value: string; chi
   );
 }
 
-export function TabsContent({ value, children, className }: { value: string; children: React.ReactNode; className?: string }) {
+export function TabsContent({
+  value,
+  children,
+  className,
+  lazy = false,
+}: {
+  value: string;
+  children: React.ReactNode;
+  className?: string;
+  lazy?: boolean;
+}) {
   const { activeTab } = React.useContext(TabsContext);
   const isActive = activeTab === value;
+
+  if (lazy && !isActive) {
+    return null;
+  }
   
   return (
     <div 

@@ -1,10 +1,11 @@
 import * as React from "react";
-import fs from "fs";
-import path from "path";
-import { CodeBlock } from "@/components/ui/code-block";
+import fs from "node:fs";
+import path from "node:path";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { ComponentDocsSections } from "@/components/docs/component-docs-sections";
+import { DeferredSourceCode } from "@/components/docs/deferred-source-code";
 import { ComponentPreviewPanel } from "@/components/ui/component-preview-panel";
+import { COMPONENT_DOCS } from "@/lib/component-docs";
 import { getShadcnAddCommand } from "@/lib/registry";
 
 interface ComponentShowcaseProps {
@@ -15,30 +16,42 @@ interface ComponentShowcaseProps {
   children: React.ReactNode; // The live component itself
 }
 
-/**
- * Read the component source code from the filesystem (server-side only).
- * Tries multiple candidate directories.
- * The turbopackIgnore comment prevents Turbopack from tracing the entire project.
- */
-function readComponentSource(componentName: string): string {
+const INTERACTION_DEFERRED_PREVIEWS = new Set([
+  "books-showcase",
+  "circular-gallery",
+  "interactive-particles",
+  "liquid-ocean",
+  "liquid-text",
+  "ripple-displacement-slider",
+  "scroll-dissolve-reveal",
+  "wave-grid-background",
+]);
+
+function readFallbackSource(componentName: string) {
+  const registryItem = path.join(process.cwd(), "public", "r", `${componentName}.json`);
+  if (fs.existsSync(registryItem)) {
+    try {
+      const item = JSON.parse(fs.readFileSync(registryItem, "utf8")) as {
+        files?: Array<{ content?: unknown }>;
+      };
+      const hasUsableSource = item.files?.some(
+        (file) => typeof file.content === "string" && file.content.trim().length > 0,
+      );
+      if (hasUsableSource) return undefined;
+    } catch {
+      // A malformed registry record should not hide a valid local source file.
+    }
+  }
+
   const fileName = `${componentName}.tsx`;
+  const candidates = [
+    path.join(process.cwd(), "src", "registry", fileName),
+    path.join(process.cwd(), "src", "components", "ui", fileName),
+    path.join(process.cwd(), "src", "components", "docs", fileName),
+  ];
+  const sourcePath = candidates.find((candidate) => fs.existsSync(candidate));
 
-  try {
-    const p1 = path.join(process.cwd(), "src", "components", "ui", fileName);
-    if (fs.existsSync(p1)) return fs.readFileSync(p1, "utf8");
-  } catch {}
-
-  try {
-    const p2 = path.join(process.cwd(), "src", "registry", fileName);
-    if (fs.existsSync(p2)) return fs.readFileSync(p2, "utf8");
-  } catch {}
-
-  try {
-    const p3 = path.join(process.cwd(), "src", "components", "docs", fileName);
-    if (fs.existsSync(p3)) return fs.readFileSync(p3, "utf8");
-  } catch {}
-
-  return `// Source code for ${componentName} not found`;
+  return sourcePath ? fs.readFileSync(sourcePath, "utf8") : undefined;
 }
 
 export function ComponentShowcase({
@@ -49,7 +62,9 @@ export function ComponentShowcase({
   children,
 }: ComponentShowcaseProps) {
   const installCommand = getShadcnAddCommand(componentName);
-  const sourceCode = readComponentSource(componentName);
+  const docs = COMPONENT_DOCS[slug] || COMPONENT_DOCS[componentName] || null;
+  const deferPreview = INTERACTION_DEFERRED_PREVIEWS.has(slug);
+  const fallbackSource = readFallbackSource(componentName);
 
   return (
     <div className="mb-8 space-y-4">
@@ -65,21 +80,25 @@ export function ComponentShowcase({
 
       {/* The Showcase Toggle */}
       <Tabs defaultValue="preview" className="space-y-4">
-        <ComponentPreviewPanel installCommand={installCommand}>
+        <ComponentPreviewPanel
+          installCommand={installCommand}
+          deferUntilInteraction={deferPreview}
+          previewName={title}
+        >
           {children}
         </ComponentPreviewPanel>
 
         {/* Code Block */}
-        <TabsContent value="code">
+        <TabsContent value="code" lazy>
           <div id="code" className="scroll-mt-24" />
           <div className="mt-4">
-            <CodeBlock fileName={`${componentName}.tsx`} />
+            <DeferredSourceCode componentName={componentName} fallbackSource={fallbackSource} />
           </div>
         </TabsContent>
       </Tabs>
 
       {/* ─── Documentation Sections (Client Component) ─── */}
-      <ComponentDocsSections componentName={componentName} slug={slug} sourceCode={sourceCode} />
+      <ComponentDocsSections componentName={componentName} docs={docs} fallbackSource={fallbackSource} />
     </div>
   );
 }
