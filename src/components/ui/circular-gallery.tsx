@@ -116,7 +116,8 @@ export function CircularGallery({
     let target = 0;
     let isInViewport = true;
     let isPageVisible = !document.hidden;
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let reducedMotion = reducedMotionQuery.matches;
 
     const tick = () => {
       if (!isInViewport || !isPageVisible) return;
@@ -136,8 +137,12 @@ export function CircularGallery({
     const onVisibilityChange = () => {
       isPageVisible = !document.hidden;
     };
+    const onReducedMotionChange = (event: MediaQueryListEvent) => {
+      reducedMotion = event.matches;
+    };
     visibilityObserver.observe(root);
     document.addEventListener("visibilitychange", onVisibilityChange);
+    reducedMotionQuery.addEventListener("change", onReducedMotionChange);
 
     // ── Drag to spin ─────────────────────────────────────────────────────
     let dragging = false;
@@ -184,6 +189,7 @@ export function CircularGallery({
       gsap.ticker.remove(tick);
       visibilityObserver.disconnect();
       document.removeEventListener("visibilitychange", onVisibilityChange);
+      reducedMotionQuery.removeEventListener("change", onReducedMotionChange);
       root.removeEventListener("pointerdown", onPointerDown);
       root.removeEventListener("pointermove", onPointerMove);
       root.removeEventListener("pointerup", endDrag);

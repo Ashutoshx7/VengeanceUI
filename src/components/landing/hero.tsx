@@ -46,7 +46,7 @@ function CustomVideoPlayer() {
 
         const observer = new IntersectionObserver(
             ([entry]) => {
-                if (!entry.isIntersecting && !video.paused) {
+                if (entry.intersectionRatio < 0.05 && !video.paused) {
                     video.pause();
                     setIsPlaying(false);
                 }
