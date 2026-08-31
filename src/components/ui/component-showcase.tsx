@@ -1,4 +1,6 @@
 import * as React from "react";
+import fs from "node:fs";
+import path from "node:path";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { ComponentDocsSections } from "@/components/docs/component-docs-sections";
 import { DeferredSourceCode } from "@/components/docs/deferred-source-code";
@@ -25,6 +27,21 @@ const INTERACTION_DEFERRED_PREVIEWS = new Set([
   "wave-grid-background",
 ]);
 
+function readFallbackSource(componentName: string) {
+  const registryItem = path.join(process.cwd(), "public", "r", `${componentName}.json`);
+  if (fs.existsSync(registryItem)) return undefined;
+
+  const fileName = `${componentName}.tsx`;
+  const candidates = [
+    path.join(process.cwd(), "src", "registry", fileName),
+    path.join(process.cwd(), "src", "components", "ui", fileName),
+    path.join(process.cwd(), "src", "components", "docs", fileName),
+  ];
+  const sourcePath = candidates.find((candidate) => fs.existsSync(candidate));
+
+  return sourcePath ? fs.readFileSync(sourcePath, "utf8") : undefined;
+}
+
 export function ComponentShowcase({
   componentName,
   title,
@@ -35,6 +52,7 @@ export function ComponentShowcase({
   const installCommand = getShadcnAddCommand(componentName);
   const docs = COMPONENT_DOCS[slug] || COMPONENT_DOCS[componentName] || null;
   const deferPreview = INTERACTION_DEFERRED_PREVIEWS.has(slug);
+  const fallbackSource = readFallbackSource(componentName);
 
   return (
     <div className="mb-8 space-y-4">
@@ -62,13 +80,13 @@ export function ComponentShowcase({
         <TabsContent value="code" lazy>
           <div id="code" className="scroll-mt-24" />
           <div className="mt-4">
-            <DeferredSourceCode componentName={componentName} />
+            <DeferredSourceCode componentName={componentName} fallbackSource={fallbackSource} />
           </div>
         </TabsContent>
       </Tabs>
 
       {/* ─── Documentation Sections (Client Component) ─── */}
-      <ComponentDocsSections componentName={componentName} docs={docs} />
+      <ComponentDocsSections componentName={componentName} docs={docs} fallbackSource={fallbackSource} />
     </div>
   );
 }

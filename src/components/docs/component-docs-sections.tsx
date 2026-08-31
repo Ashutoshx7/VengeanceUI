@@ -20,6 +20,7 @@ export function cn(...inputs: ClassValue[]) {
 interface ComponentDocsSectionsProps {
   componentName: string;
   docs: ComponentDocData | null;
+  fallbackSource?: string;
 }
 
 const InstallationCLI = memo(function InstallationCLI({ componentName }: { componentName: string }) {
@@ -33,11 +34,13 @@ const InstallationCLI = memo(function InstallationCLI({ componentName }: { compo
 
 const InstallationManual = memo(function InstallationManual({
   componentName,
+  fallbackSource,
   dependencies,
   includeUtils,
   manualNotes,
 }: {
   componentName: string;
+  fallbackSource?: string;
   dependencies: string;
   includeUtils?: boolean;
   manualNotes?: string[];
@@ -80,7 +83,7 @@ const InstallationManual = memo(function InstallationManual({
           <div className="inline-flex items-center rounded-md border border-neutral-200 dark:border-[#222] bg-neutral-100 dark:bg-zinc-900 px-3 py-1 text-sm text-neutral-600 dark:text-zinc-300 mb-4 font-mono">
             components/ui/{componentName}.tsx
           </div>
-          <DeferredSourceCode componentName={componentName} expandable />
+          <DeferredSourceCode componentName={componentName} fallbackSource={fallbackSource} expandable />
         </div>
       </div>
     </div>
@@ -155,7 +158,7 @@ const SocialLink = memo(function SocialLink({ href, platform, author }: SocialLi
   );
 });
 
-export function ComponentDocsSections({ componentName, docs }: ComponentDocsSectionsProps) {
+export function ComponentDocsSections({ componentName, docs, fallbackSource }: ComponentDocsSectionsProps) {
   const [installTab, setInstallTab] = useState<"cli" | "manual">("cli");
 
   const handleCLI = useCallback(() => setInstallTab("cli"), []);
@@ -204,6 +207,7 @@ export function ComponentDocsSections({ componentName, docs }: ComponentDocsSect
         {installTab === "manual" && (
           <InstallationManual
             componentName={componentName}
+            fallbackSource={fallbackSource}
             dependencies={docs.dependencies}
             includeUtils={docs.includeUtils}
             manualNotes={docs.manualNotes}

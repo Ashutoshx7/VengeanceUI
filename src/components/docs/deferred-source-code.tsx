@@ -17,6 +17,7 @@ interface RegistryItem {
 
 interface DeferredSourceCodeProps {
   componentName: string;
+  fallbackSource?: string;
   title?: string;
   expandable?: boolean;
   className?: string;
@@ -33,15 +34,19 @@ function selectSource(files: RegistryFile[], componentName: string) {
 
 export function DeferredSourceCode({
   componentName,
+  fallbackSource,
   title,
   expandable = false,
   className,
 }: DeferredSourceCodeProps) {
-  const [source, setSource] = React.useState<string | null>(null);
+  const [fetchedSource, setFetchedSource] = React.useState<string | null>(null);
   const [error, setError] = React.useState<string | null>(null);
   const [expanded, setExpanded] = React.useState(!expandable);
+  const source = fallbackSource ?? fetchedSource;
 
   React.useEffect(() => {
+    if (fallbackSource) return;
+
     const controller = new AbortController();
 
     async function loadSource() {
@@ -55,7 +60,7 @@ export function DeferredSourceCode({
         const item = (await response.json()) as RegistryItem;
         const content = selectSource(item.files ?? [], componentName);
         if (!content) throw new Error("The registry item does not contain source code");
-        setSource(content);
+        setFetchedSource(content);
       } catch (loadError) {
         if (controller.signal.aborted) return;
         setError(loadError instanceof Error ? loadError.message : "Unable to load source code");
@@ -64,9 +69,9 @@ export function DeferredSourceCode({
 
     loadSource();
     return () => controller.abort();
-  }, [componentName]);
+  }, [componentName, fallbackSource]);
 
-  if (error) {
+  if (error && source === null) {
     return (
       <div className="rounded-md border border-red-200 bg-red-50 p-4 text-sm text-red-700 dark:border-red-950 dark:bg-red-950/30 dark:text-red-300" role="alert">
         Source code could not be loaded: {error}.
