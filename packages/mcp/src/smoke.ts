@@ -42,7 +42,7 @@ assert(
 );
 assert(
   install ===
-    "npx shadcn@latest add https://www.vengenceui.com/r/animated-button.json",
+    "npx shadcn@latest add https://raw.githubusercontent.com/Ashutoshx7/VengeanceUI/main/public/r/animated-button.json",
   `unexpected install command: ${install}`,
 );
 
