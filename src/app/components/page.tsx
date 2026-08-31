@@ -127,6 +127,7 @@ export default function ComponentsIndexPage() {
                   <Link
                     key={item.slug}
                     href={`/components/${item.slug}`}
+                    prefetch={false}
                     className="group block min-w-0 border border-transparent px-3 py-2 transition-colors hover:border-border hover:bg-muted/40"
                   >
                     <span className="flex min-w-0 items-center justify-between gap-3">

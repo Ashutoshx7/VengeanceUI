@@ -219,7 +219,7 @@ export interface InteractiveParticlesProps {
   uploadLabel?: string;
   /** Fired with the uploaded File whenever the user picks an image. */
   onUpload?: (file: File) => void;
-  /** Longest edge the source is downscaled to before sampling (caps the particle count). Defaults to 480. */
+  /** Longest edge the source is downscaled to before sampling (caps the particle count). Defaults to 320. */
   maxDimension?: number;
   /** Extra classes for the wrapper element. */
   className?: string;
@@ -244,7 +244,7 @@ export function InteractiveParticles({
   allowUpload = true,
   uploadLabel = "Upload image",
   onUpload,
-  maxDimension = 480,
+  maxDimension = 320,
   className,
   background = "#000000",
   color = "#ffffff",
@@ -297,7 +297,7 @@ export function InteractiveParticles({
     camera.position.z = 300;
 
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(1);
     renderer.setSize(view.width, view.height);
     renderer.setClearColor(0x000000, 0);
 
@@ -461,17 +461,43 @@ export function InteractiveParticles({
     window.addEventListener("resize", applySize);
 
     // ── loop ──────────────────────────────────────────────────────────────────
-    renderer.setAnimationLoop(() => {
-      const delta = clock.getDelta();
+    // Rendering every display refresh is unnecessary for this ambient effect.
+    // Keep it at 30fps and fully stop the WebGL loop while offscreen/hidden.
+    let isInViewport = true;
+    let lastRender = 0;
+    const frameInterval = 1000 / 30;
+    const renderFrame = (timestamp: number) => {
+      if (timestamp - lastRender < frameInterval) return;
+      lastRender = timestamp;
+      const delta = Math.min(clock.getDelta(), 0.05);
       if (touch) touch.update();
       if (uniforms) uniforms.uTime.value += delta;
       renderer.render(scene, camera);
-    });
+    };
+
+    const updateAnimationLoop = () => {
+      renderer.setAnimationLoop(
+        !disposed && isInViewport && !document.hidden ? renderFrame : null,
+      );
+    };
+    const visibilityObserver = new IntersectionObserver(
+      ([entry]) => {
+        isInViewport = entry.isIntersecting;
+        updateAnimationLoop();
+      },
+      { rootMargin: "160px" },
+    );
+    const onVisibilityChange = () => updateAnimationLoop();
+    visibilityObserver.observe(container);
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    updateAnimationLoop();
 
     // ── cleanup ─────────────────────────────────────────────────────────────
     return () => {
       disposed = true;
       renderer.setAnimationLoop(null);
+      visibilityObserver.disconnect();
+      document.removeEventListener("visibilitychange", onVisibilityChange);
       canvas.removeEventListener("pointermove", onPointerMove);
       window.removeEventListener("resize", applySize);
       resizeObserver.disconnect();

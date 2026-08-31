@@ -90,7 +90,7 @@ const SidebarItem = memo(function SidebarItem({
       <Link
         href={item.href}
         onClick={item.external ? undefined : handleClick}
-        prefetch={item.external ? false : true}
+        prefetch={false}
         target={item.external ? "_blank" : undefined}
         rel={item.external ? "noopener noreferrer" : undefined}
         className={cn(

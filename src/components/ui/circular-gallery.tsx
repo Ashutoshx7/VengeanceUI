@@ -114,14 +114,30 @@ export function CircularGallery({
     // ── Rotation: eased current chasing a target, nudged by auto-spin + drag ──
     let current = 0;
     let target = 0;
+    let isInViewport = true;
+    let isPageVisible = !document.hidden;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     const tick = () => {
+      if (!isInViewport || !isPageVisible) return;
       const { autoRotate: auto, autoRotateSpeed: speed } = optsRef.current;
-      if (auto && !dragging) target += (speed / 60) * gsap.ticker.deltaRatio();
+      if (auto && !reducedMotion && !dragging) target += (speed / 60) * gsap.ticker.deltaRatio();
       current += (target - current) * 0.05;
       for (let i = 0; i < setZ.length; i++) setZ[i](baseAngles[i] + current);
     };
     gsap.ticker.add(tick);
+
+    const visibilityObserver = new IntersectionObserver(
+      ([entry]) => {
+        isInViewport = entry.isIntersecting;
+      },
+      { rootMargin: "160px" },
+    );
+    const onVisibilityChange = () => {
+      isPageVisible = !document.hidden;
+    };
+    visibilityObserver.observe(root);
+    document.addEventListener("visibilitychange", onVisibilityChange);
 
     // ── Drag to spin ─────────────────────────────────────────────────────
     let dragging = false;
@@ -166,6 +182,8 @@ export function CircularGallery({
 
     return () => {
       gsap.ticker.remove(tick);
+      visibilityObserver.disconnect();
+      document.removeEventListener("visibilitychange", onVisibilityChange);
       root.removeEventListener("pointerdown", onPointerDown);
       root.removeEventListener("pointermove", onPointerMove);
       root.removeEventListener("pointerup", endDrag);

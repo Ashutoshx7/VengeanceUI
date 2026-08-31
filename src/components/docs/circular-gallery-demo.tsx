@@ -9,7 +9,7 @@ import { CircularGallery } from "@/components/ui/circular-gallery";
 const IMAGES = Array.from({ length: 15 }, (_, i) => `/circular-gallery/img${i + 1}.jpg`);
 
 export function CircularGalleryDemo() {
-  return <CircularGallery images={IMAGES} />;
+  return <CircularGallery images={IMAGES} count={72} />;
 }
 
 export default CircularGalleryDemo;

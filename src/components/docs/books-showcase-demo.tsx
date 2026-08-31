@@ -15,9 +15,9 @@ const DEMO_BOOKS: BookCfg[] = [
     backInk: "255,255,255",
     edge: "#e0d6c8",
     images: {
-      front: "/books-showcase/front-cover-ml.png",
-      spine: "/books-showcase/center-cover-ml.png",
-      back: "/books-showcase/back-cover-ml.png"
+      front: "/books-showcase/front-cover-ml.webp",
+      spine: "/books-showcase/center-cover-ml.webp",
+      back: "/books-showcase/back-cover-ml.webp"
     }
   },
   {
@@ -34,9 +34,9 @@ const DEMO_BOOKS: BookCfg[] = [
     backInk: "0,0,0",
     edge: "#ffffff",
     images: {
-      front: "/books-showcase/front-cover-neural-nets.png",
-      spine: "/books-showcase/center-cover-neural-nets.png",
-      back: "/books-showcase/back-oover-neural-nets.png"
+      front: "/books-showcase/front-cover-neural-nets.webp",
+      spine: "/books-showcase/center-cover-neural-nets.webp",
+      back: "/books-showcase/back-oover-neural-nets.webp"
     }
   },
   {
@@ -53,9 +53,9 @@ const DEMO_BOOKS: BookCfg[] = [
     backInk: "60,42,30",
     edge: "#c8b093",
     images: {
-      front: "/books-showcase/front-cover-llms.png",
-      spine: "/books-showcase/center-cover-llms.png",
-      back: "/books-showcase/back-cover-llms.png"
+      front: "/books-showcase/front-cover-llms.webp",
+      spine: "/books-showcase/center-cover-llms.webp",
+      back: "/books-showcase/back-cover-llms.webp"
     }
   },
   {
@@ -72,9 +72,9 @@ const DEMO_BOOKS: BookCfg[] = [
     backInk: "255,255,255",
     edge: "#cccccc",
     images: {
-      front: "/books-showcase/front-cover-inference.png",
-      spine: "/books-showcase/center-cover-inference.png",
-      back: "/books-showcase/back-cover-inference.png"
+      front: "/books-showcase/front-cover-inference.webp",
+      spine: "/books-showcase/center-cover-inference.webp",
+      back: "/books-showcase/back-cover-inference.webp"
     }
   }
 ];

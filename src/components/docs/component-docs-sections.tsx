@@ -6,7 +6,8 @@ import { cn } from "@/lib/utils";
 import { CLICommand } from "@/components/docs/cli-command";
 import { CodeBlock as DocCodeBlock } from "@/components/docs/component-installation";
 import { PropsTable } from "@/components/docs/props-table";
-import { COMPONENT_DOCS } from "@/lib/component-docs";
+import { DeferredSourceCode } from "@/components/docs/deferred-source-code";
+import type { ComponentDocData } from "@/lib/component-docs";
 // Inline SVG icons used below instead of brand imports
 
 const UTILS_CODE = `import { ClassValue, clsx } from "clsx";
@@ -18,8 +19,7 @@ export function cn(...inputs: ClassValue[]) {
 
 interface ComponentDocsSectionsProps {
   componentName: string;
-  slug: string;
-  sourceCode: string;
+  docs: ComponentDocData | null;
 }
 
 const InstallationCLI = memo(function InstallationCLI({ componentName }: { componentName: string }) {
@@ -33,13 +33,11 @@ const InstallationCLI = memo(function InstallationCLI({ componentName }: { compo
 
 const InstallationManual = memo(function InstallationManual({
   componentName,
-  sourceCode,
   dependencies,
   includeUtils,
   manualNotes,
 }: {
   componentName: string;
-  sourceCode: string;
   dependencies: string;
   includeUtils?: boolean;
   manualNotes?: string[];
@@ -82,11 +80,7 @@ const InstallationManual = memo(function InstallationManual({
           <div className="inline-flex items-center rounded-md border border-neutral-200 dark:border-[#222] bg-neutral-100 dark:bg-zinc-900 px-3 py-1 text-sm text-neutral-600 dark:text-zinc-300 mb-4 font-mono">
             components/ui/{componentName}.tsx
           </div>
-          <DocCodeBlock
-            language="tsx"
-            expandable={true}
-            code={sourceCode}
-          />
+          <DeferredSourceCode componentName={componentName} expandable />
         </div>
       </div>
     </div>
@@ -161,8 +155,7 @@ const SocialLink = memo(function SocialLink({ href, platform, author }: SocialLi
   );
 });
 
-export function ComponentDocsSections({ componentName, slug, sourceCode }: ComponentDocsSectionsProps) {
-  const docs = COMPONENT_DOCS[slug] || COMPONENT_DOCS[componentName];
+export function ComponentDocsSections({ componentName, docs }: ComponentDocsSectionsProps) {
   const [installTab, setInstallTab] = useState<"cli" | "manual">("cli");
 
   const handleCLI = useCallback(() => setInstallTab("cli"), []);
@@ -211,7 +204,6 @@ export function ComponentDocsSections({ componentName, slug, sourceCode }: Compo
         {installTab === "manual" && (
           <InstallationManual
             componentName={componentName}
-            sourceCode={sourceCode}
             dependencies={docs.dependencies}
             includeUtils={docs.includeUtils}
             manualNotes={docs.manualNotes}
