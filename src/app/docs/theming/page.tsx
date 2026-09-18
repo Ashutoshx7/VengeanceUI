@@ -54,7 +54,7 @@ export default function ThemingPage() {
 }`}
         />
         <DocsParagraph>
-          The theme also provides secondary, danger, success, warning, surface,
+          The theme also provides secondary, danger, success, warning, background,
           border, radius, and spacing tokens. Components copied by hand still
           work with the standard shadcn color tokens; add the theme item when
           you want the shared VengeanceUI controls.

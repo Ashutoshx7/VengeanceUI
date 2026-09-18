@@ -35,6 +35,7 @@
       "vng-space-md": "1rem",
       "vng-space-lg": "2rem",
       "vng-transition-speed": "150ms",
+      "vng-transition-speed-slow": "calc(var(--vng-transition-speed) * 2)",
       "background": "var(--vng-background)",
       "foreground": "var(--vng-foreground)",
       "border": "var(--vng-border)",
@@ -43,6 +44,7 @@
       "secondary": "var(--vng-secondary)",
       "secondary-foreground": "var(--vng-secondary-foreground)",
       "destructive": "var(--vng-danger)",
+      "ring": "var(--vng-primary)",
       "radius": "var(--vng-radius-lg)"
     },
     "dark": {
@@ -61,7 +63,8 @@
       "primary-foreground": "var(--vng-primary-foreground)",
       "secondary": "var(--vng-secondary)",
       "secondary-foreground": "var(--vng-secondary-foreground)",
-      "destructive": "var(--vng-danger)"
+      "destructive": "var(--vng-danger)",
+      "ring": "var(--vng-primary)"
     }
   }
 }
