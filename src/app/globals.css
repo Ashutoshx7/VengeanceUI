@@ -117,6 +117,7 @@
     --vng-space-md: 1rem;
     --vng-space-lg: 2rem;
     --vng-transition-speed: 150ms;
+    --vng-transition-speed-slow: calc(var(--vng-transition-speed) * 2);
 
     --background: var(--vng-background);
     --foreground: var(--vng-foreground);
@@ -136,7 +137,7 @@
     --destructive-foreground: var(--color-white);
     --border: var(--vng-border);
     --input: var(--color-zinc-200);
-    --ring: var(--color-zinc-950);
+    --ring: var(--vng-primary);
     --chart-1: var(--color-blue-500);
     --chart-2: var(--color-indigo-500);
     --chart-3: var(--color-purple-500);
@@ -173,7 +174,7 @@
     --destructive-foreground: var(--color-white);
     --border: var(--vng-border);
     --input: var(--color-zinc-800);
-    --ring: var(--color-white);
+    --ring: var(--vng-primary);
   }
 
   /* Shiki Dual-Theming Support for Tailwind */
