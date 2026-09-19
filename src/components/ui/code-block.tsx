@@ -62,7 +62,7 @@ export async function CodeBlock({ fileName, code, language = "tsx", title }: Cod
         </div>
         <CopyButton 
           code={codeString} 
-          className="flex items-center justify-center w-7 h-7 rounded-sm border-none bg-transparent hover:bg-neutral-100 dark:hover:bg-zinc-800 text-neutral-400 dark:text-zinc-500 hover:text-neutral-700 dark:hover:text-zinc-300 transition-all opacity-0 group-hover/code:opacity-100 [&>svg]:w-3.5 [&>svg]:h-3.5"
+          className="flex items-center justify-center w-7 h-7 rounded-sm border-none bg-transparent hover:bg-neutral-100 dark:hover:bg-zinc-800 text-neutral-400 dark:text-zinc-500 hover:text-neutral-700 dark:hover:text-zinc-300 transition-all [&>svg]:w-3.5 [&>svg]:h-3.5"
         />
       </div>
       

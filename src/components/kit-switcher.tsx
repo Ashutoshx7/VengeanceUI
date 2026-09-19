@@ -48,21 +48,22 @@ export function KitSwitcher() {
 
     const handleKitChange = (newlySelectedKitId: string) => {
         if (newlySelectedKitId === 'quartz-kit') {
-            window.open('https://www.vengenceui.com/premium', '_parent')
+            window.open('https://www.vengeanceui.com/premium', '_blank')
             return
         }
-
-        if (isDisabled) return
 
         setStoredKitId(newlySelectedKitId)
         localStorage.setItem(STORAGE_KEY, newlySelectedKitId)
 
+        if (newlySelectedKitId === 'vengeance-kit') {
+            router.push('/')
+            return
+        }
+
         const pathSegments = pathname.split('/').filter(Boolean)
-        let newPath: string
-
         const newKitRouteSegment = newlySelectedKitId === 'mist-kit' ? 'mist' : newlySelectedKitId
-
         let remainingPath = ''
+
         if (currentKitIdFromPath !== 'vengeance-kit') {
             if (pathSegments.length > 1) {
                 remainingPath = pathSegments.slice(1).join('/')
@@ -73,11 +74,7 @@ export function KitSwitcher() {
             }
         }
 
-        if (newlySelectedKitId === 'vengeance-kit') {
-            newPath = remainingPath ? `/${remainingPath}` : '/'
-        } else {
-            newPath = remainingPath ? `/${newKitRouteSegment}/${remainingPath}` : `/${newKitRouteSegment}`
-        }
+        const newPath = remainingPath ? `/${newKitRouteSegment}/${remainingPath}` : `/${newKitRouteSegment}`
 
         if (newPath !== pathname) {
             router.push(newPath)
@@ -88,8 +85,7 @@ export function KitSwitcher() {
         <Select
             value={selectedKitId}
             defaultValue={selectedKitId}
-            onValueChange={handleKitChange}
-            disabled={isDisabled}>
+            onValueChange={handleKitChange}>
             <SelectTrigger className="hover:bg-muted -ml-2 h-8 gap-3 border-none pl-1.5 pr-3 font-medium shadow-none">
                 <div className="flex items-center gap-2">
                     <SelectValue placeholder="Select kit" />

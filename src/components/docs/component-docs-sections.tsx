@@ -3,6 +3,8 @@
 import * as React from "react";
 import { useState, useCallback, memo } from "react";
 import { cn } from "@/lib/utils";
+import { Terminal, Wrench } from "lucide-react";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CLICommand } from "@/components/docs/cli-command";
 import { CodeBlock as DocCodeBlock } from "@/components/docs/component-installation";
 import { PropsTable } from "@/components/docs/props-table";
@@ -161,9 +163,6 @@ const SocialLink = memo(function SocialLink({ href, platform, author }: SocialLi
 export function ComponentDocsSections({ componentName, docs, fallbackSource }: ComponentDocsSectionsProps) {
   const [installTab, setInstallTab] = useState<"cli" | "manual">("cli");
 
-  const handleCLI = useCallback(() => setInstallTab("cli"), []);
-  const handleManual = useCallback(() => setInstallTab("manual"), []);
-
   if (!docs) {
     return null;
   }
@@ -175,30 +174,18 @@ export function ComponentDocsSections({ componentName, docs, fallbackSource }: C
         <h2 className="text-2xl font-bold tracking-tight text-neutral-900 dark:text-zinc-100 mb-6">Installation</h2>
 
         {/* CLI / Manual Toggle Tabs */}
-        <div className="inline-flex items-center rounded-xl bg-neutral-100 dark:bg-zinc-900/80 border border-neutral-200 dark:border-zinc-700/50 p-1 mb-6">
-          <button
-            onClick={handleCLI}
-            className={cn(
-              "relative px-5 py-1.5 rounded-lg text-sm font-medium transition-all duration-150 select-none",
-              installTab === "cli"
-                ? "bg-white dark:bg-zinc-700 text-neutral-900 dark:text-white shadow-sm"
-                : "text-neutral-400 dark:text-zinc-500 hover:text-neutral-700 dark:hover:text-zinc-300"
-            )}
-          >
-            CLI
-          </button>
-          <button
-            onClick={handleManual}
-            className={cn(
-              "relative px-5 py-1.5 rounded-lg text-sm font-medium transition-all duration-150 select-none",
-              installTab === "manual"
-                ? "bg-white dark:bg-zinc-700 text-neutral-900 dark:text-white shadow-sm"
-                : "text-neutral-400 dark:text-zinc-500 hover:text-neutral-700 dark:hover:text-zinc-300"
-            )}
-          >
-            Manual
-          </button>
-        </div>
+        <Tabs value={installTab} onValueChange={(val) => setInstallTab(val as "cli" | "manual")} className="mb-6">
+          <TabsList className="mb-0">
+            <TabsTrigger value="cli" className="gap-2 px-3 py-1.5 text-sm h-8 font-medium">
+              <Terminal className="h-4 w-4" />
+              CLI
+            </TabsTrigger>
+            <TabsTrigger value="manual" className="gap-2 px-3 py-1.5 text-sm h-8 font-medium text-neutral-500 dark:text-zinc-400 hover:text-neutral-700 dark:hover:text-zinc-300">
+              <Wrench className="h-4 w-4" />
+              Manual
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
 
         {/* CLI Tab Content */}
         {installTab === "cli" && <InstallationCLI componentName={componentName} />}

@@ -39,7 +39,7 @@ export function Tabs({ children, defaultValue = "", value, onValueChange, classN
 
 export function TabsList({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={cn("inline-flex h-10 items-center justify-center rounded-lg bg-neutral-100 dark:bg-zinc-800/80 p-1 text-neutral-500 dark:text-zinc-400 mb-4", className)}>
+    <div className={cn("inline-flex w-fit self-start shrink-0 h-10 items-center justify-center rounded-lg bg-neutral-100 dark:bg-zinc-800/80 p-1 text-neutral-500 dark:text-zinc-400 mb-4", className)}>
       {children}
     </div>
   );

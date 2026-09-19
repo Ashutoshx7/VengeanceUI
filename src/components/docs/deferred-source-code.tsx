@@ -4,6 +4,40 @@ import * as React from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { CopyButton } from "@/components/ui/copy-button";
 import { cn } from "@/lib/utils";
+import { useTheme } from "next-themes";
+import { Highlight, type PrismTheme } from "prism-react-renderer";
+
+const vibrantLightTheme: PrismTheme = {
+  plain: {
+    color: "#52525b",
+    backgroundColor: "transparent",
+  },
+  styles: [
+    { types: ["comment", "prolog", "doctype", "cdata"], style: { color: "#a1a1aa", fontStyle: "italic" } },
+    { types: ["punctuation", "operator"], style: { color: "#71717a" } },
+    { types: ["property", "tag", "boolean", "number", "constant", "symbol", "deleted"], style: { color: "#4a7f94" } },
+    { types: ["selector", "attr-name", "string", "char", "builtin", "inserted"], style: { color: "#8a6d3b" } },
+    { types: ["url", "variable", "function", "class-name"], style: { color: "#3d7a5f" } },
+    { types: ["atrule", "attr-value", "keyword"], style: { color: "#6b6b99" } },
+    { types: ["regex", "important"], style: { color: "#996b6b" } },
+  ],
+};
+
+const vibrantDarkTheme: PrismTheme = {
+  plain: {
+    color: "#a1a1aa",
+    backgroundColor: "transparent",
+  },
+  styles: [
+    { types: ["comment", "prolog", "doctype", "cdata"], style: { color: "#3f3f46", fontStyle: "italic" } },
+    { types: ["punctuation", "operator"], style: { color: "#52525b" } },
+    { types: ["property", "tag", "boolean", "number", "constant", "symbol", "deleted"], style: { color: "#8bb8d0" } },
+    { types: ["selector", "attr-name", "string", "char", "builtin", "inserted"], style: { color: "#c9a87c" } },
+    { types: ["url", "variable", "function", "class-name"], style: { color: "#8ec8b0" } },
+    { types: ["atrule", "attr-value", "keyword"], style: { color: "#a0a0cc" } },
+    { types: ["regex", "important"], style: { color: "#c4908a" } },
+  ],
+};
 
 interface RegistryFile {
   path?: string;
@@ -47,6 +81,20 @@ export function DeferredSourceCode({
 }: DeferredSourceCodeProps) {
   const [requestState, setRequestState] = React.useState<SourceRequestState | null>(null);
   const [expanded, setExpanded] = React.useState(!expandable);
+  const { resolvedTheme } = useTheme();
+  const [isMounted, setIsMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => setIsMounted(true), 0);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const currentTheme = isMounted
+    ? resolvedTheme === "dark"
+      ? vibrantDarkTheme
+      : vibrantLightTheme
+    : vibrantLightTheme;
+
   const activeRequest = requestState?.componentName === componentName ? requestState : null;
   const source = fallbackSource ?? activeRequest?.source ?? null;
   const error = fallbackSource ? null : activeRequest?.error ?? null;
@@ -110,14 +158,28 @@ export function DeferredSourceCode({
         </div>
         <CopyButton
           code={source}
-          className="h-7 w-7 border-none bg-transparent text-neutral-400 opacity-0 transition-all hover:bg-neutral-100 hover:text-neutral-700 group-hover/code:opacity-100 dark:text-zinc-500 dark:hover:bg-zinc-800 dark:hover:text-zinc-300"
+          className="h-7 w-7 border-none bg-transparent text-neutral-400 transition-all hover:bg-neutral-100 hover:text-neutral-700 dark:text-zinc-500 dark:hover:bg-zinc-800 dark:hover:text-zinc-300"
         />
       </div>
 
       <div className={cn("relative overflow-hidden", expandable && !expanded && "max-h-[440px]")}>
-        <pre className="overflow-x-auto p-4 text-sm leading-relaxed text-neutral-700 selection:bg-neutral-200 dark:text-zinc-300 dark:selection:bg-zinc-800">
-          <code>{source}</code>
-        </pre>
+        <div className="overflow-x-auto p-4 text-sm font-mono leading-relaxed scrollbar-hide selection:bg-neutral-200 dark:selection:bg-zinc-800">
+          <Highlight theme={currentTheme} code={source} language="tsx">
+            {({ className: _className, style, tokens, getLineProps, getTokenProps }) => (
+              <pre style={{ ...style, backgroundColor: "transparent", margin: 0, padding: 0 }}>
+                {tokens.map((line, i) => (
+                  <div key={i} {...getLineProps({ line })} className="table-row">
+                    <span className="table-cell">
+                      {line.map((token, key) => (
+                        <span key={key} {...getTokenProps({ token })} />
+                      ))}
+                    </span>
+                  </div>
+                ))}
+              </pre>
+            )}
+          </Highlight>
+        </div>
         {expandable && !expanded && (
           <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-neutral-50 to-transparent dark:from-black" />
         )}
