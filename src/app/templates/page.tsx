@@ -19,7 +19,7 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 const templatesPageDescription =
-    "Portfolio and blog templates with live previews, GitHub source links, and multi-screenshot galleries.";
+    "Portfolio, blog, and desktop app templates with live previews, GitHub source links, and multi-screenshot galleries.";
 
 export const metadata: Metadata = {
     title: "Templates",
@@ -50,6 +50,7 @@ type PortfolioTemplate = {
     stats: string[];
     tags: string[];
     liveUrl: string;
+    liveLabel?: string;
     githubUrl: string;
     screenshots: TemplateScreenshot[];
 };
@@ -150,6 +151,42 @@ const blogTemplates: PortfolioTemplate[] = [
                 src: "/templates/blog-v1-mobile.png",
                 alt: "Blog V1 mobile reading layout screenshot",
                 label: "Mobile",
+                className: "object-top",
+            },
+        ],
+    },
+];
+
+const appTemplates: PortfolioTemplate[] = [
+    {
+        title: "Vengeance Notes",
+        label: "Desktop notes + Excalidraw workspace",
+        description:
+            "A lightweight desktop writing app built with Tauri and React. Combine Notion-like notes with an embedded Excalidraw canvas, local disk storage, and native .excalidraw file and library support — all in a ~12 MB app.",
+        accent: "from-violet-500/30 via-zinc-300/15 to-transparent",
+        status: "App 01",
+        stats: ["Excalidraw", "Notes", "12 MB"],
+        tags: ["Tauri", "React", "TypeScript", "Excalidraw"],
+        liveUrl: "https://github.com/FirePheonix/vengeance-notes/releases/latest",
+        liveLabel: "Download",
+        githubUrl: "https://github.com/FirePheonix/vengeance-notes",
+        screenshots: [
+            {
+                src: "/templates/vengeance-notes-v1-home.png",
+                alt: "Vengeance Notes notes editor and file explorer screenshot",
+                label: "Notes editor",
+                className: "object-top",
+            },
+            {
+                src: "/templates/vengeance-notes-v1-wide.png",
+                alt: "Vengeance Notes Excalidraw canvas screenshot",
+                label: "Excalidraw canvas",
+                className: "object-top",
+            },
+            {
+                src: "/templates/vengeance-notes-v1-mobile.png",
+                alt: "Vengeance Notes multi-board Excalidraw workspace screenshot",
+                label: "Canvas workspace",
                 className: "object-top",
             },
         ],
@@ -361,6 +398,45 @@ export default function TemplatesPage() {
                 </Container>
             </section>
 
+            <section id="app-templates" className="border-b border-border/70">
+                <Container>
+                    <div className="md:border-x md:border-border/70">
+                        <div className="grid gap-4 border-b border-border/70 px-4 py-8 md:grid-cols-[minmax(0,1fr)_360px] md:gap-8 md:px-8 md:py-12">
+                            <div className="space-y-3">
+                                <Heading variant="medium">One desktop app</Heading>
+                                <SubHeading>
+                                    Native apps follow the same gallery layout with download links, source repos, and screenshot rails.
+                                </SubHeading>
+                            </div>
+                            <div className="grid grid-cols-3 border border-foreground/10 bg-foreground/[0.02] text-center font-mono text-xs dark:bg-white/[0.02]">
+                                <div className="border-r border-foreground/10 p-3">
+                                    <span className="block text-lg font-semibold text-foreground">1</span>
+                                    App
+                                </div>
+                                <div className="border-r border-foreground/10 p-3">
+                                    <span className="block text-lg font-semibold text-foreground">3</span>
+                                    Screens
+                                </div>
+                                <div className="p-3">
+                                    <span className="block text-lg font-semibold text-foreground">1</span>
+                                    Repo
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="divide-y">
+                            {appTemplates.map((template, index) => (
+                                <PortfolioTemplateRow
+                                    key={template.title}
+                                    template={template}
+                                    index={index}
+                                />
+                            ))}
+                        </div>
+                    </div>
+                </Container>
+            </section>
+
             <section>
                 <Container>
                     <div className="grid border-b border-border/70 md:grid-cols-3 md:border-x md:border-border/70">
@@ -423,7 +499,7 @@ function PortfolioTemplateRow({
                     <Button asChild variant="outline" size="sm" className={cn("w-full", primaryActionClass)}>
                         <Link href={template.liveUrl} target="_blank" rel="noreferrer">
                             <ExternalLink className="size-4" />
-                            Live preview
+                            {template.liveLabel ?? "Live preview"}
                         </Link>
                     </Button>
                     <Button asChild variant="outline" size="sm" className={cn("w-full", secondaryActionClass)}>
