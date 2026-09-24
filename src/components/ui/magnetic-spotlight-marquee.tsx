@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState, useEffect, ReactNode } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import gsap from "gsap";
 import { cn } from "@/lib/utils";
 
@@ -70,8 +70,13 @@ export function MagneticSpotlightMarquee({
 
   // State to hold cloned images to fill width
   const [clonedImages, setClonedImages] = useState<string[]>(images);
+  const visibleImages = images.length === 0 ? [] : clonedImages;
 
   useEffect(() => {
+    if (images.length === 0) {
+      return;
+    }
+
     if (!marqueeTrackRef.current || !marqueeStripRef.current || !containerRef.current || !contentWrapperRef.current) return;
 
     const marqueeTrack = marqueeTrackRef.current;
@@ -88,24 +93,35 @@ export function MagneticSpotlightMarquee({
     for (let i = 0; i < setsNeeded; i++) {
       newImages.push(...images);
     }
-    setClonedImages(newImages);
+    const cloneFrame = window.requestAnimationFrame(() => {
+      setClonedImages(newImages);
+    });
 
     // Wait for React to render clones, then animate
-    const ctx = gsap.context(() => {
-      setTimeout(() => {
-         gsap.to(marqueeTrack, {
-           x: `-${oneSetWidth}px`,
-           duration: oneSetWidth / 600, // Hardcoded even faster speed (600)
-           ease: "none",
-           repeat: -1,
-           modifiers: {
-             x: (x) => `${gsap.utils.wrap(-oneSetWidth, 0, parseFloat(x))}px`
-           }
-         });
-      }, 100);
-    }, marqueeTrack);
+    let isActive = true;
+    const ctx = gsap.context(() => {}, marqueeTrack);
+    const animationTimer = window.setTimeout(() => {
+      if (!isActive) return;
 
-    return () => ctx.revert();
+      ctx.add(() => {
+        gsap.to(marqueeTrack, {
+          x: `-${oneSetWidth}px`,
+          duration: oneSetWidth / 600, // Hardcoded even faster speed (600)
+          ease: "none",
+          repeat: -1,
+          modifiers: {
+            x: (x) => `${gsap.utils.wrap(-oneSetWidth, 0, parseFloat(x))}px`
+          }
+        });
+      });
+    }, 100);
+
+    return () => {
+      isActive = false;
+      window.cancelAnimationFrame(cloneFrame);
+      window.clearTimeout(animationTimer);
+      ctx.revert();
+    };
   }, [images]);
 
   // Wake effect logic
@@ -167,7 +183,7 @@ export function MagneticSpotlightMarquee({
       }
     };
 
-    setTimeout(measureGeometry, 100);
+    const measureTimer = window.setTimeout(measureGeometry, 100);
     window.addEventListener('resize', measureGeometry);
 
     const handlePointerMove = (e: MouseEvent) => {
@@ -220,6 +236,7 @@ export function MagneticSpotlightMarquee({
     rafId = requestAnimationFrame(render);
 
     return () => {
+      window.clearTimeout(measureTimer);
       window.removeEventListener('resize', measureGeometry);
       spotlightSection.removeEventListener('mousemove', handlePointerMove);
       spotlightSection.removeEventListener('mouseleave', handlePointerLeave);
@@ -252,8 +269,9 @@ export function MagneticSpotlightMarquee({
           ref={marqueeTrackRef} 
           className="spotlight-marquee-track flex gap-4 h-full items-center absolute top-0 left-0"
         >
-          {clonedImages.map((img, idx) => (
+          {visibleImages.map((img, idx) => (
             <div key={idx} className="w-[140px] h-[140px] md:w-[180px] md:h-[180px] shrink-0 rounded-[20px] overflow-hidden shadow-sm bg-neutral-100 dark:bg-neutral-900">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={img}
                 alt="Marquee item"
