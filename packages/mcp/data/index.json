@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-30T21:50:01.809Z",
+  "generatedAt": "2026-09-24T08:50:19.254Z",
   "registryBaseUrl": "https://raw.githubusercontent.com/Ashutoshx7/VengeanceUI/main/public/r",
   "categories": [
     {
@@ -949,7 +949,9 @@
       "description": "Interactive scattered image collage toggle",
       "isNew": false,
       "inCatalog": true,
-      "registryDependencies": [],
+      "registryDependencies": [
+        "framer-motion"
+      ],
       "dependencies": "npm install framer-motion clsx tailwind-merge",
       "includeUtils": true,
       "manualNotes": null,
@@ -1504,7 +1506,10 @@
       "description": "Interactive full-screen WebGL slider with fluid ripple displacement transitions",
       "isNew": false,
       "inCatalog": true,
-      "registryDependencies": [],
+      "registryDependencies": [
+        "three",
+        "gsap"
+      ],
       "dependencies": "npm install three @types/three gsap clsx tailwind-merge",
       "includeUtils": true,
       "manualNotes": [
@@ -1561,7 +1566,12 @@
       "description": "A beautiful image dissolve effect driven by scrolling using React Three Fiber and Shaders.",
       "isNew": false,
       "inCatalog": true,
-      "registryDependencies": [],
+      "registryDependencies": [
+        "@react-three/fiber",
+        "@react-three/drei",
+        "three",
+        "framer-motion"
+      ],
       "dependencies": "npm install @react-three/fiber @react-three/drei three framer-motion clsx tailwind-merge",
       "includeUtils": true,
       "manualNotes": null,
@@ -1803,7 +1813,9 @@
       "description": "Interactive 3D technology ecosystem orbit animation",
       "isNew": false,
       "inCatalog": true,
-      "registryDependencies": [],
+      "registryDependencies": [
+        "lucide-react"
+      ],
       "dependencies": "npm install framer-motion lucide-react clsx tailwind-merge",
       "includeUtils": true,
       "manualNotes": null,
@@ -2293,7 +2305,9 @@
       "description": "Three.js 3D interactive books showcase with procedural rendering",
       "isNew": true,
       "inCatalog": true,
-      "registryDependencies": [],
+      "registryDependencies": [
+        "three"
+      ],
       "dependencies": "npm install three",
       "includeUtils": true,
       "manualNotes": [
@@ -3060,7 +3074,10 @@
       "description": "Interactive 5-panel bento grid with isometric graphics, character avatars, and step pipeline",
       "isNew": true,
       "inCatalog": true,
-      "registryDependencies": [],
+      "registryDependencies": [
+        "framer-motion",
+        "@phosphor-icons/react"
+      ],
       "dependencies": "npm install framer-motion @phosphor-icons/react clsx tailwind-merge",
       "includeUtils": true,
       "manualNotes": [
@@ -3458,7 +3475,9 @@
       "description": "Interactive full-screen marquee with spotlight cursor effect",
       "isNew": false,
       "inCatalog": true,
-      "registryDependencies": [],
+      "registryDependencies": [
+        "gsap"
+      ],
       "dependencies": "npm install gsap clsx tailwind-merge",
       "includeUtils": true,
       "manualNotes": [
@@ -6127,6 +6146,97 @@
       "slug": "gooey-text-reveal",
       "category": "Text & Motion",
       "description": "Line-aware gooey blur reveal with load, scroll, and scrub modes"
+    },
+    {
+      "name": "books-showcase",
+      "type": "registry:ui",
+      "dependencies": [
+        "three"
+      ],
+      "inCatalog": true,
+      "slug": "books-showcase",
+      "category": "Interactive",
+      "description": "Three.js 3D interactive books showcase with procedural rendering"
+    },
+    {
+      "name": "cylinder-carousel",
+      "type": "registry:ui",
+      "dependencies": [],
+      "inCatalog": true,
+      "slug": "cylinder-carousel",
+      "category": "Interactive",
+      "description": "Infinite CSS 3D cylinder image carousel"
+    },
+    {
+      "name": "image-collage",
+      "type": "registry:ui",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "inCatalog": true,
+      "slug": "image-collage",
+      "category": "Interactive",
+      "description": "Interactive scattered image collage toggle"
+    },
+    {
+      "name": "magnetic-spotlight-marquee",
+      "type": "registry:ui",
+      "dependencies": [
+        "gsap"
+      ],
+      "inCatalog": true,
+      "slug": "magnetic-spotlight-marquee",
+      "category": "Tooltip & Marquee",
+      "description": "Interactive full-screen marquee with spotlight cursor effect"
+    },
+    {
+      "name": "ripple-displacement-slider",
+      "type": "registry:ui",
+      "dependencies": [
+        "three",
+        "gsap"
+      ],
+      "inCatalog": true,
+      "slug": "ripple-displacement-slider",
+      "category": "Interactive",
+      "description": "Interactive full-screen WebGL slider with fluid ripple displacement transitions"
+    },
+    {
+      "name": "scroll-dissolve-reveal",
+      "type": "registry:ui",
+      "dependencies": [
+        "@react-three/fiber",
+        "@react-three/drei",
+        "three",
+        "framer-motion"
+      ],
+      "inCatalog": true,
+      "slug": "scroll-dissolve-reveal",
+      "category": "Interactive",
+      "description": "A beautiful image dissolve effect driven by scrolling using React Three Fiber and Shaders."
+    },
+    {
+      "name": "solar-system",
+      "type": "registry:ui",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "inCatalog": true,
+      "slug": "solar-system",
+      "category": "Interactive",
+      "description": "Interactive 3D technology ecosystem orbit animation"
+    },
+    {
+      "name": "why-us-bento",
+      "type": "registry:ui",
+      "dependencies": [
+        "framer-motion",
+        "@phosphor-icons/react"
+      ],
+      "inCatalog": true,
+      "slug": "why-us-bento",
+      "category": "Layout & Cards",
+      "description": "Interactive 5-panel bento grid with isometric graphics, character avatars, and step pipeline"
     }
   ],
   "lookups": {
