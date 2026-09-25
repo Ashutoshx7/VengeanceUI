@@ -1267,5 +1267,88 @@
     "files": [
       "public/r/gooey-text-reveal.json"
     ]
+  },
+  {
+    "name": "books-showcase",
+    "dependencies": [
+      "three"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/books-showcase.json"
+    ]
+  },
+  {
+    "name": "cylinder-carousel",
+    "dependencies": [],
+    "type": "registry:ui",
+    "files": [
+      "public/r/cylinder-carousel.json"
+    ]
+  },
+  {
+    "name": "image-collage",
+    "dependencies": [
+      "framer-motion"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/image-collage.json"
+    ]
+  },
+  {
+    "name": "magnetic-spotlight-marquee",
+    "dependencies": [
+      "gsap"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/magnetic-spotlight-marquee.json"
+    ]
+  },
+  {
+    "name": "ripple-displacement-slider",
+    "dependencies": [
+      "three",
+      "gsap"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/ripple-displacement-slider.json"
+    ]
+  },
+  {
+    "name": "scroll-dissolve-reveal",
+    "dependencies": [
+      "@react-three/fiber",
+      "@react-three/drei",
+      "three",
+      "framer-motion"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/scroll-dissolve-reveal.json"
+    ]
+  },
+  {
+    "name": "solar-system",
+    "dependencies": [
+      "lucide-react"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/solar-system.json"
+    ]
+  },
+  {
+    "name": "why-us-bento",
+    "dependencies": [
+      "framer-motion",
+      "@phosphor-icons/react"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/why-us-bento.json"
+    ]
   }
 ]

@@ -10,9 +10,10 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm run validate:registry && next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "validate:registry": "node scripts/validate-registry.mjs"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",

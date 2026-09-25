@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import gsap from "gsap";
 import { cn } from "@/lib/utils";
@@ -16,56 +16,59 @@ export interface RippleDisplacementSliderProps {
   slides?: RippleSlide[];
 }
 
+const IMAGE_BASE_URL =
+  "https://raw.githubusercontent.com/Ashutoshx7/VengeanceUI/main/public";
+
 const DEFAULT_SLIDES: RippleSlide[] = [
   {
     title: "Goku",
     description: "The Earth's greatest defender. Constantly pushing past his limits to achieve new heights like Ultra Instinct.",
-    image: "/goku.png", 
+    image: `${IMAGE_BASE_URL}/goku.png`,
   },
   {
     title: "Luffy",
     description: "Captain of the Straw Hat Pirates. The Sun God Nika who brings smiles and liberates the seas with Gear 5.",
-    image: "/luffy.png", 
+    image: `${IMAGE_BASE_URL}/luffy.png`,
   },
   {
     title: "Naruto",
     description: "The Hero of the Hidden Leaf. Wielding the massive power of the Nine-Tails and Six Paths Sage Mode.",
-    image: "/naruto.png", 
+    image: `${IMAGE_BASE_URL}/naruto.png`,
   },
   {
     title: "Ichigo",
     description: "The Substitute Soul Reaper. Combining Hollow, Quincy, and Soul Reaper powers for an unstoppable True Bankai.",
-    image: "/ichigo.png", 
+    image: `${IMAGE_BASE_URL}/ichigo.png`,
   },
   {
     title: "Zoro",
     description: "The King of Hell. Master of the Three Sword Style, cutting through anything with terrifying conqueror's haki.",
-    image: "/zoro.png", 
+    image: `${IMAGE_BASE_URL}/zoro.png`,
   },
   {
     title: "Aizen",
     description: "The ultimate mastermind. Standing at the pinnacle of power with his terrifying spiritual pressure and illusions.",
-    image: "/aizen.png", 
+    image: `${IMAGE_BASE_URL}/aizen.png`,
   },
   {
     title: "Vegeta",
     description: "The proud Prince of all Saiyans. Fueled by his rivalry with Goku and his unyielding royal pride.",
-    image: "/vegeta.png", 
+    image: `${IMAGE_BASE_URL}/vegeta.png`,
   },
   {
     title: "Gohan",
     description: "Possesses hidden potential that surpasses even his father. When pushed to the edge, the Beast awakens.",
-    image: "/gohan.png", 
+    image: `${IMAGE_BASE_URL}/gohan.png`,
   },
   {
     title: "Broly",
     description: "A mutant Saiyan of pure, unstoppable rage. His legendary power grows continuously during combat.",
-    image: "/broly.png", 
+    image: `${IMAGE_BASE_URL}/broly.png`,
   },
   {
     title: "Frieza",
     description: "The tyrannical emperor of Universe 7. A ruthless conqueror who always returns with a new, terrifying form.",
-    image: "/frieza.png", 
+    image: `${IMAGE_BASE_URL}/frieza.png`,
   }
 ];
 
@@ -177,7 +180,8 @@ export function RippleDisplacementSlider({
   const contentRef = useRef<HTMLDivElement>(null);
   
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [texturesLoaded, setTexturesLoaded] = useState(false);
+  const [loadedSlides, setLoadedSlides] = useState<RippleSlide[] | null>(null);
+  const texturesLoaded = loadedSlides === slides;
   
   const materialRef = useRef<THREE.ShaderMaterial | null>(null);
   const texturesRef = useRef<THREE.Texture[]>([]);
@@ -193,7 +197,14 @@ export function RippleDisplacementSlider({
   };
 
   useEffect(() => {
-    if (!canvasRef.current || !containerRef.current) return;
+    if (!canvasRef.current || !containerRef.current || slides.length === 0) return;
+
+    let isActive = true;
+    let resize: (() => void) | undefined;
+    let renderFrame: (() => void) | undefined;
+    let geometry: THREE.PlaneGeometry | undefined;
+    let material: THREE.ShaderMaterial | undefined;
+    let ctx: gsap.Context | undefined;
 
     const scene = new THREE.Scene();
     const camera = new THREE.OrthographicCamera(-0.5, 0.5, 0.5, -0.5, 0.01, 10);
@@ -230,6 +241,11 @@ export function RippleDisplacementSlider({
     });
 
     loadFirstTexture.then((firstTex) => {
+      if (!isActive || !containerRef.current) {
+        firstTex.dispose();
+        return;
+      }
+
       // Background load the rest seamlessly
       const allTextures = slides.map((slide, idx) => {
         if (idx === 0) return firstTex;
@@ -247,10 +263,11 @@ export function RippleDisplacementSlider({
       const height = containerRef.current!.clientHeight;
       const isMobile = width < 1000;
 
-      const imgWidth = (firstTex.image as any)?.width || 1920;
-      const imgHeight = (firstTex.image as any)?.height || 1080;
+      const image = firstTex.image as { width?: number; height?: number } | undefined;
+      const imgWidth = image?.width || 1920;
+      const imgHeight = image?.height || 1080;
 
-      const material = new THREE.ShaderMaterial({
+      const nextMaterial = new THREE.ShaderMaterial({
         vertexShader,
         fragmentShader,
         uniforms: {
@@ -269,19 +286,21 @@ export function RippleDisplacementSlider({
         },
         transparent: true,
       });
-      materialRef.current = material;
+      material = nextMaterial;
+      materialRef.current = nextMaterial;
 
-      const geometry = new THREE.PlaneGeometry(1, 1);
-      const mesh = new THREE.Mesh(geometry, material);
+      const nextGeometry = new THREE.PlaneGeometry(1, 1);
+      geometry = nextGeometry;
+      const mesh = new THREE.Mesh(nextGeometry, nextMaterial);
       scene.add(mesh);
 
-      const resize = () => {
+      resize = () => {
         if (!containerRef.current) return;
         const w = containerRef.current.clientWidth;
         const h = containerRef.current.clientHeight;
         renderer.setSize(w, h);
-        material.uniforms.uResolution.value.set(w, h);
-        material.uniforms.uMobile.value = w < 1000 ? 1.0 : 0.0;
+        nextMaterial.uniforms.uResolution.value.set(w, h);
+        nextMaterial.uniforms.uMobile.value = w < 1000 ? 1.0 : 0.0;
 
         // Ensure the wave expands fully beyond the screen corners
         const ratio = h / w;
@@ -295,15 +314,16 @@ export function RippleDisplacementSlider({
       resize();
       window.addEventListener("resize", resize);
 
-      gsap.ticker.add(() => {
+      renderFrame = () => {
         renderer.render(scene, camera);
-      });
+      };
+      gsap.ticker.add(renderFrame);
 
-      setTexturesLoaded(true);
+      setLoadedSlides(slides);
 
       // Trigger initial text in based on Screenshot 3
-      const ctx = gsap.context(() => {
-        const chars = document.querySelectorAll(".char");
+      ctx = gsap.context(() => {
+        const chars = contentRef.current?.querySelectorAll(".char") ?? [];
         
         gsap.fromTo(
           chars,
@@ -312,19 +332,28 @@ export function RippleDisplacementSlider({
         );
       }, contentRef);
 
-      return () => {
-        window.removeEventListener("resize", resize);
-        gsap.ticker.remove(() => renderer.render(scene, camera));
-        renderer.dispose();
-        geometry.dispose();
-        material.dispose();
-        ctx.revert();
-      };
     });
+
+    return () => {
+      isActive = false;
+
+      if (resize) window.removeEventListener("resize", resize);
+      if (renderFrame) gsap.ticker.remove(renderFrame);
+      ctx?.revert();
+
+      texturesRef.current.forEach((texture) => texture.dispose());
+      texturesRef.current = [];
+      materialRef.current = null;
+      isTransitioning.current = false;
+      if (material) gsap.killTweensOf(material.uniforms.uProgress);
+      geometry?.dispose();
+      material?.dispose();
+      renderer.dispose();
+    };
   }, [slides]);
 
-  const handleNextSlide = () => {
-    if (isTransitioning.current || !materialRef.current || !texturesRef.current.length) return;
+  const handleNextSlide = useCallback(() => {
+    if (slides.length === 0 || isTransitioning.current || !materialRef.current || !texturesRef.current.length) return;
     isTransitioning.current = true;
 
     const nextIndex = (currentIndex + 1) % slides.length;
@@ -374,16 +403,31 @@ export function RippleDisplacementSlider({
         isTransitioning.current = false;
       }
     });
-  };
+  }, [currentIndex, slides.length]);
 
   // Autoplay loop
   useEffect(() => {
-    if (!texturesLoaded) return;
+    if (!texturesLoaded || slides.length === 0) return;
     const timer = setTimeout(() => {
       handleNextSlide();
     }, 5000);
     return () => clearTimeout(timer);
-  }, [currentIndex, texturesLoaded]);
+  }, [handleNextSlide, slides.length, texturesLoaded]);
+
+  const activeSlide = slides[currentIndex] ?? slides[0];
+
+  if (!activeSlide) {
+    return (
+      <div
+        className={cn(
+          "flex min-h-[600px] w-full items-center justify-center bg-[#e0ddcf] text-sm text-neutral-600 dark:bg-black dark:text-neutral-400",
+          className
+        )}
+      >
+        No slides to display.
+      </div>
+    );
+  }
 
   return (
     <div 
@@ -400,7 +444,7 @@ export function RippleDisplacementSlider({
       >
         <div className="slide-title absolute top-1/2 left-12 -translate-y-1/2 w-max text-white max-[1000px]:top-1/2 max-[1000px]:left-1/2 max-[1000px]:-translate-x-1/2 max-[1000px]:-translate-y-1/2">
           <h1 className="text-[clamp(2rem,4vw,6rem)] font-medium tracking-[-0.02em] leading-tight">
-            {renderSplitTitle(slides[currentIndex].title)}
+            {renderSplitTitle(activeSlide.title)}
           </h1>
         </div>
       </div>

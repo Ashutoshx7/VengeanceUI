@@ -2,7 +2,6 @@
 
 import Container from "@/components/container";
 import { motion } from "framer-motion";
-import Image from "next/image";
 import {
   Headset,
   MapTrifold,
@@ -16,13 +15,16 @@ import IsometricBoxes02 from "@/assets/svgs/isometric-boxes-02";
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
+const AVATAR_BASE_URL =
+  "https://raw.githubusercontent.com/Ashutoshx7/VengeanceUI/main/public/avatars";
+
 const DEFAULT_TEAM_AVATARS = [
-  "/avatars/aizen.jpg",
-  "/avatars/batmaaanji.jpg",
-  "/avatars/johan.jpg",
-  "/avatars/shinji.jpg",
-  "/avatars/andha-aizen.jpg",
-  "/avatars/pinky-aizen.jpg",
+  `${AVATAR_BASE_URL}/aizen.jpg`,
+  `${AVATAR_BASE_URL}/batmaaanji.jpg`,
+  `${AVATAR_BASE_URL}/johan.jpg`,
+  `${AVATAR_BASE_URL}/shinji.jpg`,
+  `${AVATAR_BASE_URL}/andha-aizen.jpg`,
+  `${AVATAR_BASE_URL}/pinky-aizen.jpg`,
 ];
 
 const PIPELINE_STEPS = [
@@ -33,9 +35,11 @@ const PIPELINE_STEPS = [
   { id: "05", label: "LAUNCH", Icon: Rocket },
 ];
 
+export type TeamAvatar = string | { readonly src: string };
+
 export interface WhyUsBentoProps {
   className?: string;
-  teamAvatars?: (string | any)[];
+  teamAvatars?: TeamAvatar[];
 }
 
 export function WhyUsBento({
@@ -167,7 +171,7 @@ export function WhyUsBento({
           >
             {/* Stacked avatars */}
             <div className="flex items-center relative z-10 mb-3 h-8 sm:h-10">
-              {teamAvatars.map((src, i) => (
+              {teamAvatars.map((avatar, i) => (
                 <motion.div
                   key={i}
                   className="relative w-7 h-7 sm:w-9 sm:h-9 rounded-full overflow-hidden ring-2 ring-white dark:ring-neutral-900 shadow-sm"
@@ -191,12 +195,12 @@ export function WhyUsBento({
                     bounce: 0,
                   }}
                 >
-                  <Image
-                    src={src}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={typeof avatar === "string" ? avatar : avatar.src}
                     alt="team member"
-                    fill
-                    sizes="36px"
-                    className="object-cover object-top"
+                    loading="lazy"
+                    className="absolute inset-0 h-full w-full object-cover object-top"
                   />
                 </motion.div>
               ))}

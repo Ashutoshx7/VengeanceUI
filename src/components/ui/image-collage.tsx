@@ -20,7 +20,16 @@ export interface ImageCollageProps extends React.HTMLAttributes<HTMLDivElement> 
 
 export const ImageCollage = React.forwardRef<HTMLDivElement, ImageCollageProps>(
   (
-    { images, className, containerClassName, imageClassName, ...props },
+    {
+      images,
+      className,
+      containerClassName,
+      imageClassName,
+      onClick,
+      onKeyDown,
+      "aria-label": ariaLabel = "Toggle image collage layout",
+      ...props
+    },
     ref
   ) => {
     const [isOrganized, setIsOrganized] = useState(false);
@@ -32,15 +41,30 @@ export const ImageCollage = React.forwardRef<HTMLDivElement, ImageCollageProps>(
     return (
       <div
         ref={ref}
+        {...props}
         className={cn(
-          "flex flex-col items-center justify-center gap-12 select-none w-full min-h-[400px] cursor-pointer",
+          "flex flex-col items-center justify-center gap-12 select-none w-full min-h-[400px] cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500",
           className
         )}
-        onClick={toggleLayout}
-        {...props}
+        role="button"
+        tabIndex={0}
+        aria-label={ariaLabel}
+        aria-pressed={isOrganized}
+        onClick={(event) => {
+          toggleLayout();
+          onClick?.(event);
+        }}
+        onKeyDown={(event) => {
+          onKeyDown?.(event);
+
+          if (!event.defaultPrevented && (event.key === "Enter" || event.key === " ")) {
+            event.preventDefault();
+            toggleLayout();
+          }
+        }}
       >
         <div className="text-zinc-800 dark:text-zinc-200 text-xl font-medium tracking-tight">
-          Click anywhere to toggle the layout
+          Click or press Enter to toggle the layout
         </div>
         
         <motion.div className={cn("h-40 flex items-center justify-center", containerClassName)}>
@@ -63,6 +87,7 @@ export const ImageCollage = React.forwardRef<HTMLDivElement, ImageCollageProps>(
                 zIndex: isOrganized ? 1 : i,
               }}
             >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={img.src}
                 alt={img.alt || `Collage image ${i}`}
