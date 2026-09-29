@@ -2346,6 +2346,29 @@ export function BooksShowcaseDemo() {
       },
     ],
   },
+    "share-sheet": {
+    dependencies: "npm install framer-motion qrcode-generator",
+    manualNotes: [
+      "Pass a public http or https URL. The example URL is a placeholder and must be replaced before production.",
+      "The QR is generated in-browser with qrcode-generator (MIT, Kazuhiko Arase); no API calls or keys are needed.",
+      "Instagram uses native sharing where available, otherwise copies the link so it can be pasted in Instagram. Websites cannot directly save to Photos; download the QR instead.",
+      "Clipboard and native sharing depend on browser permissions. Popup blockers can affect external destinations.",
+    ],
+    usageCode: `import { ShareSheet } from "@/components/ui/share-sheet"
+
+export function ShareExample() {
+  return <ShareSheet url="https://your-site.example/story" title="A story worth sharing" variant="message" />
+}`,
+    props: [
+      { prop: "url", type: "string", defaultValue: "'https://example.com/story'", description: "Public http(s) link to share; replace the demo URL." },
+      { prop: "title", type: "string", defaultValue: "'Share this page'", description: "Title used when sharing." },
+      { prop: "variant", type: "'default' | 'message' | 'compact'", defaultValue: "'default'", description: "Message field or condensed destination row." },
+      { prop: "theme", type: "'auto' | 'dark' | 'light'", defaultValue: "'auto'", description: "Automatically follows the document's dark class." },
+      { prop: "initialOpen", type: "boolean", defaultValue: "false", description: "Open immediately when mounted." },
+      { prop: "onShare", type: "(event) => void", defaultValue: "-", description: "Receives sharing intent with channel, URL, and optional message." },
+    ],
+    credits: { author: "Enzo", github: "https://github.com/Aseel012/kavynui", description: "Originally built for kavynUI. QR generator by Kazuhiko Arase (MIT)." },
+  },
     "model-viewer": {
     dependencies: "npm install three @react-three/fiber @react-three/drei clsx tailwind-merge",
     includeUtils: true,

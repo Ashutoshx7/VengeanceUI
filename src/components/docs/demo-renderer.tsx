@@ -83,6 +83,7 @@ const DEMO_COMPONENTS: Record<string, React.ComponentType> = {
 
   "light-lines": dynamic(() => import("@/components/docs/light-lines").then((m) => ({ default: m.LightLinesDemo })), { ssr: false, loading: LOADING }),
   "liquid-ocean": dynamic(() => import("@/components/docs/liquid-ocean").then((m) => ({ default: m.LiquidOceanDemo })), { ssr: false, loading: LOADING }),
+  "share-sheet": dynamic(() => import("@/components/docs/share-sheet-demo").then((m) => ({ default: m.ShareSheetDemo })), { ssr: false, loading: LOADING }),
   "model-viewer": dynamic(() => import("@/components/docs/model-viewer").then((m) => ({ default: m.ModelViewerDemo })), { ssr: false, loading: LOADING }),
   "twisting-ribbon": dynamic(() => import("@/components/docs/twisting-ribbon-demo").then((m) => ({ default: m.TwistingRibbonDemo })), { ssr: false, loading: LOADING }),
   "aurora-hero": dynamic(() => import("@/components/docs/aurora-hero-demo").then((m) => ({ default: m.AuroraHeroDemo })), { ssr: false, loading: LOADING }),

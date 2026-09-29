@@ -57,6 +57,7 @@ export const COMPONENT_CATEGORIES: ComponentCategory[] = [
     items: [
       { name: "Image Collage", slug: "image-collage", description: "Interactive scattered image collage toggle", componentName: "image-collage" },
       { name: "Interactive Book", slug: "interactive-book", description: "3D page-flip style book", componentName: "interactive-book" },
+      { name: "Share Sheet", slug: "share-sheet", description: "Animated share dialog with direct sharing, copy-link feedback, and a downloadable QR code", componentName: "share-sheet", isNew: true },
       { name: "Model Viewer", slug: "model-viewer", description: "Interactive 3D model viewer with drag, zoom and keyboard rotation", componentName: "model-viewer" },
       { name: "Image Trail", slug: "image-trail", description: "Cursor-following image trail effect", componentName: "image-trail" },
       { name: "Perspective Carousel", slug: "perspective-carousel", description: "Spring-driven 3D image carousel", componentName: "perspective-carousel" },
