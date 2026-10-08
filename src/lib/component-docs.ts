@@ -3,6 +3,7 @@ import type { PropDef } from "@/components/docs/props-table";
 export interface ComponentCredit {
   author: string;
   github?: string;
+  website?: string;
   twitter?: string;
   linkedin?: string;
   description?: string;
@@ -2359,6 +2360,11 @@ export function BooksShowcaseDemo() {
 export function ShareExample() {
   return <ShareSheet url="https://your-site.example/story" title="A story worth sharing" variant="message" />
 }`,
+    credits: {
+      author: "Aseel",
+      github: "https://github.com/Aseel012",
+      website: "https://kavynui.com/",
+    },
     props: [
       { prop: "url", type: "string", defaultValue: "'https://example.com/story'", description: "Public http(s) link to share; replace the demo URL." },
       { prop: "title", type: "string", defaultValue: "'Share this page'", description: "Title used when sharing." },

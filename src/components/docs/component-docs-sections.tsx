@@ -94,14 +94,16 @@ const InstallationManual = memo(function InstallationManual({
 
 interface SocialLinkProps {
   href: string;
-  platform: "github" | "linkedin" | "twitter";
+  platform: "github" | "linkedin" | "twitter" | "website";
   author: string;
 }
 
 const SocialLink = memo(function SocialLink({ href, platform, author }: SocialLinkProps) {
   const isLinkedIn = platform === "linkedin";
-  const label = platform === "github" ? "GitHub" : platform === "linkedin" ? "LinkedIn" : "X";
-  const ariaLabel = `View ${author}'s ${platform === "twitter" ? "Twitter" : label} profile`;
+  const label = platform === "github" ? "GitHub" : platform === "linkedin" ? "LinkedIn" : platform === "website" ? "Website" : "X";
+  const ariaLabel = platform === "website"
+    ? `Visit ${author}'s website`
+    : `View ${author}'s ${platform === "twitter" ? "Twitter" : label} profile`;
 
   const classes = cn(
     "group inline-flex items-center gap-2 rounded-lg bg-white dark:bg-[#0b0c10] px-4 py-2.5 text-xs font-semibold text-neutral-700 dark:text-zinc-300 transition-all",
@@ -153,6 +155,22 @@ const SocialLink = memo(function SocialLink({ href, platform, author }: SocialLi
           focusable="false"
         >
           <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.779-1.75-1.75s.784-1.75 1.75-1.75 1.75.779 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+        </svg>
+      )}
+      {platform === "website" && (
+        <svg
+          className="size-4 text-neutral-900 dark:text-zinc-100 transition-transform group-hover:scale-110"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <circle cx="12" cy="12" r="10" />
+          <path d="M2 12h20M12 2a16 16 0 0 1 0 20 16 16 0 0 1 0-20" />
         </svg>
       )}
       {label}
@@ -247,11 +265,18 @@ export function ComponentDocsSections({ componentName, docs, fallbackSource }: C
                     </p>
                   </div>
 
-                  <div className="flex items-center gap-3">
+                  <div className="flex flex-wrap items-center gap-3">
                     {credit.github && (
                       <SocialLink
                         href={credit.github}
                         platform="github"
+                        author={credit.author}
+                      />
+                    )}
+                    {credit.website && (
+                      <SocialLink
+                        href={credit.website}
+                        platform="website"
                         author={credit.author}
                       />
                     )}
