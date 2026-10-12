@@ -44,7 +44,8 @@ export function ElasticStack({
 
         if (hoveredIndex !== null) {
           if (i > hoveredIndex) {
-            translateX = Math.min(pushForce * (total - i - 1), overlap);
+            // Right neighbour always clears the hovered item so its z-index swap stays smooth near the end
+            translateX = Math.max(Math.min(pushForce * (total - i - 1), overlap), overlap - pushForce * (i - hoveredIndex - 1));
           } else if (i < hoveredIndex) {
             translateX = -Math.min(pushForce * i, overlap);
           } else {
@@ -58,7 +59,7 @@ export function ElasticStack({
             key={item.id}
             onMouseEnter={() => setHoveredIndex(i)}
             className={cn(
-              "relative flex items-center justify-center rounded-full isolate transition-all duration-700 bg-neutral-100 dark:bg-neutral-800",
+              "relative flex items-center justify-center rounded-full isolate bg-neutral-100 dark:bg-neutral-800",
               "border-2 border-white dark:border-neutral-950",
               isHovered ? "shadow-xl" : "shadow-sm"
             )}
@@ -67,6 +68,10 @@ export function ElasticStack({
               height: itemSize,
               marginLeft: i === 0 ? 0 : -overlap,
               transform: `translateX(${translateX}px) scale(${scale})`,
+              transitionProperty: "transform, box-shadow, z-index",
+              transitionDuration: "700ms, 700ms, 0ms",
+              // Raise the hovered item only once its right neighbour has slid mostly clear; drop it instantly on release
+              transitionDelay: isHovered ? "0ms, 0ms, 150ms" : "0ms",
               transitionTimingFunction: springEasing,
               zIndex,
             }}
