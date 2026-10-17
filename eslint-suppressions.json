@@ -190,10 +190,5 @@
     "@typescript-eslint/no-explicit-any": {
       "count": 1
     }
-  },
-  "src/registry/books-showcase.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 10
-    }
   }
 }
