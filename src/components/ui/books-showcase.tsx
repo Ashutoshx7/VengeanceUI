@@ -4,6 +4,70 @@ import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { cn } from '@/lib/utils';
 
+// Math constants
+const TAU = Math.PI * 2;
+
+// Spring presets (stiffness, damping)
+const SPRING = {
+  POSITION: { k: 17, d: 6.8 },
+  TILT: { k: 120, d: 13 },
+  COVER: { k: 90, d: 12 },
+  DRAG: { k: 160, d: 16 },
+  ORBIT: { k: 60, d: 12 },
+  LEAF: { k: 60, d: 10 },
+  CAMERA: { k: 13, d: 6.5 },
+  PARALLAX: { k: 60, d: 10 },
+  PILL: { k: 190, d: 23 },
+} as const;
+
+// Book dimensions
+const BOOK = {
+  W: 1.42,        // width
+  H: 2.14,        // height
+  T: 0.34,        // thickness
+  CT: 0.032,      // cover thickness
+  OV: 0.05,       // overhang
+} as const;
+
+// Easing functions
+const EASE = {
+  hold: () => 1,
+  outQuad: (t: number) => 1 - (1 - t) * (1 - t),
+  outQuint: (t: number) => 1 - Math.pow(1 - t, 5),
+  inOutSine: (t: number) => -(Math.cos(Math.PI * t) - 1) / 2,
+} as const;
+
+// Detail view constants
+const DETAIL = {
+  LIFT: 0.38,
+  CLEAR: 4.2,
+  OPEN_ANGLE: 0.88,
+  OPEN_SWAY: 0.035,
+} as const;
+
+// Animation segment type for exit animations
+type AnimationSegment = {
+  d: number;
+  from: number;
+  to: number;
+  ease: (t: number) => number;
+  end?: () => void;
+};
+
+// Leaf item type for floating leaves
+type LeafItem = {
+  mesh: THREE.Mesh;
+  hx: number;
+  hy: number;
+  hz: number;
+  sp: number;
+  ph: number;
+  rv: THREE.Vector3;
+  kick: THREE.Vector3;
+  size: number;
+  s: { t: number; update: (dt: number) => number };
+};
+
 export interface BookCfg {
   id: string;
   title: string;
@@ -143,12 +207,12 @@ export function BooksShowcase({
       vel: number;
       k: number;
       d: number;
-      constructor(v: number, k?: number, d?: number) {
+      constructor(v: number, preset?: { k: number; d: number }) {
         this.v = v;
         this.t = v;
         this.vel = 0;
-        this.k = k || 120;
-        this.d = d || 14;
+        this.k = preset?.k ?? 120;
+        this.d = preset?.d ?? 14;
       }
       set(v: number) {
         this.v = v;
@@ -238,7 +302,7 @@ export function BooksShowcase({
       g.addColorStop(1, 'rgba(' + rgb + ',0)');
       x.fillStyle = g;
       x.beginPath();
-      x.arc(cx, cy, r, 0, 6.2832);
+      x.arc(cx, cy, r, 0, TAU);
       x.fill();
     }
     (function buildEnv() {
@@ -456,7 +520,7 @@ export function BooksShowcase({
       }
       x.fillStyle = 'rgba(' + ink + ',.45)';
       x.beginPath();
-      x.arc(178, h - 186, 26, 0, 6.2832);
+      x.arc(178, h - 186, 26, 0, TAU);
       x.fill();
       x.fillStyle = '#fff';
       rr(x, w - 330, h - 262, 236, 152, 8);
@@ -552,20 +616,17 @@ export function BooksShowcase({
     const N = books.length;
     const VISIBLE = Math.min(3, N);
 
-    const W = 1.42,
-      H = 2.14,
-      T = 0.34,
-      CT = 0.032,
-      OV = 0.05;
-    const PAGE_N = lowPowerDevice ? 6 : 10,
-      BACK_PAGE_N = lowPowerDevice ? 3 : 5,
-      PW = W - 0.02,
-      PH = H - 0.02;
-    const BLOCK_D = 0.245,
-      BLOCK_Z = -0.0205,
-      PIVOT_Z = T / 2 + CT / 2,
-      BPIVOT_Z = -(T / 2 + CT / 2),
-      HINGE_OVERLAP = 0.05;
+    // Use book dimension constants
+    const { W, H, T, CT, OV } = BOOK;
+    const PAGE_N = lowPowerDevice ? 6 : 10;
+    const BACK_PAGE_N = lowPowerDevice ? 3 : 5;
+    const PW = W - 0.02;
+    const PH = H - 0.02;
+    const BLOCK_D = 0.245;
+    const BLOCK_Z = -0.0205;
+    const PIVOT_Z = T / 2 + CT / 2;
+    const BPIVOT_Z = -(T / 2 + CT / 2);
+    const HINGE_OVERLAP = 0.05;
 
     const coverGeo = new THREE.BoxGeometry(W + OV, H + OV * 2, CT);
     const blockGeo = new THREE.BoxGeometry(W - 0.015, H, BLOCK_D);
@@ -612,7 +673,7 @@ export function BooksShowcase({
       orbPhase: string;
       orbTarget: number;
       orbXs: Spring;
-      exit: { segs: any[]; i: number; t: number } | null;
+      exit: { segs: AnimationSegment[]; i: number; t: number } | null;
     };
 
     const bookInstances: Book[] = [];
@@ -728,19 +789,19 @@ export function BooksShowcase({
       float.add(hit);
 
       const springs: Record<string, Spring> = {
-        px: new Spring(0, 17, 6.8),
-        py: new Spring(0, 17, 6.8),
-        pz: new Spring(0, 17, 6.8),
-        rx: new Spring(0, 17, 6.8),
-        ry: new Spring(0, 17, 6.8),
-        rz: new Spring(0, 17, 6.8),
-        sc: new Spring(1, 17, 6.8),
-        tiltX: new Spring(0, 120, 13),
-        tiltY: new Spring(0, 120, 13),
-        lift: new Spring(0, 120, 13),
-        cover: new Spring(0, 90, 12),
-        coverB: new Spring(0, 90, 12),
-        drag: new Spring(0, 160, 16),
+        px: new Spring(0, SPRING.POSITION),
+        py: new Spring(0, SPRING.POSITION),
+        pz: new Spring(0, SPRING.POSITION),
+        rx: new Spring(0, SPRING.POSITION),
+        ry: new Spring(0, SPRING.POSITION),
+        rz: new Spring(0, SPRING.POSITION),
+        sc: new Spring(1, SPRING.POSITION),
+        tiltX: new Spring(0, SPRING.TILT),
+        tiltY: new Spring(0, SPRING.TILT),
+        lift: new Spring(0, SPRING.TILT),
+        cover: new Spring(0, SPRING.COVER),
+        coverB: new Spring(0, SPRING.COVER),
+        drag: new Spring(0, SPRING.DRAG),
       };
 
       const b: Book = {
@@ -759,7 +820,7 @@ export function BooksShowcase({
         pageFB,
         hit,
         springs,
-        phase: Math.random() * 6.28,
+        phase: Math.random() * TAU,
         slotScale: 1,
         hitEdge: null,
         scr: { x: 0, y: 0 },
@@ -767,7 +828,7 @@ export function BooksShowcase({
         orbYv: 0,
         orbPhase: 'idle',
         orbTarget: 0,
-        orbXs: new Spring(0, 60, 12),
+        orbXs: new Spring(0, SPRING.ORBIT),
         exit: null,
       };
       bookInstances.push(b);
@@ -778,7 +839,7 @@ export function BooksShowcase({
 
     // Floating leaves (detail view)
     const leaves = {
-      items: [] as any[],
+      items: [] as LeafItem[],
       anchor: null as Book | null,
       activate(book: Book) {
         this.anchor = book;
@@ -840,11 +901,11 @@ export function BooksShowcase({
           hy: (Math.random() - 0.5) * 3.2,
           hz: -0.5 + Math.random() * 1.5,
           sp: 0.25 + Math.random() * 0.5,
-          ph: Math.random() * 6.28,
+          ph: Math.random() * TAU,
           rv: new THREE.Vector3((Math.random() - 0.5) * 0.8, (Math.random() - 0.5) * 0.8, (Math.random() - 0.5) * 0.8),
           kick: new THREE.Vector3(),
           size: 0.14 + Math.random() * 0.16,
-          s: new Spring(0, 60, 10),
+          s: new Spring(0, SPRING.LEAF),
         });
       }
     })();
@@ -918,16 +979,7 @@ export function BooksShowcase({
       b.slotScale = slot.s;
     }
 
-    const EASE = {
-      hold: () => 1,
-      outQuad: (t: number) => 1 - (1 - t) * (1 - t),
-      outQuint: (t: number) => 1 - Math.pow(1 - t, 5),
-      inOutSine: (t: number) => -(Math.cos(Math.PI * t) - 1) / 2,
-    };
-    const LIFT = 0.38,
-      CLEAR = 4.2;
-
-    function playY(b: Book, segs: any[]) {
+    function playY(b: Book, segs: AnimationSegment[]) {
       b.exit = { segs, i: 0, t: 0 };
     }
     function stepY(b: Book, dt: number) {
@@ -957,13 +1009,13 @@ export function BooksShowcase({
     function sendOut(b: Book, i: number, delay: number) {
       const y0 = SLOTS.hero[i].p[1],
         here = b.springs.py.v,
-        apex = y0 + LIFT;
+        apex = y0 + DETAIL.LIFT;
       b.root.visible = true;
       pinInPlace(b);
       playY(b, [
         { d: delay, from: here, to: here, ease: EASE.hold },
         { d: 0.28, from: here, to: apex, ease: EASE.outQuad },
-        { d: 0.9, from: apex, to: y0 - CLEAR, ease: EASE.inOutSine, end: () => { b.root.visible = false; } },
+        { d: 0.9, from: apex, to: y0 - DETAIL.CLEAR, ease: EASE.inOutSine, end: () => { b.root.visible = false; } },
       ]);
     }
     function bringBack(b: Book, i: number, delay: number) {
@@ -1046,13 +1098,13 @@ export function BooksShowcase({
     }
     shiftCarouselRef.current = shiftCarousel;
 
-    const camX = new Spring(0, 13, 6.5),
-      camY = new Spring(0.1, 13, 6.5),
-      camZ = new Spring(9.6, 13, 6.5);
-    const lookX = new Spring(0, 13, 6.5),
-      lookY = new Spring(0, 13, 6.5);
-    const parX = new Spring(0, 60, 10),
-      parY = new Spring(0, 60, 10);
+    const camX = new Spring(0, SPRING.CAMERA);
+    const camY = new Spring(0.1, SPRING.CAMERA);
+    const camZ = new Spring(9.6, SPRING.CAMERA);
+    const lookX = new Spring(0, SPRING.CAMERA);
+    const lookY = new Spring(0, SPRING.CAMERA);
+    const parX = new Spring(0, SPRING.PARALLAX);
+    const parY = new Spring(0, SPRING.PARALLAX);
 
     function camTo(mode: string) {
       if (mode === 'detail') {
@@ -1068,8 +1120,8 @@ export function BooksShowcase({
       }
     }
 
-    const pillX = new Spring(0, 190, 23),
-      pillY = new Spring(0, 190, 23);
+    const pillX = new Spring(0, SPRING.PILL);
+    const pillY = new Spring(0, SPRING.PILL);
     let pillOn = false;
     function showPill() {
       const el = openBtnRef.current;
@@ -1109,7 +1161,7 @@ export function BooksShowcase({
 
       setT(() => {
         if (state.mode !== 'opening' && state.mode !== 'detail') return;
-        book.orbY = RM ? 0 : -6.2832;
+        book.orbY = RM ? 0 : -TAU;
         book.orbYv = RM ? 0 : 3;
         book.orbPhase = 'return';
         book.orbTarget = 0;
@@ -1144,7 +1196,7 @@ export function BooksShowcase({
       orbit.drag = false;
       const b = state.selected;
       if (b) {
-        b.orbTarget = Math.round(b.orbY / 6.2832) * 6.2832 + 6.2832;
+        b.orbTarget = Math.round(b.orbY / TAU) * TAU + TAU;
         b.orbYv = Math.max(b.orbYv, 3);
         b.orbPhase = 'return';
         b.orbXs.t = 0;
@@ -1292,8 +1344,9 @@ export function BooksShowcase({
     };
     window.addEventListener('pointerup', onPointerUp);
 
-    const cancelPointer = (e?: PointerEvent) => {
-      if (e && ptr.id !== null && e.pointerId !== ptr.id) return;
+    const cancelPointer = (e?: PointerEvent | Event) => {
+      const pe = e as PointerEvent | undefined;
+      if (pe && ptr.id !== null && pe.pointerId !== ptr.id) return;
       ptr.id = null;
       ptr.down = false;
       orbit.drag = false;
@@ -1303,8 +1356,8 @@ export function BooksShowcase({
       }
       if (isTouch()) rayBook = null;
     };
-    window.addEventListener('pointercancel', cancelPointer as any);
-    canvas.addEventListener('lostpointercapture', cancelPointer as any);
+    window.addEventListener('pointercancel', cancelPointer);
+    canvas.addEventListener('lostpointercapture', cancelPointer);
 
     const onKeydown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') close();
@@ -1339,8 +1392,6 @@ export function BooksShowcase({
     const timer = new THREE.Timer();
     timer.connect(document);
     const idle = RM ? 0 : 1;
-    const DETAIL_OPEN_ANGLE = 0.88;
-    const DETAIL_OPEN_SWAY = 0.035;
 
     function screenPos(b: Book) {
       b.root.getWorldPosition(tmpV).project(camera);
@@ -1391,13 +1442,13 @@ export function BooksShowcase({
             }
           }
         }
-        const distRest = Math.abs(b.orbY - Math.round(b.orbY / 6.2832) * 6.2832);
+        const distRest = Math.abs(b.orbY - Math.round(b.orbY / TAU) * TAU);
         activity = clamp(Math.abs(b.orbYv) * 1.5 + (orbit.drag ? 1 : 0) + distRest * 2, 0, 1);
       }
       b.orbXs.update(dt);
 
       let coverBase = 0;
-      if (inDetail) coverBase = DETAIL_OPEN_ANGLE + Math.sin(t * 0.8 + b.phase) * DETAIL_OPEN_SWAY * idle;
+      if (inDetail) coverBase = DETAIL.OPEN_ANGLE + Math.sin(t * 0.8 + b.phase) * DETAIL.OPEN_SWAY * idle;
       const fan = orbitActive ? clamp(b.orbYv * 0.16, 0, 0.75) : 0;
       const fanB = orbitActive ? clamp(-b.orbYv * 0.16, 0, 0.75) : 0;
       let coverBBase = 0;
@@ -1624,23 +1675,22 @@ export function BooksShowcase({
         window.visualViewport.removeEventListener('resize', visualViewportHandler);
       }
       window.removeEventListener('pointerup', onPointerUp);
-      window.removeEventListener('pointercancel', cancelPointer as any);
+      window.removeEventListener('pointercancel', cancelPointer);
       root.removeEventListener('keydown', onKeydown);
       canvas.removeEventListener('contextmenu', onContextMenu);
       canvas.removeEventListener('pointerleave', onPointerLeave);
       canvas.removeEventListener('pointermove', onPointerMove);
       canvas.removeEventListener('pointerdown', onPointerDown);
-      canvas.removeEventListener('lostpointercapture', cancelPointer as any);
+      canvas.removeEventListener('lostpointercapture', cancelPointer);
       closeBtnRef.current?.removeEventListener('click', onCloseClick);
 
-      scene.traverse((obj: any) => {
-        if (obj.geometry) obj.geometry.dispose();
-        if (obj.material) {
-          const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
-          mats.forEach((m: any) => {
-            Object.values(m).forEach((v: any) => {
-              if (v && v.isTexture) v.dispose();
-            });
+      scene.traverse((obj: THREE.Object3D) => {
+        const mesh = obj as THREE.Mesh;
+        if (mesh.geometry) mesh.geometry.dispose();
+        if (mesh.material) {
+          const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+          mats.forEach((m: THREE.Material) => {
+            if ('map' in m && m.map) (m.map as THREE.Texture).dispose();
             m.dispose();
           });
         }
@@ -1736,7 +1786,7 @@ export function BooksShowcase({
             type="button"
             aria-label="Previous books"
             onClick={() => shiftCarouselRef.current(-1)}
-            className={`absolute left-3 top-1/2 z-30 -translate-y-1/2 inline-flex h-11 w-11 items-center justify-center rounded-full bg-[var(--bs-cream)]/90 text-[var(--bs-navy)] shadow-lg transition-all duration-300 hover:scale-105 hover:bg-[var(--bs-cream)] @min-[768px]:left-6 @min-[768px]:h-12 @min-[768px]:w-12 ${uiMode === 'hero' ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
+            className={`absolute left-3 top-1/2 z-30 -translate-y-1/2 inline-flex h-11 w-11 items-center justify-center rounded-full bg-[var(--bs-cream)]/90 text-[var(--bs-navy)] shadow-md transition-colors duration-300 hover:bg-[var(--bs-cream)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--bs-navy)] @min-[768px]:left-6 @min-[768px]:h-12 @min-[768px]:w-12 ${uiMode === 'hero' ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
               }`}
           >
             <ChevronLeft />
@@ -1745,7 +1795,7 @@ export function BooksShowcase({
             type="button"
             aria-label="Next books"
             onClick={() => shiftCarouselRef.current(1)}
-            className={`absolute right-3 top-1/2 z-30 -translate-y-1/2 inline-flex h-11 w-11 items-center justify-center rounded-full bg-[var(--bs-cream)]/90 text-[var(--bs-navy)] shadow-lg transition-all duration-300 hover:scale-105 hover:bg-[var(--bs-cream)] @min-[768px]:right-6 @min-[768px]:h-12 @min-[768px]:w-12 ${uiMode === 'hero' ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
+            className={`absolute right-3 top-1/2 z-30 -translate-y-1/2 inline-flex h-11 w-11 items-center justify-center rounded-full bg-[var(--bs-cream)]/90 text-[var(--bs-navy)] shadow-md transition-colors duration-300 hover:bg-[var(--bs-cream)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--bs-navy)] @min-[768px]:right-6 @min-[768px]:h-12 @min-[768px]:w-12 ${uiMode === 'hero' ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
               }`}
           >
             <ChevronRight />
@@ -1806,29 +1856,29 @@ export function BooksShowcase({
               ))}
             </div>
             <div className="h-6 w-px bg-[var(--bs-lav)]/[0.28]" />
-            <div className="text-[19px] italic text-[#98a4d6]">Goodreads</div>
-            <div className="ml-auto text-[19px] italic text-[#98a4d6]">{selectedCfg?.year}</div>
+            <div className="text-[19px] italic text-[var(--bs-lav)]">Goodreads</div>
+            <div className="ml-auto text-[19px] italic text-[var(--bs-lav)]">{selectedCfg?.year}</div>
           </div>
           <div className={`mt-[26px] border-t border-[var(--bs-lav)]/[0.18] @max-[760px]:mt-4 ${dpChild(270)}`} />
           <div
-            className={`pointer-events-auto mt-8 inline-flex items-center gap-[10px] rounded-full bg-[#1a2140] p-[10px] shadow-[0_24px_60px_rgba(0,0,0,0.45)] @max-[760px]:mt-[18px] @max-[760px]:flex-wrap @max-[760px]:rounded-[28px] ${dpChild(330)}`}
+            className={`pointer-events-auto mt-8 inline-flex items-center gap-[10px] rounded-full bg-[var(--bs-navy)] p-[10px] shadow-[0_24px_60px_rgba(0,0,0,0.45)] @max-[760px]:mt-[18px] @max-[760px]:flex-wrap @max-[760px]:rounded-[28px] ${dpChild(330)}`}
           >
-            <button className="inline-flex h-[54px] items-center gap-[10px] rounded-full bg-[var(--bs-cream)] px-[26px] text-[16.5px] font-semibold text-[var(--bs-navy)] transition-[transform,filter] duration-[220ms] ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-[1.04] hover:brightness-105 @max-[760px]:h-12 @max-[760px]:px-5 @max-[760px]:text-[15px]">
+            <button className="inline-flex h-[54px] items-center gap-[10px] rounded-full bg-[var(--bs-cream)] px-[26px] text-[16.5px] font-semibold text-[var(--bs-navy)] transition-colors duration-200 hover:brightness-105 @max-[760px]:h-12 @max-[760px]:px-5 @max-[760px]:text-[15px]">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.7} className="h-5 w-5">
                 <circle cx="12" cy="12" r="9" />
                 <path d="M3 12h18M12 3c2.8 2.6 2.8 15.4 0 18M12 3c-2.8 2.6-2.8 15.4 0 18" />
               </svg>
               <span>English</span>
             </button>
-            <button className="inline-flex h-[54px] items-center gap-[10px] rounded-full bg-[var(--bs-peri)] px-[26px] text-[16.5px] font-semibold text-[#10152c] transition-[transform,filter] duration-[220ms] ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-[1.04] hover:brightness-105 @max-[760px]:h-12 @max-[760px]:px-5 @max-[760px]:text-[15px]">
+            <button className="inline-flex h-[54px] items-center gap-[10px] rounded-full bg-[var(--bs-peri)] px-[26px] text-[16.5px] font-semibold text-[var(--bs-navy)] transition-colors duration-200 hover:brightness-105 @max-[760px]:h-12 @max-[760px]:px-5 @max-[760px]:text-[15px]">
               Buy Now
             </button>
-            <button className="inline-flex h-[54px] items-center gap-[10px] rounded-full bg-[var(--bs-peri)] px-[26px] text-[16.5px] font-semibold text-[#10152c] transition-[transform,filter] duration-[220ms] ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-[1.04] hover:brightness-105 @max-[760px]:h-12 @max-[760px]:px-5 @max-[760px]:text-[15px]">
+            <button className="inline-flex h-[54px] items-center gap-[10px] rounded-full bg-[var(--bs-peri)] px-[26px] text-[16.5px] font-semibold text-[var(--bs-navy)] transition-colors duration-200 hover:brightness-105 @max-[760px]:h-12 @max-[760px]:px-5 @max-[760px]:text-[15px]">
               Buy Audiobook
             </button>
             <button
               aria-label="Save"
-              className="inline-flex h-[54px] w-[54px] items-center justify-center gap-[10px] rounded-full bg-[#242c50] px-0 text-[var(--bs-lav)] transition-[transform,filter] duration-[220ms] ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-[1.04] hover:brightness-105"
+              className="inline-flex h-[54px] w-[54px] items-center justify-center gap-[10px] rounded-full bg-[var(--bs-navy)]/80 px-0 text-[var(--bs-lav)] transition-colors duration-200 hover:brightness-105"
             >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.7} className="h-5 w-5">
                 <path d="M7 3h10v18l-5-4-5 4z" />
