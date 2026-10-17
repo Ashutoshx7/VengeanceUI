@@ -45,6 +45,29 @@ const DETAIL = {
   OPEN_SWAY: 0.035,
 } as const;
 
+// Animation segment type for exit animations
+type AnimationSegment = {
+  d: number;
+  from: number;
+  to: number;
+  ease: (t: number) => number;
+  end?: () => void;
+};
+
+// Leaf item type for floating leaves
+type LeafItem = {
+  mesh: THREE.Mesh;
+  hx: number;
+  hy: number;
+  hz: number;
+  sp: number;
+  ph: number;
+  rv: THREE.Vector3;
+  kick: THREE.Vector3;
+  size: number;
+  s: { t: number; update: (dt: number) => number };
+};
+
 export interface BookCfg {
   id: string;
   title: string;
@@ -650,7 +673,7 @@ export function BooksShowcase({
       orbPhase: string;
       orbTarget: number;
       orbXs: Spring;
-      exit: { segs: any[]; i: number; t: number } | null;
+      exit: { segs: AnimationSegment[]; i: number; t: number } | null;
     };
 
     const bookInstances: Book[] = [];
@@ -816,7 +839,7 @@ export function BooksShowcase({
 
     // Floating leaves (detail view)
     const leaves = {
-      items: [] as any[],
+      items: [] as LeafItem[],
       anchor: null as Book | null,
       activate(book: Book) {
         this.anchor = book;
@@ -956,7 +979,7 @@ export function BooksShowcase({
       b.slotScale = slot.s;
     }
 
-    function playY(b: Book, segs: any[]) {
+    function playY(b: Book, segs: AnimationSegment[]) {
       b.exit = { segs, i: 0, t: 0 };
     }
     function stepY(b: Book, dt: number) {
@@ -1321,8 +1344,9 @@ export function BooksShowcase({
     };
     window.addEventListener('pointerup', onPointerUp);
 
-    const cancelPointer = (e?: PointerEvent) => {
-      if (e && ptr.id !== null && e.pointerId !== ptr.id) return;
+    const cancelPointer = (e?: PointerEvent | Event) => {
+      const pe = e as PointerEvent | undefined;
+      if (pe && ptr.id !== null && pe.pointerId !== ptr.id) return;
       ptr.id = null;
       ptr.down = false;
       orbit.drag = false;
@@ -1332,8 +1356,8 @@ export function BooksShowcase({
       }
       if (isTouch()) rayBook = null;
     };
-    window.addEventListener('pointercancel', cancelPointer as any);
-    canvas.addEventListener('lostpointercapture', cancelPointer as any);
+    window.addEventListener('pointercancel', cancelPointer);
+    canvas.addEventListener('lostpointercapture', cancelPointer);
 
     const onKeydown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') close();
@@ -1651,23 +1675,22 @@ export function BooksShowcase({
         window.visualViewport.removeEventListener('resize', visualViewportHandler);
       }
       window.removeEventListener('pointerup', onPointerUp);
-      window.removeEventListener('pointercancel', cancelPointer as any);
+      window.removeEventListener('pointercancel', cancelPointer);
       root.removeEventListener('keydown', onKeydown);
       canvas.removeEventListener('contextmenu', onContextMenu);
       canvas.removeEventListener('pointerleave', onPointerLeave);
       canvas.removeEventListener('pointermove', onPointerMove);
       canvas.removeEventListener('pointerdown', onPointerDown);
-      canvas.removeEventListener('lostpointercapture', cancelPointer as any);
+      canvas.removeEventListener('lostpointercapture', cancelPointer);
       closeBtnRef.current?.removeEventListener('click', onCloseClick);
 
-      scene.traverse((obj: any) => {
-        if (obj.geometry) obj.geometry.dispose();
-        if (obj.material) {
-          const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
-          mats.forEach((m: any) => {
-            Object.values(m).forEach((v: any) => {
-              if (v && v.isTexture) v.dispose();
-            });
+      scene.traverse((obj: THREE.Object3D) => {
+        const mesh = obj as THREE.Mesh;
+        if (mesh.geometry) mesh.geometry.dispose();
+        if (mesh.material) {
+          const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+          mats.forEach((m: THREE.Material) => {
+            if ('map' in m && m.map) (m.map as THREE.Texture).dispose();
             m.dispose();
           });
         }
@@ -1763,7 +1786,7 @@ export function BooksShowcase({
             type="button"
             aria-label="Previous books"
             onClick={() => shiftCarouselRef.current(-1)}
-            className={`absolute left-3 top-1/2 z-30 -translate-y-1/2 inline-flex h-11 w-11 items-center justify-center rounded-full bg-[var(--bs-cream)]/90 text-[var(--bs-navy)] shadow-lg transition-all duration-300 hover:scale-105 hover:bg-[var(--bs-cream)] @min-[768px]:left-6 @min-[768px]:h-12 @min-[768px]:w-12 ${uiMode === 'hero' ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
+            className={`absolute left-3 top-1/2 z-30 -translate-y-1/2 inline-flex h-11 w-11 items-center justify-center rounded-full bg-[var(--bs-cream)]/90 text-[var(--bs-navy)] shadow-md transition-colors duration-300 hover:bg-[var(--bs-cream)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--bs-navy)] @min-[768px]:left-6 @min-[768px]:h-12 @min-[768px]:w-12 ${uiMode === 'hero' ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
               }`}
           >
             <ChevronLeft />
@@ -1772,7 +1795,7 @@ export function BooksShowcase({
             type="button"
             aria-label="Next books"
             onClick={() => shiftCarouselRef.current(1)}
-            className={`absolute right-3 top-1/2 z-30 -translate-y-1/2 inline-flex h-11 w-11 items-center justify-center rounded-full bg-[var(--bs-cream)]/90 text-[var(--bs-navy)] shadow-lg transition-all duration-300 hover:scale-105 hover:bg-[var(--bs-cream)] @min-[768px]:right-6 @min-[768px]:h-12 @min-[768px]:w-12 ${uiMode === 'hero' ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
+            className={`absolute right-3 top-1/2 z-30 -translate-y-1/2 inline-flex h-11 w-11 items-center justify-center rounded-full bg-[var(--bs-cream)]/90 text-[var(--bs-navy)] shadow-md transition-colors duration-300 hover:bg-[var(--bs-cream)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--bs-navy)] @min-[768px]:right-6 @min-[768px]:h-12 @min-[768px]:w-12 ${uiMode === 'hero' ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
               }`}
           >
             <ChevronRight />
@@ -1833,29 +1856,29 @@ export function BooksShowcase({
               ))}
             </div>
             <div className="h-6 w-px bg-[var(--bs-lav)]/[0.28]" />
-            <div className="text-[19px] italic text-[#98a4d6]">Goodreads</div>
-            <div className="ml-auto text-[19px] italic text-[#98a4d6]">{selectedCfg?.year}</div>
+            <div className="text-[19px] italic text-[var(--bs-lav)]">Goodreads</div>
+            <div className="ml-auto text-[19px] italic text-[var(--bs-lav)]">{selectedCfg?.year}</div>
           </div>
           <div className={`mt-[26px] border-t border-[var(--bs-lav)]/[0.18] @max-[760px]:mt-4 ${dpChild(270)}`} />
           <div
-            className={`pointer-events-auto mt-8 inline-flex items-center gap-[10px] rounded-full bg-[#1a2140] p-[10px] shadow-[0_24px_60px_rgba(0,0,0,0.45)] @max-[760px]:mt-[18px] @max-[760px]:flex-wrap @max-[760px]:rounded-[28px] ${dpChild(330)}`}
+            className={`pointer-events-auto mt-8 inline-flex items-center gap-[10px] rounded-full bg-[var(--bs-navy)] p-[10px] shadow-[0_24px_60px_rgba(0,0,0,0.45)] @max-[760px]:mt-[18px] @max-[760px]:flex-wrap @max-[760px]:rounded-[28px] ${dpChild(330)}`}
           >
-            <button className="inline-flex h-[54px] items-center gap-[10px] rounded-full bg-[var(--bs-cream)] px-[26px] text-[16.5px] font-semibold text-[var(--bs-navy)] transition-[transform,filter] duration-[220ms] ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-[1.04] hover:brightness-105 @max-[760px]:h-12 @max-[760px]:px-5 @max-[760px]:text-[15px]">
+            <button className="inline-flex h-[54px] items-center gap-[10px] rounded-full bg-[var(--bs-cream)] px-[26px] text-[16.5px] font-semibold text-[var(--bs-navy)] transition-colors duration-200 hover:brightness-105 @max-[760px]:h-12 @max-[760px]:px-5 @max-[760px]:text-[15px]">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.7} className="h-5 w-5">
                 <circle cx="12" cy="12" r="9" />
                 <path d="M3 12h18M12 3c2.8 2.6 2.8 15.4 0 18M12 3c-2.8 2.6-2.8 15.4 0 18" />
               </svg>
               <span>English</span>
             </button>
-            <button className="inline-flex h-[54px] items-center gap-[10px] rounded-full bg-[var(--bs-peri)] px-[26px] text-[16.5px] font-semibold text-[#10152c] transition-[transform,filter] duration-[220ms] ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-[1.04] hover:brightness-105 @max-[760px]:h-12 @max-[760px]:px-5 @max-[760px]:text-[15px]">
+            <button className="inline-flex h-[54px] items-center gap-[10px] rounded-full bg-[var(--bs-peri)] px-[26px] text-[16.5px] font-semibold text-[var(--bs-navy)] transition-colors duration-200 hover:brightness-105 @max-[760px]:h-12 @max-[760px]:px-5 @max-[760px]:text-[15px]">
               Buy Now
             </button>
-            <button className="inline-flex h-[54px] items-center gap-[10px] rounded-full bg-[var(--bs-peri)] px-[26px] text-[16.5px] font-semibold text-[#10152c] transition-[transform,filter] duration-[220ms] ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-[1.04] hover:brightness-105 @max-[760px]:h-12 @max-[760px]:px-5 @max-[760px]:text-[15px]">
+            <button className="inline-flex h-[54px] items-center gap-[10px] rounded-full bg-[var(--bs-peri)] px-[26px] text-[16.5px] font-semibold text-[var(--bs-navy)] transition-colors duration-200 hover:brightness-105 @max-[760px]:h-12 @max-[760px]:px-5 @max-[760px]:text-[15px]">
               Buy Audiobook
             </button>
             <button
               aria-label="Save"
-              className="inline-flex h-[54px] w-[54px] items-center justify-center gap-[10px] rounded-full bg-[#242c50] px-0 text-[var(--bs-lav)] transition-[transform,filter] duration-[220ms] ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-[1.04] hover:brightness-105"
+              className="inline-flex h-[54px] w-[54px] items-center justify-center gap-[10px] rounded-full bg-[var(--bs-navy)]/80 px-0 text-[var(--bs-lav)] transition-colors duration-200 hover:brightness-105"
             >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.7} className="h-5 w-5">
                 <path d="M7 3h10v18l-5-4-5 4z" />
