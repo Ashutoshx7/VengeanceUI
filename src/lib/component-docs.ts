@@ -36,6 +36,47 @@ export interface ComponentDocData {
  *   4. Props table
  */
 export const COMPONENT_DOCS: Record<string, ComponentDocData> = {
+  "liquid-button": {
+    dependencies: "npm install @radix-ui/react-slot class-variance-authority clsx tailwind-merge",
+    includeUtils: true,
+    manualNotes: [
+      "Client component using SVG procedural fractal turbulence (feTurbulence) and displacement mapping (feDisplacementMap).",
+      "Features a 60-120fps physics loop with spring damping, cursor velocity tracking, and organic directional stretching.",
+      "Dual-layer synchronized inverted clipping ensures crisp text legibility under all states.",
+      "Tactile click feedback: procedural noise shockwave, haptic vibration pulse, and a multi-phase recoiling ring.",
+    ],
+    usageCode: `"use client"
+
+import { LiquidButton } from "@/components/ui/liquid-button"
+
+export function LiquidButtonExample() {
+  return (
+    <div className="flex flex-wrap items-center gap-4">
+      <LiquidButton size="default">
+        Initialize Vengeance <span aria-hidden="true">↗</span>
+      </LiquidButton>
+      <LiquidButton variant="accent" size="default">
+        Explore System
+      </LiquidButton>
+    </div>
+  )
+}`,
+    props: [
+      { prop: "variant", type: "'default' | 'dark' | 'destructive' | 'accent'", defaultValue: "'default'", description: "Visual style variant of the button." },
+      { prop: "size", type: "'sm' | 'default' | 'lg'", defaultValue: "'default'", description: "Size of the button." },
+      { prop: "asChild", type: "boolean", defaultValue: "false", description: "Change the default rendered element to a Slot component." },
+      { prop: "fillColor", type: "string", defaultValue: "variant default", description: "Custom liquid ink fill color." },
+      { prop: "textColor", type: "string", defaultValue: "variant default", description: "Custom base text color." },
+      { prop: "activeTextColor", type: "string", defaultValue: "variant default", description: "Custom inverted text color revealed under the liquid mask." },
+      { prop: "borderColor", type: "string", defaultValue: "variant default", description: "Custom border color." },
+      { prop: "noiseFrequency", type: "string", defaultValue: "'0.035 0.08'", description: "SVG filter noise baseFrequency for fractal turbulence." },
+    ],
+    credits: {
+      author: "0xKernelEclipse",
+      github: "https://github.com/0xKernelEclipse",
+      description: "Crafted interactive liquid ink button with living fluid physics and shockwave recoil.",
+    },
+  },
   "team-reveal-grid": {
     dependencies: "npm install clsx tailwind-merge",
     includeUtils: true,

@@ -20,6 +20,7 @@ export const COMPONENT_CATEGORIES: ComponentCategory[] = [
     name: "Buttons",
     icon: MousePointer2,
     items: [
+      { name: "Liquid Button", slug: "liquid-button", description: "Living organic fluid ink button with cursor displacement tracking and tactile shockwave recoil", componentName: "liquid-button", isNew: true },
       { name: "Animated Button", slug: "my-animated-button", description: "Animated CTA button with shine effect", componentName: "animated-button" },
       { name: "Candy Button", slug: "candy-button", description: "Glassy candy-like button with top highlight", componentName: "candy-button" },
       { name: "Pop Button", slug: "pop-button", description: "Interactive 3D pushable pop button", componentName: "pop-button" },
