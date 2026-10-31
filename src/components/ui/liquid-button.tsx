@@ -6,6 +6,7 @@ import React, {
   useEffect,
   useState,
   useCallback,
+  useMemo,
   forwardRef,
 } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
@@ -103,13 +104,13 @@ export const LiquidButton = forwardRef<HTMLButtonElement, LiquidButtonProps>(
     const [isFocusActive, setIsFocusActive] = useState(false);
     const [isPressed, setIsPressed] = useState(false);
 
-    const parsedFreq = (() => {
+    const parsedFreq = useMemo(() => {
       const parts = noiseFrequency.trim().split(/\s+/).map(Number);
       return {
         baseX: isNaN(parts[0]) || parts[0] === 0 ? 0.035 : parts[0],
         baseY: parts.length > 1 && !isNaN(parts[1]) && parts[1] !== 0 ? parts[1] : 0.08,
       };
-    })();
+    }, [noiseFrequency]);
 
     const stateRef = useRef({
       x: 0,
@@ -515,12 +516,18 @@ export const LiquidButton = forwardRef<HTMLButtonElement, LiquidButtonProps>(
       return () => {
         window.removeEventListener("blur", handleWindowBlur);
         window.removeEventListener("focus", handleWindowFocus);
-        if (stateRef.current.frame !== 0) {
-          window.cancelAnimationFrame(stateRef.current.frame);
-          stateRef.current.frame = 0;
-        }
       };
     }, [disabled, scheduleFrame]);
+
+    useEffect(() => {
+      return () => {
+        const s = stateRef.current;
+        if (s.frame !== 0) {
+          window.cancelAnimationFrame(s.frame);
+          s.frame = 0;
+        }
+      };
+    }, []);
 
     const handlePointerEnter = (e: React.PointerEvent<HTMLButtonElement>) => {
       onPointerEnter?.(e);
