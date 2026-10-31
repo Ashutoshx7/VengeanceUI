@@ -37,7 +37,7 @@ export interface ComponentDocData {
  */
 export const COMPONENT_DOCS: Record<string, ComponentDocData> = {
   "liquid-button": {
-    dependencies: "npm install @radix-ui/react-slot class-variance-authority clsx tailwind-merge",
+    dependencies: "npm install class-variance-authority clsx tailwind-merge",
     includeUtils: true,
     manualNotes: [
       "Client component using SVG procedural fractal turbulence (feTurbulence) and displacement mapping (feDisplacementMap).",
@@ -64,8 +64,7 @@ export function LiquidButtonExample() {
     props: [
       { prop: "variant", type: "'default' | 'dark' | 'destructive' | 'accent'", defaultValue: "'default'", description: "Visual style variant of the button." },
       { prop: "size", type: "'sm' | 'default' | 'lg'", defaultValue: "'default'", description: "Size of the button." },
-      { prop: "asChild", type: "boolean", defaultValue: "false", description: "Change the default rendered element to a Slot component." },
-      { prop: "fillColor", type: "string", defaultValue: "variant default", description: "Custom liquid ink fill color." },
+{ prop: "fillColor", type: "string", defaultValue: "variant default", description: "Custom liquid ink fill color." },
       { prop: "textColor", type: "string", defaultValue: "variant default", description: "Custom base text color." },
       { prop: "activeTextColor", type: "string", defaultValue: "variant default", description: "Custom inverted text color revealed under the liquid mask." },
       { prop: "borderColor", type: "string", defaultValue: "variant default", description: "Custom border color." },
