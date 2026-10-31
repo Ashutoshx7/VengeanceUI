@@ -4,9 +4,9 @@ import React, {
   useId,
   useRef,
   useEffect,
+  useLayoutEffect,
   useState,
   useCallback,
-  useMemo,
   forwardRef,
 } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
@@ -61,6 +61,65 @@ export interface LiquidButtonProps
 const clamp = (value: number, min: number, max: number) =>
   Math.min(max, Math.max(min, value));
 
+export const DEFAULT_NOISE_FREQUENCY = {
+  baseX: 0.035,
+  baseY: 0.08,
+} as const;
+
+const isFiniteNumber = (value: number) => Number.isFinite(value);
+
+/**
+ * Parse SVG `feTurbulence` `baseFrequency`.
+ *
+ * SVG treats a single number as both X and Y. Zero is a valid frequency and
+ * must not fall back to the defaults.
+ */
+export function parseNoiseFrequency(value: string | undefined | null): {
+  baseX: number;
+  baseY: number;
+} {
+  if (value == null) {
+    return { baseX: DEFAULT_NOISE_FREQUENCY.baseX, baseY: DEFAULT_NOISE_FREQUENCY.baseY };
+  }
+
+  const tokens = String(value).trim().split(/\s+/).filter(Boolean);
+  if (tokens.length === 0) {
+    return { baseX: DEFAULT_NOISE_FREQUENCY.baseX, baseY: DEFAULT_NOISE_FREQUENCY.baseY };
+  }
+
+  const parsed = tokens.map(Number);
+  const x = parsed[0];
+  const y = parsed[1];
+
+  if (tokens.length === 1) {
+    if (!isFiniteNumber(x)) {
+      return { baseX: DEFAULT_NOISE_FREQUENCY.baseX, baseY: DEFAULT_NOISE_FREQUENCY.baseY };
+    }
+    return { baseX: x, baseY: x };
+  }
+
+  return {
+    baseX: isFiniteNumber(x) ? x : DEFAULT_NOISE_FREQUENCY.baseX,
+    baseY: isFiniteNumber(y) ? y : DEFAULT_NOISE_FREQUENCY.baseY,
+  };
+}
+
+function formatNoiseFrequency(frequency: { baseX: number; baseY: number }) {
+  return `${frequency.baseX} ${frequency.baseY}`;
+}
+
+function cloneInvertedContent(source: HTMLElement, dest: HTMLElement) {
+  const clones = Array.from(source.childNodes).map((node) => {
+    const clone = node.cloneNode(true);
+    if (clone instanceof Element) {
+      clone.removeAttribute("id");
+      clone.querySelectorAll("[id]").forEach((el) => el.removeAttribute("id"));
+    }
+    return clone;
+  });
+  dest.replaceChildren(...clones);
+}
+
 export const LiquidButton = forwardRef<HTMLButtonElement, LiquidButtonProps>(
   (
     {
@@ -104,13 +163,11 @@ export const LiquidButton = forwardRef<HTMLButtonElement, LiquidButtonProps>(
     const [isFocusActive, setIsFocusActive] = useState(false);
     const [isPressed, setIsPressed] = useState(false);
 
-    const parsedFreq = useMemo(() => {
-      const parts = noiseFrequency.trim().split(/\s+/).map(Number);
-      return {
-        baseX: isNaN(parts[0]) || parts[0] === 0 ? 0.035 : parts[0],
-        baseY: parts.length > 1 && !isNaN(parts[1]) && parts[1] !== 0 ? parts[1] : 0.08,
-      };
-    }, [noiseFrequency]);
+    const contentRef = useRef<HTMLSpanElement | null>(null);
+    const invertedRef = useRef<HTMLSpanElement | null>(null);
+    const parsedFreq = parseNoiseFrequency(noiseFrequency);
+    const parsedFreqRef = useRef(parsedFreq);
+    parsedFreqRef.current = parsedFreq;
 
     const stateRef = useRef({
       x: 0,
@@ -192,9 +249,10 @@ export const LiquidButton = forwardRef<HTMLButtonElement, LiquidButtonProps>(
 
       if (turbulenceRef.current && !prefersReducedMotion) {
         const breathingFactor = 1 + Math.sin(s.time * 2.5) * 0.12;
+        const { baseX, baseY } = parsedFreqRef.current;
         turbulenceRef.current.setAttribute(
           "baseFrequency",
-          `${(parsedFreq.baseX * breathingFactor).toFixed(4)} ${(parsedFreq.baseY * (2 - breathingFactor)).toFixed(4)}`
+          `${(baseX * breathingFactor).toFixed(4)} ${(baseY * (2 - breathingFactor)).toFixed(4)}`
         );
       }
 
@@ -241,7 +299,7 @@ export const LiquidButton = forwardRef<HTMLButtonElement, LiquidButtonProps>(
           rippleRef.current.style.display = "none";
         }
       }
-    }, [getDimensions, setShapeAttributes, parsedFreq]);
+    }, [getDimensions, setShapeAttributes]);
 
     const maxCornerDistance = (width: number, height: number, x: number, y: number) => {
       return Math.max(
@@ -252,124 +310,123 @@ export const LiquidButton = forwardRef<HTMLButtonElement, LiquidButtonProps>(
       );
     };
 
-    const tick = useCallback(
-      (now: number) => {
-        const s = stateRef.current;
-        s.frame = 0;
-
-        const dt =
-          s.lastFrame === 0
-            ? 1 / 60
-            : clamp((now - s.lastFrame) / 1000, 1 / 240, 1 / 30);
-        s.lastFrame = now;
-        s.time += dt;
-
-        const { width, height } = getDimensions();
-        if (width <= 0 || height <= 0) return;
-
-        const prefersReducedMotion =
-          typeof window !== "undefined" &&
-          window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-        if (prefersReducedMotion) {
-          s.unstableJitterX = 0;
-          s.unstableJitterY = 0;
-          s.ringPhase = 0;
-          s.ringProgress = 0;
-        } else {
-          const t = s.time;
-          s.unstableJitterX =
-            Math.sin(t * 3.7) * 2.2 +
-            Math.sin(t * 7.1 + 1.2) * 1.4 +
-            Math.cos(t * 11.3) * 0.8;
-          s.unstableJitterY =
-            Math.cos(t * 3.1) * 1.8 +
-            Math.sin(t * 6.3 + 2.4) * 1.2 +
-            Math.sin(t * 13.1) * 0.6;
-        }
-
-        const speedLerp = 1 - Math.exp(-dt / 0.105);
-        s.speed += (s.targetSpeed - s.speed) * speedLerp;
-        s.targetSpeed = 0;
-
-        const breathingStretch = prefersReducedMotion ? 0 : Math.sin(s.time * 2.8) * 0.04;
-        const desiredStretch = 1 + s.speed * 0.55 + (s.pointerActive ? breathingStretch : 0);
-        s.stretch += (desiredStretch - s.stretch) * (1 - Math.exp(-dt / 0.08));
-
-        const angleDelta = ((s.targetAngle - s.angle + 540) % 360) - 180;
-        s.angle += angleDelta * (1 - Math.exp(-dt / 0.075));
-
-        if (!prefersReducedMotion) {
-          if (s.ringPhase === 1) {
-            s.ringProgress += dt * 3.8 * s.ringSpeedMult;
-            if (s.ringProgress >= 1) {
-              s.ringPhase = 2;
-              s.ringProgress = 0;
-            }
-          } else if (s.ringPhase === 2) {
-            s.ringProgress += dt * 7.8 * s.ringSpeedMult;
-            if (s.ringProgress >= 1) {
-              s.ringPhase = 3;
-              s.ringProgress = 0;
-            }
-          } else if (s.ringPhase === 3) {
-            s.ringProgress += dt * 3.5 * s.ringSpeedMult;
-            const glideSpeed = Math.max(width, height) * 1.55 * dt * s.ringSpeedMult;
-            s.ringX += Math.cos(s.ringEscapeAngle) * glideSpeed;
-            s.ringY += Math.sin(s.ringEscapeAngle) * glideSpeed;
-
-            if (s.ringProgress >= 1) {
-              s.ringPhase = 0;
-              s.ringProgress = 0;
-            }
-          }
-        }
-
-        const active = (s.pointerActive || s.focusActive) && !s.disabled;
-        const targetRadius = active
-          ? maxCornerDistance(width, height, s.x, s.y) * Math.sqrt(s.stretch) * 1.14
-          : 0;
-
-        if (prefersReducedMotion) {
-          s.radius = targetRadius;
-          s.radiusVelocity = 0;
-        } else {
-          const spring = 150;
-          const damping = 24;
-          const acceleration =
-            (targetRadius - s.radius) * spring - s.radiusVelocity * damping;
-          s.radiusVelocity += acceleration * dt;
-          s.radius += s.radiusVelocity * dt;
-        }
-
-        if (s.radius < 0) {
-          s.radius = 0;
-          s.radiusVelocity = 0;
-        }
-
-        renderShape();
-
-        if (active || s.ringPhase > 0 || Math.abs(s.radius) > 0.1) {
-          s.frame = window.requestAnimationFrame(tick);
-        } else {
-          s.lastFrame = 0;
-          s.radius = 0;
-          s.radiusVelocity = 0;
-          s.stretch = 1;
-          s.speed = 0;
-          s.ringPhase = 0;
-          renderShape();
-        }
-      },
-      [getDimensions, renderShape]
-    );
+    const tickRef = useRef<(now: number) => void>(() => {});
 
     const scheduleFrame = useCallback(() => {
       const s = stateRef.current;
       if (s.frame === 0) {
-        s.frame = window.requestAnimationFrame(tick);
+        s.frame = window.requestAnimationFrame((now) => tickRef.current(now));
       }
-    }, [tick]);
+    }, []);
+
+    tickRef.current = (now: number) => {
+      const s = stateRef.current;
+      s.frame = 0;
+
+      const dt =
+        s.lastFrame === 0
+          ? 1 / 60
+          : clamp((now - s.lastFrame) / 1000, 1 / 240, 1 / 30);
+      s.lastFrame = now;
+      s.time += dt;
+
+      const { width, height } = getDimensions();
+      if (width <= 0 || height <= 0) return;
+
+      const prefersReducedMotion =
+        typeof window !== "undefined" &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      if (prefersReducedMotion) {
+        s.unstableJitterX = 0;
+        s.unstableJitterY = 0;
+        s.ringPhase = 0;
+        s.ringProgress = 0;
+      } else {
+        const t = s.time;
+        s.unstableJitterX =
+          Math.sin(t * 3.7) * 2.2 +
+          Math.sin(t * 7.1 + 1.2) * 1.4 +
+          Math.cos(t * 11.3) * 0.8;
+        s.unstableJitterY =
+          Math.cos(t * 3.1) * 1.8 +
+          Math.sin(t * 6.3 + 2.4) * 1.2 +
+          Math.sin(t * 13.1) * 0.6;
+      }
+
+      const speedLerp = 1 - Math.exp(-dt / 0.105);
+      s.speed += (s.targetSpeed - s.speed) * speedLerp;
+      s.targetSpeed = 0;
+
+      const breathingStretch = prefersReducedMotion ? 0 : Math.sin(s.time * 2.8) * 0.04;
+      const desiredStretch = 1 + s.speed * 0.55 + (s.pointerActive ? breathingStretch : 0);
+      s.stretch += (desiredStretch - s.stretch) * (1 - Math.exp(-dt / 0.08));
+
+      const angleDelta = ((s.targetAngle - s.angle + 540) % 360) - 180;
+      s.angle += angleDelta * (1 - Math.exp(-dt / 0.075));
+
+      if (!prefersReducedMotion) {
+        if (s.ringPhase === 1) {
+          s.ringProgress += dt * 3.8 * s.ringSpeedMult;
+          if (s.ringProgress >= 1) {
+            s.ringPhase = 2;
+            s.ringProgress = 0;
+          }
+        } else if (s.ringPhase === 2) {
+          s.ringProgress += dt * 7.8 * s.ringSpeedMult;
+          if (s.ringProgress >= 1) {
+            s.ringPhase = 3;
+            s.ringProgress = 0;
+          }
+        } else if (s.ringPhase === 3) {
+          s.ringProgress += dt * 3.5 * s.ringSpeedMult;
+          const glideSpeed = Math.max(width, height) * 1.55 * dt * s.ringSpeedMult;
+          s.ringX += Math.cos(s.ringEscapeAngle) * glideSpeed;
+          s.ringY += Math.sin(s.ringEscapeAngle) * glideSpeed;
+
+          if (s.ringProgress >= 1) {
+            s.ringPhase = 0;
+            s.ringProgress = 0;
+          }
+        }
+      }
+
+      const active = (s.pointerActive || s.focusActive) && !s.disabled;
+      const targetRadius = active
+        ? maxCornerDistance(width, height, s.x, s.y) * Math.sqrt(s.stretch) * 1.14
+        : 0;
+
+      if (prefersReducedMotion) {
+        s.radius = targetRadius;
+        s.radiusVelocity = 0;
+      } else {
+        const spring = 150;
+        const damping = 24;
+        const acceleration =
+          (targetRadius - s.radius) * spring - s.radiusVelocity * damping;
+        s.radiusVelocity += acceleration * dt;
+        s.radius += s.radiusVelocity * dt;
+      }
+
+      if (s.radius < 0) {
+        s.radius = 0;
+        s.radiusVelocity = 0;
+      }
+
+      renderShape();
+
+      if (active || s.ringPhase > 0 || Math.abs(s.radius) > 0.1) {
+        s.frame = window.requestAnimationFrame((next) => tickRef.current(next));
+      } else {
+        s.lastFrame = 0;
+        s.radius = 0;
+        s.radiusVelocity = 0;
+        s.stretch = 1;
+        s.speed = 0;
+        s.ringPhase = 0;
+        renderShape();
+      }
+    };
 
     const setOrigin = useCallback(
       (clientX: number, clientY: number) => {
@@ -529,6 +586,26 @@ export const LiquidButton = forwardRef<HTMLButtonElement, LiquidButtonProps>(
       };
     }, []);
 
+    useLayoutEffect(() => {
+      const source = contentRef.current;
+      const dest = invertedRef.current;
+      if (!source || !dest) return;
+
+      const syncInvertedLayer = () => {
+        cloneInvertedContent(source, dest);
+      };
+
+      syncInvertedLayer();
+      const observer = new MutationObserver(syncInvertedLayer);
+      observer.observe(source, {
+        subtree: true,
+        childList: true,
+        characterData: true,
+        attributes: true,
+      });
+      return () => observer.disconnect();
+    }, []);
+
     const handlePointerEnter = (e: React.PointerEvent<HTMLButtonElement>) => {
       onPointerEnter?.(e);
       if (disabled || e.pointerType === "touch") return;
@@ -670,7 +747,7 @@ export const LiquidButton = forwardRef<HTMLButtonElement, LiquidButtonProps>(
               <feTurbulence
                 ref={turbulenceRef}
                 type="fractalNoise"
-                baseFrequency={noiseFrequency}
+                baseFrequency={formatNoiseFrequency(parsedFreq)}
                 numOctaves={2}
                 seed={8}
                 result="liquid-noise"
@@ -713,6 +790,8 @@ export const LiquidButton = forwardRef<HTMLButtonElement, LiquidButtonProps>(
         </svg>
 
         <span
+          ref={contentRef}
+          data-liquid-content
           className={cn(
             "pointer-events-none relative z-10 inline-flex items-center justify-center gap-2 text-[var(--liquid-text)] transition-transform duration-100",
             isPressed && "scale-[0.98]"
@@ -722,6 +801,8 @@ export const LiquidButton = forwardRef<HTMLButtonElement, LiquidButtonProps>(
         </span>
 
         <span
+          ref={invertedRef}
+          data-liquid-inverted
           className={cn(
             "pointer-events-none absolute inset-0 z-20 inline-flex items-center justify-center gap-2 px-[inherit] text-[var(--liquid-active-text)] transition-transform duration-100",
             isPressed && "scale-[0.98]"
@@ -731,9 +812,7 @@ export const LiquidButton = forwardRef<HTMLButtonElement, LiquidButtonProps>(
             WebkitClipPath: `var(--liquid-clip)`,
           }}
           aria-hidden="true"
-        >
-          {children}
-        </span>
+        />
       </button>
     );
   }
