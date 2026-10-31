@@ -8,7 +8,6 @@ import React, {
   useCallback,
   forwardRef,
 } from "react";
-import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
@@ -50,7 +49,6 @@ export const liquidButtonVariants = cva(
 export interface LiquidButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof liquidButtonVariants> {
-  asChild?: boolean;
   children?: React.ReactNode;
   fillColor?: string;
   textColor?: string;
@@ -69,7 +67,6 @@ export const LiquidButton = forwardRef<HTMLButtonElement, LiquidButtonProps>(
       className,
       variant,
       size,
-      asChild = false,
       fillColor,
       textColor,
       activeTextColor,
@@ -105,6 +102,14 @@ export const LiquidButton = forwardRef<HTMLButtonElement, LiquidButtonProps>(
     const [isPointerActive, setIsPointerActive] = useState(false);
     const [isFocusActive, setIsFocusActive] = useState(false);
     const [isPressed, setIsPressed] = useState(false);
+
+    const parsedFreq = (() => {
+      const parts = noiseFrequency.trim().split(/\s+/).map(Number);
+      return {
+        baseX: isNaN(parts[0]) || parts[0] === 0 ? 0.035 : parts[0],
+        baseY: parts.length > 1 && !isNaN(parts[1]) && parts[1] !== 0 ? parts[1] : 0.08,
+      };
+    })();
 
     const stateRef = useRef({
       x: 0,
@@ -188,7 +193,7 @@ export const LiquidButton = forwardRef<HTMLButtonElement, LiquidButtonProps>(
         const breathingFactor = 1 + Math.sin(s.time * 2.5) * 0.12;
         turbulenceRef.current.setAttribute(
           "baseFrequency",
-          `${(0.035 * breathingFactor).toFixed(4)} ${(0.08 * (2 - breathingFactor)).toFixed(4)}`
+          `${(parsedFreq.baseX * breathingFactor).toFixed(4)} ${(parsedFreq.baseY * (2 - breathingFactor)).toFixed(4)}`
         );
       }
 
@@ -235,7 +240,7 @@ export const LiquidButton = forwardRef<HTMLButtonElement, LiquidButtonProps>(
           rippleRef.current.style.display = "none";
         }
       }
-    }, [getDimensions, setShapeAttributes]);
+    }, [getDimensions, setShapeAttributes, parsedFreq]);
 
     const maxCornerDistance = (width: number, height: number, x: number, y: number) => {
       return Math.max(
@@ -261,48 +266,61 @@ export const LiquidButton = forwardRef<HTMLButtonElement, LiquidButtonProps>(
         const { width, height } = getDimensions();
         if (width <= 0 || height <= 0) return;
 
-        const t = s.time;
-        s.unstableJitterX =
-          Math.sin(t * 3.7) * 2.2 +
-          Math.sin(t * 7.1 + 1.2) * 1.4 +
-          Math.cos(t * 11.3) * 0.8;
-        s.unstableJitterY =
-          Math.cos(t * 3.1) * 1.8 +
-          Math.sin(t * 6.3 + 2.4) * 1.2 +
-          Math.sin(t * 13.1) * 0.6;
+        const prefersReducedMotion =
+          typeof window !== "undefined" &&
+          window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+        if (prefersReducedMotion) {
+          s.unstableJitterX = 0;
+          s.unstableJitterY = 0;
+          s.ringPhase = 0;
+          s.ringProgress = 0;
+        } else {
+          const t = s.time;
+          s.unstableJitterX =
+            Math.sin(t * 3.7) * 2.2 +
+            Math.sin(t * 7.1 + 1.2) * 1.4 +
+            Math.cos(t * 11.3) * 0.8;
+          s.unstableJitterY =
+            Math.cos(t * 3.1) * 1.8 +
+            Math.sin(t * 6.3 + 2.4) * 1.2 +
+            Math.sin(t * 13.1) * 0.6;
+        }
 
         const speedLerp = 1 - Math.exp(-dt / 0.105);
         s.speed += (s.targetSpeed - s.speed) * speedLerp;
         s.targetSpeed = 0;
 
-        const breathingStretch = Math.sin(t * 2.8) * 0.04;
+        const breathingStretch = prefersReducedMotion ? 0 : Math.sin(s.time * 2.8) * 0.04;
         const desiredStretch = 1 + s.speed * 0.55 + (s.pointerActive ? breathingStretch : 0);
         s.stretch += (desiredStretch - s.stretch) * (1 - Math.exp(-dt / 0.08));
 
         const angleDelta = ((s.targetAngle - s.angle + 540) % 360) - 180;
         s.angle += angleDelta * (1 - Math.exp(-dt / 0.075));
 
-        if (s.ringPhase === 1) {
-          s.ringProgress += dt * 3.8 * s.ringSpeedMult;
-          if (s.ringProgress >= 1) {
-            s.ringPhase = 2;
-            s.ringProgress = 0;
-          }
-        } else if (s.ringPhase === 2) {
-          s.ringProgress += dt * 7.8 * s.ringSpeedMult;
-          if (s.ringProgress >= 1) {
-            s.ringPhase = 3;
-            s.ringProgress = 0;
-          }
-        } else if (s.ringPhase === 3) {
-          s.ringProgress += dt * 3.5 * s.ringSpeedMult;
-          const glideSpeed = Math.max(width, height) * 1.55 * dt * s.ringSpeedMult;
-          s.ringX += Math.cos(s.ringEscapeAngle) * glideSpeed;
-          s.ringY += Math.sin(s.ringEscapeAngle) * glideSpeed;
+        if (!prefersReducedMotion) {
+          if (s.ringPhase === 1) {
+            s.ringProgress += dt * 3.8 * s.ringSpeedMult;
+            if (s.ringProgress >= 1) {
+              s.ringPhase = 2;
+              s.ringProgress = 0;
+            }
+          } else if (s.ringPhase === 2) {
+            s.ringProgress += dt * 7.8 * s.ringSpeedMult;
+            if (s.ringProgress >= 1) {
+              s.ringPhase = 3;
+              s.ringProgress = 0;
+            }
+          } else if (s.ringPhase === 3) {
+            s.ringProgress += dt * 3.5 * s.ringSpeedMult;
+            const glideSpeed = Math.max(width, height) * 1.55 * dt * s.ringSpeedMult;
+            s.ringX += Math.cos(s.ringEscapeAngle) * glideSpeed;
+            s.ringY += Math.sin(s.ringEscapeAngle) * glideSpeed;
 
-          if (s.ringProgress >= 1) {
-            s.ringPhase = 0;
-            s.ringProgress = 0;
+            if (s.ringProgress >= 1) {
+              s.ringPhase = 0;
+              s.ringProgress = 0;
+            }
           }
         }
 
@@ -310,10 +328,6 @@ export const LiquidButton = forwardRef<HTMLButtonElement, LiquidButtonProps>(
         const targetRadius = active
           ? maxCornerDistance(width, height, s.x, s.y) * Math.sqrt(s.stretch) * 1.14
           : 0;
-
-        const prefersReducedMotion =
-          typeof window !== "undefined" &&
-          window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
         if (prefersReducedMotion) {
           s.radius = targetRadius;
@@ -503,26 +517,27 @@ export const LiquidButton = forwardRef<HTMLButtonElement, LiquidButtonProps>(
         window.removeEventListener("focus", handleWindowFocus);
         if (stateRef.current.frame !== 0) {
           window.cancelAnimationFrame(stateRef.current.frame);
+          stateRef.current.frame = 0;
         }
       };
     }, [disabled, scheduleFrame]);
 
     const handlePointerEnter = (e: React.PointerEvent<HTMLButtonElement>) => {
+      onPointerEnter?.(e);
       if (disabled || e.pointerType === "touch") return;
       stateRef.current.pointerActive = true;
       setIsPointerActive(true);
       setOrigin(e.clientX, e.clientY);
       updatePointerVelocity(e);
       scheduleFrame();
-      onPointerEnter?.(e);
     };
 
     const handlePointerMove = (e: React.PointerEvent<HTMLButtonElement>) => {
+      onPointerMove?.(e);
       if (disabled || e.pointerType === "touch") return;
       setOrigin(e.clientX, e.clientY);
       updatePointerVelocity(e);
       scheduleFrame();
-      onPointerMove?.(e);
     };
 
     const handlePointerLeave = (e: React.PointerEvent<HTMLButtonElement>) => {
@@ -607,13 +622,10 @@ export const LiquidButton = forwardRef<HTMLButtonElement, LiquidButtonProps>(
       ...style,
     } as React.CSSProperties;
 
-    const Component = asChild ? Slot : "button";
-    const isActive = isPointerActive || isFocusActive;
-
     return (
-      <Component
+      <button
         ref={assignRef}
-        type={asChild ? undefined : "button"}
+        type="button"
         data-liquid-button
         className={cn(
           liquidButtonVariants({ variant, size }),
@@ -708,14 +720,14 @@ export const LiquidButton = forwardRef<HTMLButtonElement, LiquidButtonProps>(
             isPressed && "scale-[0.98]"
           )}
           style={{
-            clipPath: isActive ? `var(--liquid-clip)` : `circle(0 at 50% 50%)`,
-            WebkitClipPath: isActive ? `var(--liquid-clip)` : `circle(0 at 50% 50%)`,
+            clipPath: `var(--liquid-clip)`,
+            WebkitClipPath: `var(--liquid-clip)`,
           }}
           aria-hidden="true"
         >
           {children}
         </span>
-      </Component>
+      </button>
     );
   }
 );
