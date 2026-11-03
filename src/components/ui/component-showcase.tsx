@@ -68,7 +68,7 @@ export function ComponentShowcase({
 
       {/* The Showcase Toggle */}
       <Tabs defaultValue="preview" className="space-y-4">
-        <ComponentPreviewPanel installCommand={installCommand}>
+        <ComponentPreviewPanel installCommand={installCommand} componentName={componentName}>
           {children}
         </ComponentPreviewPanel>
 
