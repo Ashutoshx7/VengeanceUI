@@ -38,6 +38,8 @@ export interface PricingPlan {
   price: { monthly: number; annually: number } | string;
   /** Any CSS color. Tints the card border, glow, and plan icon. */
   accent?: string;
+  /** Strength of the accent wash, 0–1. Darker accents such as blue need more. */
+  glow?: number;
   /** Highlights the card and gives it the primary call to action. */
   featured?: boolean;
   badge?: string;
@@ -71,6 +73,7 @@ export const DEFAULT_PRICING_PLANS: PricingPlan[] = [
     description: "For beginners to explore our platform and start their investment journey.",
     price: { monthly: 0, annually: 0 },
     accent: "#4f6bff",
+    glow: 1,
     cta: { label: "Start for Free" },
     features: [
       { label: "Track up to 5 stocks", icon: <ChartLineUp weight="fill" /> },
@@ -174,8 +177,8 @@ export function PricingSection({
       <section
         className={cx(
           // Theme tokens consumed by the card layers below.
-          "[--ps-lit:#18181b] dark:[--ps-lit:#ffffff] [--ps-edge-top:rgba(0,0,0,0.1)] [--ps-edge-bottom:rgba(0,0,0,0.055)] [--ps-glow:14%] [--ps-glow-soft:5%] [--ps-dot:rgba(0,0,0,0.035)] [--ps-orb:rgba(0,0,0,0.022)]",
-          "dark:[--ps-edge-top:rgba(255,255,255,0.055)] dark:[--ps-edge-bottom:rgba(255,255,255,0.025)] dark:[--ps-glow:30%] dark:[--ps-glow-soft:11%] dark:[--ps-dot:rgba(255,255,255,0.03)] dark:[--ps-orb:rgba(255,255,255,0.025)]",
+          "[--ps-lit:#18181b] dark:[--ps-lit:#ffffff] [--ps-edge-top:rgba(0,0,0,0.1)] [--ps-edge-bottom:rgba(0,0,0,0.055)] [--ps-glow:22%] [--ps-glow-soft:8%] [--ps-dot:rgba(0,0,0,0.035)] [--ps-orb:rgba(0,0,0,0.022)]",
+          "dark:[--ps-edge-top:rgba(255,255,255,0.035)] dark:[--ps-edge-bottom:rgba(255,255,255,0.018)] dark:[--ps-glow:48%] dark:[--ps-glow-soft:17%] dark:[--ps-dot:rgba(255,255,255,0.03)] dark:[--ps-orb:rgba(255,255,255,0.025)]",
           "@container relative isolate w-full overflow-hidden bg-[#fafafa] px-4 py-16 text-zinc-950 sm:px-6 sm:py-20 dark:bg-black dark:text-white",
           className,
         )}
@@ -352,10 +355,10 @@ function PricingCard({
   const light = plan.featured
     ? "color-mix(in oklab, var(--accent) 12%, var(--ps-lit))"
     : "var(--accent)";
-  const strength = plan.featured ? [30, 10] : [30, 10];
-  // Wide and low: tints the whole top edge (strongest at the left) and fades
-  // down the first quarter of the sides, like light falling from above.
-  const borderLight = `radial-gradient(100% 40% at 8% 0%, color-mix(in oklab, ${light} ${strength[0]}%, transparent) 0%, color-mix(in oklab, ${light} ${strength[1]}%, transparent) 45%, transparent 100%)`;
+  const strength = plan.featured ? [80, 42] : [40, 24];
+  // Strongest at the top-left corner, gone by ~60% across the top and ~40%
+  // down the side. Values measured off the reference screenshots.
+  const borderLight = `radial-gradient(60% 38% at 0% 0%, color-mix(in oklab, ${light} ${strength[0]}%, transparent) 0%, color-mix(in oklab, ${light} ${strength[1]}%, transparent) 45%, transparent 100%)`;
 
   // Cursor spotlight via CSS variables: no React re-render on pointer move.
   const onPointerMove = (event: React.PointerEvent<HTMLElement>) => {
@@ -378,8 +381,8 @@ function PricingCard({
         // Dark outer hairline + faint inner top highlight read as a soft bevel.
         "dark:shadow-[0_0_0_1px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.025),0_30px_60px_-28px_rgba(0,0,0,0.85)]",
         plan.featured
-          ? "dark:bg-[linear-gradient(180deg,#222224,#1e1e20)]"
-          : "dark:bg-[linear-gradient(180deg,#212123,#1d1d1f)]",
+          ? "dark:bg-[linear-gradient(180deg,#1e1e20,#1b1b1d)]"
+          : "dark:bg-[linear-gradient(180deg,#1c1c1e,#19191b)]",
       )}
     >
       {/* Accent wash across the top, weighted to the left */}
@@ -387,8 +390,9 @@ function PricingCard({
         aria-hidden
         className="pointer-events-none absolute inset-0 -z-10"
         style={{
+          opacity: plan.glow ?? 0.72,
           background:
-            "radial-gradient(115% 130px at 12% 0%, color-mix(in oklab, var(--accent) var(--ps-glow), transparent) 0%, color-mix(in oklab, var(--accent) var(--ps-glow-soft), transparent) 50%, transparent 100%)",
+            "radial-gradient(90% 130px at 16% 0%, color-mix(in oklab, var(--accent) var(--ps-glow), transparent) 0%, color-mix(in oklab, var(--accent) var(--ps-glow-soft), transparent) 50%, transparent 100%)",
         }}
       />
       {/* Halftone dots inside the glow */}

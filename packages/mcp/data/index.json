@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-03T03:04:25.853Z",
+  "generatedAt": "2026-11-03T03:08:46.237Z",
   "registryBaseUrl": "https://raw.githubusercontent.com/Ashutoshx7/VengeanceUI/main/public/r",
   "categories": [
     {
@@ -3271,6 +3271,12 @@
               "type": "string",
               "defaultValue": "'#a1a1aa'",
               "description": "Any CSS color for the gradient border, glow, and icon."
+            },
+            {
+              "prop": "glow",
+              "type": "number",
+              "defaultValue": "0.72",
+              "description": "Strength of the accent wash, 0–1. Darker accents like blue look best around 1."
             },
             {
               "prop": "featured",
