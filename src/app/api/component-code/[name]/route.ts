@@ -38,5 +38,14 @@ export async function GET(
     defaultColor: false,
   });
 
-  return Response.json({ code: source, html, fileName });
+  // Source only changes on deploy. Let the browser and CDN reuse the
+  // highlighted payload instead of re-running Shiki on every Code tab open.
+  return Response.json(
+    { code: source, html, fileName },
+    {
+      headers: {
+        "Cache-Control": "public, max-age=300, s-maxage=86400, stale-while-revalidate=604800",
+      },
+    },
+  );
 }
