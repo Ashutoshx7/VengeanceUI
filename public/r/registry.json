@@ -1278,5 +1278,16 @@
     "files": [
       "public/r/gooey-text-reveal.json"
     ]
+  },
+  {
+    "name": "pricing-section",
+    "dependencies": [
+      "framer-motion",
+      "@phosphor-icons/react"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/pricing-section.json"
+    ]
   }
 ]
