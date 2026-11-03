@@ -72,6 +72,16 @@ export function ComponentPreviewPanel({
   const [hasMountedPreview, setHasMountedPreview] = React.useState(false);
   if (isPreviewActive && !hasMountedPreview) setHasMountedPreview(true);
 
+  // A hidden <Activity> keeps its DOM, and media elements keep playing even
+  // while display: none. Pause any audio/video when the demo is hidden so it
+  // behaves like the old unmount did (e.g. the Music Player demo).
+  React.useEffect(() => {
+    if (isPreviewActive || !hasMountedPreview) return;
+    stageRef.current
+      ?.querySelectorAll<HTMLMediaElement>("audio, video")
+      .forEach((media) => media.pause());
+  }, [isPreviewActive, hasMountedPreview]);
+
   React.useEffect(() => {
     const onFullscreenChange = () => {
       const isStage = document.fullscreenElement === stageRef.current;
@@ -191,11 +201,13 @@ export function ComponentPreviewPanel({
               aria-modal={isFullscreen || undefined}
               aria-label={isFullscreen ? "Fullscreen preview" : undefined}
               className={[
-                "relative flex items-stretch overflow-y-auto overflow-x-hidden bg-white outline-none dark:bg-black",
+                "flex items-stretch overflow-y-auto overflow-x-hidden bg-white outline-none dark:bg-black",
+                // Exactly one position utility: with both, Tailwind's later
+                // `relative` would beat `fixed` and the overlay wouldn't cover.
+                fullscreen === "overlay" ? "fixed inset-0 z-[100] h-dvh w-screen" : "relative",
                 isFullscreen
                   ? "rounded-none border-0"
                   : "h-[680px] rounded-xl border border-neutral-200 dark:border-[#222]",
-                fullscreen === "overlay" ? "fixed inset-0 z-[100] h-dvh w-screen" : "",
               ].join(" ")}
             >
               {isFullscreen && (
