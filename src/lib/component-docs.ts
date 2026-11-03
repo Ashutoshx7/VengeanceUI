@@ -105,6 +105,7 @@ export function Pricing() {
         data: [
           { prop: "price", type: "{ monthly: number; annually: number } | string", defaultValue: "-", description: "Monthly-equivalent price per cycle, or a label like 'Custom'." },
           { prop: "accent", type: "string", defaultValue: "'#a1a1aa'", description: "Any CSS color for the gradient border, glow, and icon." },
+          { prop: "glow", type: "number", defaultValue: "0.72", description: "Strength of the accent wash, 0–1. Darker accents like blue look best around 1." },
           { prop: "featured", type: "boolean", defaultValue: "false", description: "Brighter border and the primary button style." },
           { prop: "badge", type: "string", defaultValue: "-", description: "Pill in the card's top-right corner." },
           { prop: "cta", type: "{ label: string; href?: string; onClick?: () => void }", defaultValue: "-", description: "Renders a link when href is set, otherwise a button." },
