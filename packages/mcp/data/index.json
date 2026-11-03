@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-07T09:44:35.146Z",
+  "generatedAt": "2026-11-03T03:04:25.853Z",
   "registryBaseUrl": "https://raw.githubusercontent.com/Ashutoshx7/VengeanceUI/main/public/r",
   "categories": [
     {
@@ -16,7 +16,7 @@
     },
     {
       "name": "Layout & Cards",
-      "count": 10
+      "count": 11
     },
     {
       "name": "Tooltip & Marquee",
@@ -3148,6 +3148,159 @@
       ]
     },
     {
+      "name": "Pricing Section",
+      "slug": "pricing-section",
+      "componentName": "pricing-section",
+      "category": "Layout & Cards",
+      "description": "Three-tier pricing with a sliding billing switch, rolling prices, and accent-lit cards",
+      "isNew": true,
+      "inCatalog": true,
+      "registryDependencies": [
+        "framer-motion",
+        "@phosphor-icons/react"
+      ],
+      "dependencies": "npm install framer-motion @phosphor-icons/react",
+      "includeUtils": null,
+      "manualNotes": [
+        "This is a client component because it owns the billing switch and its animations.",
+        "Feature icons accept any React element. The defaults use filled Phosphor icons; Lucide or your own SVGs work too.",
+        "Prices are per month for each cycle. Pass a string such as \"Custom\" for plans without a fixed price.",
+        "Each plan's accent accepts any CSS color and tints the gradient border, corner glow, cursor spotlight, and plan icon.",
+        "The billing switch is a keyboard-accessible radio group (arrow keys, Home, End). Motion follows the user's reduced-motion preference.",
+        "Adapts to light and dark themes through the dark class on a parent element."
+      ],
+      "usageCode": "\"use client\"\n\nimport { PricingSection, type PricingPlan } from \"@/components/ui/pricing-section\"\nimport { Lightning, RocketLaunch } from \"@phosphor-icons/react\"\n\nconst plans: PricingPlan[] = [\n  {\n    id: \"starter\",\n    name: \"Starter\",\n    description: \"Everything you need to ship your first project.\",\n    price: { monthly: 0, annually: 0 },\n    accent: \"#3b5bff\",\n    cta: { label: \"Get started\", href: \"/signup\" },\n    features: [{ label: \"3 projects\", icon: <RocketLaunch weight=\"fill\" /> }],\n  },\n  {\n    id: \"pro\",\n    name: \"Pro\",\n    description: \"For teams that ship every day.\",\n    price: { monthly: 29, annually: 24 },\n    accent: \"#b4b4bb\",\n    featured: true,\n    badge: \"Popular\",\n    cta: { label: \"Start free trial\", href: \"/signup?plan=pro\" },\n    features: [{ label: \"Unlimited projects\", icon: <Lightning weight=\"fill\" /> }],\n  },\n]\n\nexport function Pricing() {\n  return (\n    <PricingSection\n      title=\"Simple pricing\"\n      plans={plans}\n      onBillingChange={(billing) => console.log(billing)}\n    />\n  )\n}",
+      "props": [
+        {
+          "prop": "plans",
+          "type": "PricingPlan[]",
+          "defaultValue": "DEFAULT_PRICING_PLANS",
+          "description": "Plans to render. Each has id, name, description, price, cta, features, and optional accent, featured, and badge."
+        },
+        {
+          "prop": "badge",
+          "type": "string",
+          "defaultValue": "'Pricing'",
+          "description": "Small label above the title. Pass an empty string to hide it."
+        },
+        {
+          "prop": "title",
+          "type": "ReactNode",
+          "defaultValue": "'Plans and Pricing'",
+          "description": "Section heading."
+        },
+        {
+          "prop": "description",
+          "type": "ReactNode",
+          "defaultValue": "-",
+          "description": "Supporting copy under the heading."
+        },
+        {
+          "prop": "billing",
+          "type": "'monthly' | 'annually'",
+          "defaultValue": "-",
+          "description": "Controlled billing cycle."
+        },
+        {
+          "prop": "defaultBilling",
+          "type": "'monthly' | 'annually'",
+          "defaultValue": "'monthly'",
+          "description": "Initial billing cycle when uncontrolled."
+        },
+        {
+          "prop": "onBillingChange",
+          "type": "(billing) => void",
+          "defaultValue": "-",
+          "description": "Called when the billing switch changes."
+        },
+        {
+          "prop": "billingLabels",
+          "type": "Record<BillingCycle, string>",
+          "defaultValue": "{ monthly: 'Bill Monthly', annually: 'Bill Annually' }",
+          "description": "Labels for the billing switch."
+        },
+        {
+          "prop": "annualDiscountLabel",
+          "type": "string | null",
+          "defaultValue": "null",
+          "description": "Optional chip next to the annual option, e.g. '-20%'."
+        },
+        {
+          "prop": "currency",
+          "type": "string",
+          "defaultValue": "'$'",
+          "description": "Symbol shown before numeric prices."
+        },
+        {
+          "prop": "periodLabel",
+          "type": "string",
+          "defaultValue": "'/month'",
+          "description": "Suffix shown after numeric prices."
+        },
+        {
+          "prop": "featuresLabel",
+          "type": "string",
+          "defaultValue": "'Stand out features'",
+          "description": "Divider label above each feature list."
+        },
+        {
+          "prop": "footnote",
+          "type": "ReactNode",
+          "defaultValue": "'Start your journey risk free - No credit card needed'",
+          "description": "Small note under the cards. Pass null to hide it."
+        },
+        {
+          "prop": "className",
+          "type": "string",
+          "defaultValue": "-",
+          "description": "Additional classes for the section element."
+        }
+      ],
+      "additionalPropSections": [
+        {
+          "title": "PricingPlan",
+          "data": [
+            {
+              "prop": "price",
+              "type": "{ monthly: number; annually: number } | string",
+              "defaultValue": "-",
+              "description": "Monthly-equivalent price per cycle, or a label like 'Custom'."
+            },
+            {
+              "prop": "accent",
+              "type": "string",
+              "defaultValue": "'#a1a1aa'",
+              "description": "Any CSS color for the gradient border, glow, and icon."
+            },
+            {
+              "prop": "featured",
+              "type": "boolean",
+              "defaultValue": "false",
+              "description": "Brighter border and the primary button style."
+            },
+            {
+              "prop": "badge",
+              "type": "string",
+              "defaultValue": "-",
+              "description": "Pill in the card's top-right corner."
+            },
+            {
+              "prop": "cta",
+              "type": "{ label: string; href?: string; onClick?: () => void }",
+              "defaultValue": "-",
+              "description": "Renders a link when href is set, otherwise a button."
+            },
+            {
+              "prop": "features",
+              "type": "{ label: string; icon?: ReactNode }[]",
+              "defaultValue": "-",
+              "description": "Feature rows; icons are sized to 16px."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "name": "Why Us Bento Grid",
       "slug": "why-us-bento",
       "componentName": "why-us-bento",
@@ -6235,6 +6388,18 @@
       "slug": "gooey-text-reveal",
       "category": "Text & Motion",
       "description": "Line-aware gooey blur reveal with load, scroll, and scrub modes"
+    },
+    {
+      "name": "pricing-section",
+      "type": "registry:ui",
+      "dependencies": [
+        "framer-motion",
+        "@phosphor-icons/react"
+      ],
+      "inCatalog": true,
+      "slug": "pricing-section",
+      "category": "Layout & Cards",
+      "description": "Three-tier pricing with a sliding billing switch, rolling prices, and accent-lit cards"
     }
   ],
   "lookups": {
@@ -6285,6 +6450,7 @@
       "highlight-grid": "highlight-grid",
       "research-bento-grid": "research-bento-grid",
       "team-reveal-grid": "team-reveal-grid",
+      "pricing-section": "pricing-section",
       "why-us-bento": "why-us-bento",
       "cursor-card": "cursor-card",
       "elastic-stack": "elastic-stack",
@@ -6363,6 +6529,7 @@
       "highlight-grid": "highlight-grid",
       "research-bento-grid": "research-bento-grid",
       "team-reveal-grid": "team-reveal-grid",
+      "pricing-section": "pricing-section",
       "why-us-bento": "why-us-bento",
       "cursor-card": "cursor-card",
       "elastic-stack": "elastic-stack",
