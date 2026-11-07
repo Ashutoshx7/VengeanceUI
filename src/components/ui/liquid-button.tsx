@@ -66,13 +66,14 @@ export const DEFAULT_NOISE_FREQUENCY = {
   baseY: 0.08,
 } as const;
 
-const isFiniteNumber = (value: number) => Number.isFinite(value);
+const isValidFrequency = (value: number) => Number.isFinite(value) && value >= 0;
 
 /**
  * Parse SVG `feTurbulence` `baseFrequency`.
  *
  * SVG treats a single number as both X and Y. Zero is a valid frequency and
- * must not fall back to the defaults.
+ * must not fall back to the defaults. Negative values are an error in SVG,
+ * so they fall back to the defaults like any other invalid value.
  */
 export function parseNoiseFrequency(value: string | undefined | null): {
   baseX: number;
@@ -92,15 +93,15 @@ export function parseNoiseFrequency(value: string | undefined | null): {
   const y = parsed[1];
 
   if (tokens.length === 1) {
-    if (!isFiniteNumber(x)) {
+    if (!isValidFrequency(x)) {
       return { baseX: DEFAULT_NOISE_FREQUENCY.baseX, baseY: DEFAULT_NOISE_FREQUENCY.baseY };
     }
     return { baseX: x, baseY: x };
   }
 
   return {
-    baseX: isFiniteNumber(x) ? x : DEFAULT_NOISE_FREQUENCY.baseX,
-    baseY: isFiniteNumber(y) ? y : DEFAULT_NOISE_FREQUENCY.baseY,
+    baseX: isValidFrequency(x) ? x : DEFAULT_NOISE_FREQUENCY.baseX,
+    baseY: isValidFrequency(y) ? y : DEFAULT_NOISE_FREQUENCY.baseY,
   };
 }
 
@@ -108,16 +109,37 @@ function formatNoiseFrequency(frequency: { baseX: number; baseY: number }) {
   return `${frequency.baseX} ${frequency.baseY}`;
 }
 
+/**
+ * Copy the label into the inverted layer.
+ *
+ * The copy's text is drawn with `::before { content: attr(data-liquid-text) }`
+ * instead of real text nodes, so the label is only in the DOM once. Otherwise
+ * textContent, innerText, `getByText` and analytics click tracking would read
+ * "SubmitSubmit".
+ */
 function cloneInvertedContent(source: HTMLElement, dest: HTMLElement) {
-  const clones = Array.from(source.childNodes).map((node) => {
+  const fragment = document.createDocumentFragment();
+  source.childNodes.forEach((node) => {
     const clone = node.cloneNode(true);
     if (clone instanceof Element) {
       clone.removeAttribute("id");
       clone.querySelectorAll("[id]").forEach((el) => el.removeAttribute("id"));
     }
-    return clone;
+    fragment.append(clone);
   });
-  dest.replaceChildren(...clones);
+
+  const walker = document.createTreeWalker(fragment, NodeFilter.SHOW_TEXT);
+  const textNodes: Text[] = [];
+  while (walker.nextNode()) textNodes.push(walker.currentNode as Text);
+  for (const text of textNodes) {
+    // Whitespace only affects spacing, and SVG text can't hold an HTML span.
+    if (!text.data.trim() || text.parentNode instanceof SVGElement) continue;
+    const label = document.createElement("span");
+    label.setAttribute("data-liquid-text", text.data);
+    text.replaceWith(label);
+  }
+
+  dest.replaceChildren(fragment);
 }
 
 export const LiquidButton = forwardRef<HTMLButtonElement, LiquidButtonProps>(
@@ -159,8 +181,6 @@ export const LiquidButton = forwardRef<HTMLButtonElement, LiquidButtonProps>(
     const turbulenceRef = useRef<SVGFETurbulenceElement | null>(null);
     const rippleRef = useRef<SVGCircleElement | null>(null);
 
-    const [isPointerActive, setIsPointerActive] = useState(false);
-    const [isFocusActive, setIsFocusActive] = useState(false);
     const [isPressed, setIsPressed] = useState(false);
 
     const contentRef = useRef<HTMLSpanElement | null>(null);
@@ -208,12 +228,34 @@ export const LiquidButton = forwardRef<HTMLButtonElement, LiquidButtonProps>(
 
     stateRef.current.disabled = Boolean(disabled);
 
+    // Width and height are in the button's own CSS pixels, before transforms
+    // such as the press scale or a scaled parent. The inverted label's clip
+    // path works in these pixels, so the blob has to use them too or the two
+    // drift apart.
     const getDimensions = useCallback(() => {
       const svg = svgRef.current;
-      if (!svg) return { width: 0, height: 0, rect: null };
+      const button = buttonRef.current;
+      if (!svg || !button) return { width: 0, height: 0, rect: null };
       const rect = svg.getBoundingClientRect();
-      return { width: rect.width, height: rect.height, rect };
+      return { width: button.clientWidth, height: button.clientHeight, rect };
     }, []);
+
+    // Map a pointer position on screen into the button's own CSS pixels.
+    const toLocalPoint = useCallback(
+      (clientX: number, clientY: number) => {
+        const { rect, width, height } = getDimensions();
+        if (!rect || width <= 0 || height <= 0 || rect.width <= 0 || rect.height <= 0) {
+          return null;
+        }
+        return {
+          x: clamp(((clientX - rect.left) * width) / rect.width, 0, width),
+          y: clamp(((clientY - rect.top) * height) / rect.height, 0, height),
+          width,
+          height,
+        };
+      },
+      [getDimensions]
+    );
 
     const setShapeAttributes = useCallback(
       (element: SVGEllipseElement | null, rx: number, ry: number, angle: number) => {
@@ -430,24 +472,22 @@ export const LiquidButton = forwardRef<HTMLButtonElement, LiquidButtonProps>(
 
     const setOrigin = useCallback(
       (clientX: number, clientY: number) => {
-        const { rect } = getDimensions();
-        if (!rect) return;
+        const point = toLocalPoint(clientX, clientY);
+        if (!point) return;
         const s = stateRef.current;
-        s.x = clamp(clientX - rect.left, 0, rect.width);
-        s.y = clamp(clientY - rect.top, 0, rect.height);
+        s.x = point.x;
+        s.y = point.y;
         renderShape();
       },
-      [getDimensions, renderShape]
+      [toLocalPoint, renderShape]
     );
 
     const triggerClickImpulse = useCallback(
       (clientX: number, clientY: number) => {
-        const { rect, width, height } = getDimensions();
-        if (!rect || width <= 0 || height <= 0) return;
+        const point = toLocalPoint(clientX, clientY);
+        if (!point) return;
+        const { x: posX, y: posY, width, height } = point;
         const s = stateRef.current;
-
-        const posX = clamp(clientX - rect.left, 0, width);
-        const posY = clamp(clientY - rect.top, 0, height);
 
         s.ringOriginX = posX;
         s.ringOriginY = posY;
@@ -486,13 +526,12 @@ export const LiquidButton = forwardRef<HTMLButtonElement, LiquidButtonProps>(
 
         scheduleFrame();
       },
-      [getDimensions, scheduleFrame]
+      [toLocalPoint, scheduleFrame]
     );
 
-    const updateViewBox = useCallback(() => {
+    const syncSize = useCallback(() => {
       const { width, height } = getDimensions();
-      if (width <= 0 || height <= 0 || !svgRef.current) return;
-      svgRef.current.setAttribute("viewBox", `0 0 ${width} ${height}`);
+      if (width <= 0 || height <= 0) return;
       const s = stateRef.current;
       if (s.x === 0 && s.y === 0) {
         s.x = width / 2;
@@ -525,11 +564,11 @@ export const LiquidButton = forwardRef<HTMLButtonElement, LiquidButtonProps>(
       const btn = buttonRef.current;
       if (!btn) return;
 
-      updateViewBox();
+      syncSize();
 
       if (typeof ResizeObserver !== "undefined") {
         const observer = new ResizeObserver(() => {
-          updateViewBox();
+          syncSize();
           scheduleFrame();
         });
         observer.observe(btn);
@@ -538,7 +577,7 @@ export const LiquidButton = forwardRef<HTMLButtonElement, LiquidButtonProps>(
         };
       } else {
         const handleResize = () => {
-          updateViewBox();
+          syncSize();
           scheduleFrame();
         };
         window.addEventListener("resize", handleResize);
@@ -546,15 +585,13 @@ export const LiquidButton = forwardRef<HTMLButtonElement, LiquidButtonProps>(
           window.removeEventListener("resize", handleResize);
         };
       }
-    }, [updateViewBox, scheduleFrame]);
+    }, [syncSize, scheduleFrame]);
 
     useEffect(() => {
       const handleWindowBlur = () => {
         stateRef.current.pointerActive = false;
         stateRef.current.focusActive = false;
         stateRef.current.lastPointerTime = 0;
-        setIsPointerActive(false);
-        setIsFocusActive(false);
         setIsPressed(false);
         scheduleFrame();
       };
@@ -563,7 +600,6 @@ export const LiquidButton = forwardRef<HTMLButtonElement, LiquidButtonProps>(
         const btn = buttonRef.current;
         if (btn && btn.matches(":focus-visible") && !disabled) {
           stateRef.current.focusActive = true;
-          setIsFocusActive(true);
           scheduleFrame();
         }
       };
@@ -610,7 +646,6 @@ export const LiquidButton = forwardRef<HTMLButtonElement, LiquidButtonProps>(
       onPointerEnter?.(e);
       if (disabled || e.pointerType === "touch") return;
       stateRef.current.pointerActive = true;
-      setIsPointerActive(true);
       setOrigin(e.clientX, e.clientY);
       updatePointerVelocity(e);
       scheduleFrame();
@@ -630,7 +665,6 @@ export const LiquidButton = forwardRef<HTMLButtonElement, LiquidButtonProps>(
       }
       stateRef.current.pointerActive = false;
       stateRef.current.lastPointerTime = 0;
-      setIsPointerActive(false);
       setIsPressed(false);
       scheduleFrame();
       onPointerLeave?.(e);
@@ -639,7 +673,6 @@ export const LiquidButton = forwardRef<HTMLButtonElement, LiquidButtonProps>(
     const handlePointerDown = (e: React.PointerEvent<HTMLButtonElement>) => {
       if (disabled) return;
       stateRef.current.pointerActive = true;
-      setIsPointerActive(true);
       setIsPressed(true);
       setOrigin(e.clientX, e.clientY);
       triggerClickImpulse(e.clientX, e.clientY);
@@ -650,7 +683,6 @@ export const LiquidButton = forwardRef<HTMLButtonElement, LiquidButtonProps>(
       setIsPressed(false);
       if (e.pointerType === "touch") {
         stateRef.current.pointerActive = false;
-        setIsPointerActive(false);
         scheduleFrame();
       }
       onPointerUp?.(e);
@@ -659,7 +691,6 @@ export const LiquidButton = forwardRef<HTMLButtonElement, LiquidButtonProps>(
     const handlePointerCancel = (e: React.PointerEvent<HTMLButtonElement>) => {
       stateRef.current.pointerActive = false;
       stateRef.current.lastPointerTime = 0;
-      setIsPointerActive(false);
       setIsPressed(false);
       scheduleFrame();
       onPointerCancel?.(e);
@@ -669,7 +700,6 @@ export const LiquidButton = forwardRef<HTMLButtonElement, LiquidButtonProps>(
       const btn = buttonRef.current;
       const focusVisible = btn?.matches(":focus-visible") && !disabled;
       stateRef.current.focusActive = !!focusVisible;
-      setIsFocusActive(!!focusVisible);
       if (focusVisible) {
         const { width, height } = getDimensions();
         stateRef.current.x = width / 2;
@@ -682,20 +712,24 @@ export const LiquidButton = forwardRef<HTMLButtonElement, LiquidButtonProps>(
 
     const handleBlur = (e: React.FocusEvent<HTMLButtonElement>) => {
       stateRef.current.focusActive = false;
-      setIsFocusActive(false);
       scheduleFrame();
       onBlur?.(e);
     };
 
-    const assignRef = (element: HTMLButtonElement | null) => {
-      buttonRef.current = element;
-      if (typeof forwardedRef === "function") {
-        forwardedRef(element);
-      } else if (forwardedRef) {
-        (forwardedRef as React.MutableRefObject<HTMLButtonElement | null>).current =
-          element;
-      }
-    };
+    // Stable, so React doesn't detach and re-attach a caller's callback ref
+    // (null, then the element) on every press.
+    const assignRef = useCallback(
+      (element: HTMLButtonElement | null) => {
+        buttonRef.current = element;
+        if (typeof forwardedRef === "function") {
+          forwardedRef(element);
+        } else if (forwardedRef) {
+          (forwardedRef as React.MutableRefObject<HTMLButtonElement | null>).current =
+            element;
+        }
+      },
+      [forwardedRef]
+    );
 
     const customVars: React.CSSProperties = {
       ...(fillColor ? { "--liquid-fill": fillColor } : {}),
@@ -728,12 +762,13 @@ export const LiquidButton = forwardRef<HTMLButtonElement, LiquidButtonProps>(
         onBlur={handleBlur}
         {...rest}
       >
+        {/* No viewBox: one SVG unit is one CSS pixel of the button, the same
+            space the inverted label's clip path uses. */}
         <svg
           ref={svgRef}
           className="pointer-events-none absolute inset-0 z-0 h-full w-full overflow-visible"
           aria-hidden="true"
           focusable="false"
-          preserveAspectRatio="none"
         >
           <defs>
             <filter
@@ -804,7 +839,7 @@ export const LiquidButton = forwardRef<HTMLButtonElement, LiquidButtonProps>(
           ref={invertedRef}
           data-liquid-inverted
           className={cn(
-            "pointer-events-none absolute inset-0 z-20 inline-flex items-center justify-center gap-2 px-[inherit] text-[var(--liquid-active-text)] transition-transform duration-100",
+            "pointer-events-none absolute inset-0 z-20 inline-flex items-center justify-center gap-2 px-[inherit] text-[var(--liquid-active-text)] transition-transform duration-100 [&_[data-liquid-text]]:before:content-[attr(data-liquid-text)]",
             isPressed && "scale-[0.98]"
           )}
           style={{
