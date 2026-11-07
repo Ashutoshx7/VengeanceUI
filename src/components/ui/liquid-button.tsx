@@ -128,6 +128,13 @@ function cloneInvertedContent(source: HTMLElement, dest: HTMLElement) {
     fragment.append(clone);
   });
 
+  // `Pay {price}` gives React two text nodes next to each other, which the
+  // browser lays out as one run. Merge them so they don't become two flex
+  // items with a gap between.
+  fragment.normalize();
+  // SVG <title> and <desc> never render, so drop them instead of copying text.
+  fragment.querySelectorAll("svg title, svg desc").forEach((el) => el.remove());
+
   const walker = document.createTreeWalker(fragment, NodeFilter.SHOW_TEXT);
   const textNodes: Text[] = [];
   while (walker.nextNode()) textNodes.push(walker.currentNode as Text);
