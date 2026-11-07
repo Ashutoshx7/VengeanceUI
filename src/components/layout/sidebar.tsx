@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { COMPONENT_CATEGORIES } from "@/lib/components-catalog";
+import { preloadDemo } from "@/components/docs/demo-preloaders";
 import { ChevronUp, Download, X } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
@@ -14,6 +15,8 @@ type SidebarLinkItem = {
   href: string;
   isNew?: boolean;
   external?: boolean;
+  /** Component slug whose demo chunk should be warmed on hover. */
+  demoSlug?: string;
 };
 
 const SIDEBAR_SECTIONS: Array<{
@@ -56,9 +59,23 @@ const SidebarItem = memo(function SidebarItem({
   isHovered: boolean;
   onHover: (href: string) => void;
 }) {
+  // Prefetching all ~80 links on viewport entry floods the network, so wait
+  // for intent (hover, focus, touch). The ~100-300ms between hover and click
+  // is enough to fetch the RSC payload and the demo chunk, so the click
+  // renders the next component immediately instead of showing a skeleton.
+  const [hasIntent, setHasIntent] = useState(false);
+  const showIntent = useCallback(() => {
+    if (item.external) return;
+    setHasIntent(true);
+    if (item.demoSlug) preloadDemo(item.demoSlug);
+  }, [item.external, item.demoSlug]);
+
   return (
     <div
-      onMouseEnter={() => onHover(item.href)}
+      onMouseEnter={() => {
+        onHover(item.href);
+        showIntent();
+      }}
       className="relative"
     >
       {isActive && (
@@ -78,7 +95,9 @@ const SidebarItem = memo(function SidebarItem({
       <Link
         href={item.href}
         scroll={false}
-        prefetch={false}
+        prefetch={hasIntent ? null : false}
+        onFocus={showIntent}
+        onTouchStart={showIntent}
         aria-current={isActive ? "page" : undefined}
         target={item.external ? "_blank" : undefined}
         rel={item.external ? "noopener noreferrer" : undefined}
@@ -182,6 +201,7 @@ const SidebarCategory = memo(function SidebarCategory({
               name: item.name,
               href: `/components/${item.slug}`,
               isNew: item.isNew,
+              demoSlug: item.slug,
             }}
             isActive={pathname === `/components/${item.slug}`}
             isHovered={hoveredPath === `/components/${item.slug}`}

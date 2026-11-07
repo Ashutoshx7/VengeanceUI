@@ -64,7 +64,7 @@ export function LiquidButtonExample() {
     props: [
       { prop: "variant", type: "'default' | 'dark' | 'destructive' | 'accent'", defaultValue: "'default'", description: "Visual style variant of the button." },
       { prop: "size", type: "'sm' | 'default' | 'lg'", defaultValue: "'default'", description: "Size of the button." },
-{ prop: "fillColor", type: "string", defaultValue: "variant default", description: "Custom liquid ink fill color." },
+      { prop: "fillColor", type: "string", defaultValue: "variant default", description: "Custom liquid ink fill color." },
       { prop: "textColor", type: "string", defaultValue: "variant default", description: "Custom base text color." },
       { prop: "activeTextColor", type: "string", defaultValue: "variant default", description: "Custom inverted text color revealed under the liquid mask." },
       { prop: "borderColor", type: "string", defaultValue: "variant default", description: "Custom border color." },
@@ -75,6 +75,84 @@ export function LiquidButtonExample() {
       github: "https://github.com/0xKernelEclipse",
       description: "Crafted interactive liquid ink button with living fluid physics and shockwave recoil.",
     },
+  },
+  "pricing-section": {
+    dependencies: "npm install framer-motion @phosphor-icons/react",
+    manualNotes: [
+      "This is a client component because it owns the billing switch and its animations.",
+      "Feature icons accept any React element. The defaults use filled Phosphor icons; Lucide or your own SVGs work too.",
+      "Prices are per month for each cycle. Pass a string such as \"Custom\" for plans without a fixed price.",
+      "Each plan's accent accepts any CSS color and tints the gradient border, corner glow, cursor spotlight, and plan icon.",
+      "The billing switch is a keyboard-accessible radio group (arrow keys, Home, End). Motion follows the user's reduced-motion preference.",
+      "Adapts to light and dark themes through the dark class on a parent element.",
+    ],
+    usageCode: `"use client"
+
+import { PricingSection, type PricingPlan } from "@/components/ui/pricing-section"
+import { Lightning, RocketLaunch } from "@phosphor-icons/react"
+
+const plans: PricingPlan[] = [
+  {
+    id: "starter",
+    name: "Starter",
+    description: "Everything you need to ship your first project.",
+    price: { monthly: 0, annually: 0 },
+    accent: "#3b5bff",
+    cta: { label: "Get started", href: "/signup" },
+    features: [{ label: "3 projects", icon: <RocketLaunch weight="fill" /> }],
+  },
+  {
+    id: "pro",
+    name: "Pro",
+    description: "For teams that ship every day.",
+    price: { monthly: 29, annually: 24 },
+    accent: "#b4b4bb",
+    featured: true,
+    badge: "Popular",
+    cta: { label: "Start free trial", href: "/signup?plan=pro" },
+    features: [{ label: "Unlimited projects", icon: <Lightning weight="fill" /> }],
+  },
+]
+
+export function Pricing() {
+  return (
+    <PricingSection
+      title="Simple pricing"
+      plans={plans}
+      onBillingChange={(billing) => console.log(billing)}
+    />
+  )
+}`,
+    props: [
+      { prop: "plans", type: "PricingPlan[]", defaultValue: "DEFAULT_PRICING_PLANS", description: "Plans to render. Each has id, name, description, price, cta, features, and optional accent, featured, and badge." },
+      { prop: "badge", type: "string", defaultValue: "'Pricing'", description: "Small label above the title. Pass an empty string to hide it." },
+      { prop: "title", type: "ReactNode", defaultValue: "'Plans and Pricing'", description: "Section heading." },
+      { prop: "description", type: "ReactNode", defaultValue: "-", description: "Supporting copy under the heading." },
+      { prop: "billing", type: "'monthly' | 'annually'", defaultValue: "-", description: "Controlled billing cycle." },
+      { prop: "defaultBilling", type: "'monthly' | 'annually'", defaultValue: "'monthly'", description: "Initial billing cycle when uncontrolled." },
+      { prop: "onBillingChange", type: "(billing) => void", defaultValue: "-", description: "Called when the billing switch changes." },
+      { prop: "billingLabels", type: "Record<BillingCycle, string>", defaultValue: "{ monthly: 'Bill Monthly', annually: 'Bill Annually' }", description: "Labels for the billing switch." },
+      { prop: "annualDiscountLabel", type: "string | null", defaultValue: "null", description: "Optional chip next to the annual option, e.g. '-20%'." },
+      { prop: "currency", type: "string", defaultValue: "'$'", description: "Symbol shown before numeric prices." },
+      { prop: "periodLabel", type: "string", defaultValue: "'/month'", description: "Suffix shown after numeric prices." },
+      { prop: "featuresLabel", type: "string", defaultValue: "'Stand out features'", description: "Divider label above each feature list." },
+      { prop: "footnote", type: "ReactNode", defaultValue: "'Start your journey risk free - No credit card needed'", description: "Small note under the cards. Pass null to hide it." },
+      { prop: "className", type: "string", defaultValue: "-", description: "Additional classes for the section element." },
+    ],
+    additionalPropSections: [
+      {
+        title: "PricingPlan",
+        data: [
+          { prop: "price", type: "{ monthly: number; annually: number } | string", defaultValue: "-", description: "Monthly-equivalent price per cycle, or a label like 'Custom'." },
+          { prop: "accent", type: "string", defaultValue: "'#a1a1aa'", description: "Any CSS color for the gradient border, glow, and icon." },
+          { prop: "glow", type: "number", defaultValue: "0.72", description: "Strength of the accent wash, 0–1. Darker accents like blue look best around 1." },
+          { prop: "featured", type: "boolean", defaultValue: "false", description: "Brighter border and the primary button style." },
+          { prop: "badge", type: "string", defaultValue: "-", description: "Pill in the card's top-right corner." },
+          { prop: "cta", type: "{ label: string; href?: string; onClick?: () => void }", defaultValue: "-", description: "Renders a link when href is set, otherwise a button." },
+          { prop: "features", type: "{ label: string; icon?: ReactNode }[]", defaultValue: "-", description: "Feature rows; icons are sized to 16px." },
+        ],
+      },
+    ],
   },
   "team-reveal-grid": {
     dependencies: "npm install clsx tailwind-merge",
