@@ -103,6 +103,7 @@ const DEMO_COMPONENTS: Record<string, React.ComponentType> = {
   "highlight-grid": dynamic(() => import("@/components/docs/highlight-grid-demo").then((m) => ({ default: m.HighlightGridDemo })), { ssr: false, loading: LOADING }),
   "research-bento-grid": dynamic(() => import("@/components/docs/research-bento-grid-demo").then((m) => ({ default: m.ResearchBentoGridDemo })), { ssr: false, loading: LOADING }),
   "team-reveal-grid": dynamic(() => import("@/components/docs/team-reveal-grid-demo").then((m) => ({ default: m.TeamRevealGridDemo })), { ssr: false, loading: LOADING }),
+  "pricing-section": dynamic(() => import("@/components/docs/pricing-section-demo").then((m) => ({ default: m.PricingSectionDemo })), { ssr: false, loading: LOADING }),
   "why-us-bento": dynamic(() => import("@/components/docs/why-us-bento-demo").then((m) => ({ default: m.WhyUsBentoDemo })), { ssr: false, loading: LOADING }),
 };
 

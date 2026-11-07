@@ -16,37 +16,65 @@ interface RequestState {
   error: string | null;
 }
 
+// Shared across mounts so a source fetched once (or warmed on hover) renders
+// synchronously the next time the Code tab opens, even after navigating away.
+const pendingSources = new Map<string, Promise<SourceResponse>>();
+const loadedSources = new Map<string, SourceResponse>();
+
+export function preloadComponentSource(componentName: string): Promise<SourceResponse> {
+  const pending = pendingSources.get(componentName);
+  if (pending) return pending;
+
+  const request = fetch(`/api/component-code/${encodeURIComponent(componentName)}`)
+    .then(async (response) => {
+      if (!response.ok) throw new Error(`Source returned ${response.status}`);
+      const source = (await response.json()) as SourceResponse;
+      loadedSources.set(componentName, source);
+      return source;
+    })
+    .catch((error: unknown) => {
+      // Let a later attempt retry instead of caching the failure forever.
+      pendingSources.delete(componentName);
+      throw error;
+    });
+
+  pendingSources.set(componentName, request);
+  return request;
+}
+
 export function DeferredHighlightedCodeBlock({ componentName }: { componentName: string }) {
   const { activeTab } = React.useContext(TabsContext);
   const [requestState, setRequestState] = React.useState<RequestState | null>(null);
-  const activeRequest = requestState?.componentName === componentName ? requestState : null;
+  const cachedSource = loadedSources.get(componentName);
+  const activeRequest = cachedSource
+    ? { componentName, source: cachedSource, error: null }
+    : requestState?.componentName === componentName
+      ? requestState
+      : null;
+  const hasRequest = activeRequest !== null;
 
   React.useEffect(() => {
-    if (activeTab !== "code" || activeRequest) return;
+    if (activeTab !== "code" || hasRequest) return;
 
-    const controller = new AbortController();
-
-    async function loadSource() {
-      try {
-        const response = await fetch(`/api/component-code/${encodeURIComponent(componentName)}`, {
-          signal: controller.signal,
-        });
-        if (!response.ok) throw new Error(`Source returned ${response.status}`);
-        const source = (await response.json()) as SourceResponse;
-        setRequestState({ componentName, source, error: null });
-      } catch (error) {
-        if (controller.signal.aborted) return;
+    let cancelled = false;
+    preloadComponentSource(componentName).then(
+      (source) => {
+        if (!cancelled) setRequestState({ componentName, source, error: null });
+      },
+      (error: unknown) => {
+        if (cancelled) return;
         setRequestState({
           componentName,
           source: null,
           error: error instanceof Error ? error.message : "Unable to load source code",
         });
-      }
-    }
+      },
+    );
 
-    loadSource();
-    return () => controller.abort();
-  }, [activeTab, activeRequest, componentName]);
+    return () => {
+      cancelled = true;
+    };
+  }, [activeTab, hasRequest, componentName]);
 
   if (activeRequest?.error) {
     return <div role="alert" className="rounded-md border border-red-200 bg-red-50 p-4 text-sm text-red-700 dark:border-red-950 dark:bg-red-950/30 dark:text-red-300">Source code could not be loaded: {activeRequest.error}.</div>;

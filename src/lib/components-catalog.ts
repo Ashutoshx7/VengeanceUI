@@ -91,6 +91,7 @@ export const COMPONENT_CATEGORIES: ComponentCategory[] = [
       { name: "Highlight Grid", slug: "highlight-grid", description: "Grid with a colored highlight that glides behind the hovered cell", componentName: "highlight-grid", isNew: true },
       { name: "Developer Service Bento", slug: "research-bento-grid", description: "Animated developer-service showcase with interactive pricing and pause states", componentName: "research-bento-grid", isNew: true },
       { name: "Team Reveal Grid", slug: "team-reveal-grid", description: "Stateful team portraits with auto-cycling expertise reveals", componentName: "team-reveal-grid", isNew: true },
+      { name: "Pricing Section", slug: "pricing-section", description: "Three-tier pricing with a sliding billing switch, rolling prices, and accent-lit cards", componentName: "pricing-section", isNew: true },
       { name: "Why Us Bento Grid", slug: "why-us-bento", description: "Interactive 5-panel bento grid with isometric graphics, character avatars, and step pipeline", componentName: "why-us-bento", isNew: true },
     ],
   },
