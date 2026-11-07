@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-11-03T03:08:46.237Z",
+  "generatedAt": "2026-11-07T16:00:54.228Z",
   "registryBaseUrl": "https://raw.githubusercontent.com/Ashutoshx7/VengeanceUI/main/public/r",
   "categories": [
     {
       "name": "Buttons",
-      "count": 9
+      "count": 10
     },
     {
       "name": "Text & Motion",
@@ -40,6 +40,70 @@
     }
   ],
   "components": [
+    {
+      "name": "Liquid Button",
+      "slug": "liquid-button",
+      "componentName": "liquid-button",
+      "category": "Buttons",
+      "description": "Living organic fluid ink button with cursor displacement tracking and tactile shockwave recoil",
+      "isNew": true,
+      "inCatalog": true,
+      "registryDependencies": [],
+      "dependencies": "npm install class-variance-authority clsx tailwind-merge",
+      "includeUtils": true,
+      "manualNotes": [
+        "Client component using SVG procedural fractal turbulence (feTurbulence) and displacement mapping (feDisplacementMap).",
+        "Features a 60-120fps physics loop with spring damping, cursor velocity tracking, and organic directional stretching.",
+        "Dual-layer synchronized inverted clipping ensures crisp text legibility under all states.",
+        "Tactile click feedback: procedural noise shockwave, haptic vibration pulse, and a multi-phase recoiling ring."
+      ],
+      "usageCode": "\"use client\"\n\nimport { LiquidButton } from \"@/components/ui/liquid-button\"\n\nexport function LiquidButtonExample() {\n  return (\n    <div className=\"flex flex-wrap items-center gap-4\">\n      <LiquidButton size=\"default\">\n        Initialize Vengeance <span aria-hidden=\"true\">↗</span>\n      </LiquidButton>\n      <LiquidButton variant=\"accent\" size=\"default\">\n        Explore System\n      </LiquidButton>\n    </div>\n  )\n}",
+      "props": [
+        {
+          "prop": "variant",
+          "type": "'default' | 'dark' | 'destructive' | 'accent'",
+          "defaultValue": "'default'",
+          "description": "Visual style variant of the button."
+        },
+        {
+          "prop": "size",
+          "type": "'sm' | 'default' | 'lg'",
+          "defaultValue": "'default'",
+          "description": "Size of the button."
+        },
+        {
+          "prop": "fillColor",
+          "type": "string",
+          "defaultValue": "variant default",
+          "description": "Custom liquid ink fill color."
+        },
+        {
+          "prop": "textColor",
+          "type": "string",
+          "defaultValue": "variant default",
+          "description": "Custom base text color."
+        },
+        {
+          "prop": "activeTextColor",
+          "type": "string",
+          "defaultValue": "variant default",
+          "description": "Custom inverted text color revealed under the liquid mask."
+        },
+        {
+          "prop": "borderColor",
+          "type": "string",
+          "defaultValue": "variant default",
+          "description": "Custom border color."
+        },
+        {
+          "prop": "noiseFrequency",
+          "type": "string",
+          "defaultValue": "'0.035 0.08'",
+          "description": "SVG filter noise baseFrequency for fractal turbulence."
+        }
+      ],
+      "additionalPropSections": null
+    },
     {
       "name": "Animated Button",
       "slug": "my-animated-button",
@@ -6410,6 +6474,7 @@
   ],
   "lookups": {
     "bySlug": {
+      "liquid-button": "liquid-button",
       "my-animated-button": "animated-button",
       "candy-button": "candy-button",
       "pop-button": "pop-button",
@@ -6489,6 +6554,7 @@
       "liquid-ocean": "liquid-ocean"
     },
     "byComponentName": {
+      "liquid-button": "liquid-button",
       "animated-button": "my-animated-button",
       "candy-button": "candy-button",
       "pop-button": "pop-button",
