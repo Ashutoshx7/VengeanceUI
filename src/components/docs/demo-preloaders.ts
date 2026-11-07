@@ -8,6 +8,7 @@
  */
 const DEMO_PRELOADERS: Record<string, () => Promise<unknown>> = {
   "bento-grid": () => import("@/registry/bento-grid"),
+  "liquid-button": () => import("@/registry/liquid-button"),
   "my-animated-button": () => import("@/registry/my-animated-button"),
   "candy-button": () => import("@/components/docs/candy-button-demo"),
   "pop-button": () => import("@/components/docs/pop-button-demo"),

@@ -20,6 +20,7 @@ const LOADING = () => (
  */
 const DEMO_COMPONENTS: Record<string, React.ComponentType> = {
   "bento-grid": dynamic(() => import("@/registry/bento-grid").then((m) => ({ default: m.default })), { ssr: false, loading: LOADING }),
+  "liquid-button": dynamic(() => import("@/registry/liquid-button").then((m) => ({ default: m.default })), { ssr: false, loading: LOADING }),
   "my-animated-button": dynamic(() => import("@/registry/my-animated-button").then((m) => ({ default: m.default })), { ssr: false, loading: LOADING }),
   "candy-button": dynamic(() => import("@/components/docs/candy-button-demo").then((m) => ({ default: m.CandyButtonDemo })), { ssr: false, loading: LOADING }),
   "pop-button": dynamic(() => import("@/components/docs/pop-button-demo").then((m) => ({ default: m.PopButtonDemo })), { ssr: false, loading: LOADING }),
