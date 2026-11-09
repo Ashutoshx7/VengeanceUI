@@ -3,7 +3,8 @@
   "name": "item",
   "type": "registry:ui",
   "dependencies": [
-    "@radix-ui/react-slot"
+    "@radix-ui/react-slot",
+    "class-variance-authority@^0.7.1"
   ],
   "files": [
     {
