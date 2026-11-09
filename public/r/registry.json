@@ -1289,5 +1289,18 @@
     "files": [
       "public/r/pricing-section.json"
     ]
+  },
+  {
+    "name": "pricing-tiers",
+    "dependencies": [
+      "framer-motion",
+      "@phosphor-icons/react",
+      "clsx",
+      "tailwind-merge"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/pricing-tiers.json"
+    ]
   }
 ]

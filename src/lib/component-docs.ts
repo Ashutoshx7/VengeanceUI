@@ -154,6 +154,107 @@ export function Pricing() {
       },
     ],
   },
+  "pricing-tiers": {
+    dependencies: "npm install framer-motion @phosphor-icons/react clsx tailwind-merge",
+    includeUtils: true,
+    manualNotes: [
+      "This is a client component because it owns the billing switch and the price transitions.",
+      "Headings and prices use Aeonik Pro when it is installed, then the --font-geist-sans variable, then the system sans. Labels use Geist Mono through --font-geist-mono. Load Geist and Geist_Mono from next/font/google with those variable names for the closest free match, or set --pricing-tiers-display and --pricing-tiers-mono on the section to use your own fonts.",
+      "Wrap part of a feature label in <b> or <strong> to emphasise it, e.g. <><b>30 day</b> build retention</>.",
+      "Prices are per month for each billing cycle. Pass a string such as \"Custom\" for a tier without a fixed price.",
+      "The billing switch is a keyboard-accessible radio group (arrow keys, Home, End). Motion follows the user's reduced-motion preference.",
+      "The layout follows its container with container queries: a single column when narrow, a compact three-column layout from 42rem, and the full desktop spacing from 64rem.",
+      "The design is light only and paints its own white background. Override it with className.",
+    ],
+    usageCode: `"use client"
+
+import { PricingTiers, type PricingTier } from "@/components/ui/pricing-tiers"
+import { CloudArrowDownIcon, LightningIcon, UsersThreeIcon } from "@phosphor-icons/react"
+
+const tiers: PricingTier[] = [
+  {
+    id: "starter",
+    name: "Starter",
+    description: "For side projects and solo builders.",
+    price: { monthly: 19, yearly: 15 },
+    cta: { label: "Start free trial", href: "/signup" },
+    featuresLabel: "Starter includes:",
+    features: [
+      { label: <><b>5</b> projects</>, icon: <LightningIcon weight="fill" /> },
+      { label: <><b>10,000</b> downloads/month</>, icon: <CloudArrowDownIcon weight="fill" /> },
+    ],
+  },
+  {
+    id: "team",
+    name: "Team",
+    description: "For growing teams that ship every week.",
+    price: { monthly: 49, yearly: 39 },
+    featured: true,
+    cta: { label: "Start free trial", href: "/signup?plan=team" },
+    featuresLabel: "Everything in Starter, plus:",
+    features: [{ label: "Shared workspaces", icon: <UsersThreeIcon weight="fill" /> }],
+  },
+]
+
+export function Pricing() {
+  return (
+    <PricingTiers
+      title="Simple, predictable pricing"
+      description={<>Every plan starts with a <b>14-day free trial</b>.</>}
+      tiers={tiers}
+      enterprise={{
+        name: "Enterprise",
+        description: "Custom contracts and dedicated support.",
+        cta: { label: "Contact sales", href: "/contact" },
+        features: [{ label: <><b>Unlimited</b> projects</> }],
+      }}
+      onBillingChange={(billing) => console.log(billing)}
+    />
+  )
+}`,
+    props: [
+      { prop: "tiers", type: "PricingTier[]", defaultValue: "DEFAULT_PRICING_TIERS", description: "Tiers to render as cards. A tier with featured set gets the dark card and the blue call to action." },
+      { prop: "enterprise", type: "PricingTiersEnterprise | null", defaultValue: "DEFAULT_PRICING_TIERS_ENTERPRISE", description: "Full-width row under the tiers. Pass null to hide it." },
+      { prop: "badge", type: "ReactNode", defaultValue: "'Pricing'", description: "Monospaced pill above the title. Pass null to hide it." },
+      { prop: "title", type: "ReactNode", defaultValue: "'Choose a plan that fits your needs'", description: "Section heading." },
+      { prop: "description", type: "ReactNode", defaultValue: "'All of our plans include a 7-day free trial.'", description: "Copy under the heading. <b> and <strong> render in the darker ink." },
+      { prop: "billing", type: "'monthly' | 'yearly'", defaultValue: "-", description: "Controlled billing cycle." },
+      { prop: "defaultBilling", type: "'monthly' | 'yearly'", defaultValue: "'yearly'", description: "Initial billing cycle when uncontrolled." },
+      { prop: "onBillingChange", type: "(billing) => void", defaultValue: "-", description: "Called when the billing switch changes." },
+      { prop: "billingLabels", type: "Record<'monthly' | 'yearly', ReactNode>", defaultValue: "{ monthly: 'Monthly', yearly: 'Yearly' }", description: "Labels for the billing switch." },
+      { prop: "yearlyDiscountLabel", type: "ReactNode | null", defaultValue: "'-20%'", description: "Blue chip next to the yearly option. Pass null to hide it." },
+      { prop: "currency", type: "string", defaultValue: "'$'", description: "Symbol shown before numeric prices." },
+      { prop: "locale", type: "string", defaultValue: "'en-US'", description: "Locale used to group digits in prices." },
+      { prop: "periodLabel", type: "ReactNode", defaultValue: "'/ Month'", description: "Suffix shown after numeric prices." },
+      { prop: "animateIn", type: "boolean", defaultValue: "true", description: "Fades the cards up the first time they scroll into view." },
+      { prop: "className", type: "string", defaultValue: "-", description: "Additional classes for the section element, merged with cn." },
+    ],
+    additionalPropSections: [
+      {
+        title: "PricingTier",
+        data: [
+          { prop: "id", type: "string", defaultValue: "-", description: "Stable key for the tier." },
+          { prop: "name", type: "ReactNode", defaultValue: "-", description: "Tier name in the card header." },
+          { prop: "description", type: "ReactNode", defaultValue: "-", description: "Short copy under the name." },
+          { prop: "price", type: "{ monthly: number; yearly: number } | string", defaultValue: "-", description: "Price per month for each cycle, or a label such as 'Custom'." },
+          { prop: "featured", type: "boolean", defaultValue: "false", description: "Dark highlighted card with the blue button." },
+          { prop: "cta", type: "{ label: ReactNode; href?: string; onClick?: MouseEventHandler }", defaultValue: "-", description: "Renders a link when href is set, otherwise a button." },
+          { prop: "featuresLabel", type: "ReactNode", defaultValue: "-", description: "Monospaced label above the feature list." },
+          { prop: "features", type: "{ label: ReactNode; icon?: ReactNode }[]", defaultValue: "-", description: "Feature rows. Icons are sized to 22px." },
+        ],
+      },
+      {
+        title: "PricingTiersEnterprise",
+        data: [
+          { prop: "name", type: "ReactNode", defaultValue: "-", description: "Row title." },
+          { prop: "description", type: "ReactNode", defaultValue: "-", description: "Copy under the title." },
+          { prop: "cta", type: "{ label: ReactNode; href?: string; onClick?: MouseEventHandler }", defaultValue: "-", description: "Dark button. Sits under the description on wide containers and above the list when stacked." },
+          { prop: "featuresLabel", type: "ReactNode", defaultValue: "-", description: "Shown above the features only when the row stacks." },
+          { prop: "features", type: "{ label: ReactNode; icon?: ReactNode }[]", defaultValue: "-", description: "Features in two columns on wide containers." },
+        ],
+      },
+    ],
+  },
   "team-reveal-grid": {
     dependencies: "npm install clsx tailwind-merge",
     includeUtils: true,
