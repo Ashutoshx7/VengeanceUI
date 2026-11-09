@@ -405,7 +405,7 @@ export function PricingTiers({
             className={cn("mt-6 @2xl:mt-2.5 @5xl:mt-6", COLUMN_WIDTH)}
             {...revealProps(animateIn, tiers.length * 0.06)}
           >
-            <EnterpriseRow enterprise={enterprise} />
+            <EnterpriseRow enterprise={enterprise} stacked={columns === 1} />
           </motion.div>
         ) : null}
       </section>
@@ -570,12 +570,23 @@ function TierCard({ tier, billing, currency, formatter, periodLabel, className, 
   );
 }
 
-function EnterpriseRow({ enterprise }: { enterprise: PricingTiersEnterprise }) {
+interface EnterpriseRowProps {
+  enterprise: PricingTiersEnterprise;
+  /** Keep the narrow-container layout, e.g. under a single 360px tier. */
+  stacked: boolean;
+}
+
+function EnterpriseRow({ enterprise, stacked }: EnterpriseRowProps) {
   const styles = TONES.light;
 
   return (
-    <div className="flex flex-col gap-4 rounded-[20px] bg-[#373737]/4 p-1 @2xl:flex-row @2xl:gap-2.5 @5xl:gap-6">
-      <div className={cn("rounded-[18px] @2xl:w-1/3", PANEL_SPACING, styles.panel)}>
+    <div
+      className={cn(
+        "flex flex-col gap-4 rounded-[20px] bg-[#373737]/4 p-1",
+        !stacked && "@2xl:flex-row @2xl:gap-2.5 @5xl:gap-6",
+      )}
+    >
+      <div className={cn("rounded-[18px]", !stacked && "@2xl:w-1/3", PANEL_SPACING, styles.panel)}>
         <h3
           className={cn(
             "mb-3 text-2xl/8 font-medium tracking-[-0.24px] @2xl:mb-2 @2xl:text-xl/7 @5xl:mb-3 @5xl:text-2xl/8",
@@ -586,20 +597,32 @@ function EnterpriseRow({ enterprise }: { enterprise: PricingTiersEnterprise }) {
           {enterprise.name}
         </h3>
         {enterprise.description ? (
-          <p className={cn("text-sm/[22px] @2xl:mb-4 @2xl:text-[13px]/5 @5xl:mb-6 @5xl:text-sm/[22px]", styles.muted)}>
+          <p
+            className={cn(
+              "text-sm/[22px] @2xl:text-[13px]/5 @5xl:text-sm/[22px]",
+              !stacked && "@2xl:mb-4 @5xl:mb-6",
+              styles.muted,
+            )}
+          >
             {enterprise.description}
           </p>
         ) : null}
-        <PricingTiersButton action={enterprise.cta} variant="gray" className="hidden @2xl:block" />
+        {stacked ? null : (
+          <PricingTiersButton action={enterprise.cta} variant="gray" className="hidden @2xl:block" />
+        )}
       </div>
 
-      <div className="p-9 @2xl:w-2/3 @2xl:p-5 @5xl:p-9">
-        <PricingTiersButton action={enterprise.cta} variant="gray" className="@2xl:hidden" />
-        <DottedRule className={cn("my-[31px] @2xl:hidden", styles.divider)} />
+      <div className={cn("p-9 @2xl:p-5 @5xl:p-9", !stacked && "@2xl:w-2/3")}>
+        <PricingTiersButton action={enterprise.cta} variant="gray" className={cn(!stacked && "@2xl:hidden")} />
+        <DottedRule
+          className={cn("my-[31px]", stacked ? "@2xl:my-5 @5xl:my-[31px]" : "@2xl:hidden", styles.divider)}
+        />
         {enterprise.featuresLabel ? (
-          <div className={cn("mb-6 @2xl:hidden", MONO_LABEL, styles.muted)}>{enterprise.featuresLabel}</div>
+          <div className={cn("mb-6", stacked ? "@2xl:mb-4 @5xl:mb-6" : "@2xl:hidden", MONO_LABEL, styles.muted)}>
+            {enterprise.featuresLabel}
+          </div>
         ) : null}
-        <FeatureList features={enterprise.features} tone="light" columns />
+        <FeatureList features={enterprise.features} tone="light" columns={!stacked} />
       </div>
     </div>
   );
