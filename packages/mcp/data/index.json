@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-09T06:13:27.440Z",
+  "generatedAt": "2026-11-09T06:30:14.865Z",
   "registryBaseUrl": "https://raw.githubusercontent.com/Ashutoshx7/VengeanceUI/main/public/r",
   "categories": [
     {
@@ -3392,7 +3392,7 @@
         "Wrap part of a feature label in <b> or <strong> to emphasise it, e.g. <><b>30 day</b> build retention</>.",
         "Prices are per month for each billing cycle. Pass a string such as \"Custom\" for a tier without a fixed price.",
         "The billing switch is a keyboard-accessible radio group (arrow keys, Home, End). Motion follows the user's reduced-motion preference.",
-        "The layout follows its container with container queries: a single column when narrow, a compact three-column layout from 42rem, and the full desktop spacing from 64rem.",
+        "The layout follows its container with container queries: a single column when narrow, one column per tier from 42rem (up to three, four tiers make a 2x2 grid), and the full desktop spacing from 64rem. Cards cap at 360px and centre, and the enterprise row matches their width.",
         "The design is light only and paints its own white background. Override it with className."
       ],
       "usageCode": "\"use client\"\n\nimport { PricingTiers, type PricingTier } from \"@/components/ui/pricing-tiers\"\nimport { CloudArrowDownIcon, LightningIcon, UsersThreeIcon } from \"@phosphor-icons/react\"\n\nconst tiers: PricingTier[] = [\n  {\n    id: \"starter\",\n    name: \"Starter\",\n    description: \"For side projects and solo builders.\",\n    price: { monthly: 19, yearly: 15 },\n    cta: { label: \"Start free trial\", href: \"/signup\" },\n    featuresLabel: \"Starter includes:\",\n    features: [\n      { label: <><b>5</b> projects</>, icon: <LightningIcon weight=\"fill\" /> },\n      { label: <><b>10,000</b> downloads/month</>, icon: <CloudArrowDownIcon weight=\"fill\" /> },\n    ],\n  },\n  {\n    id: \"team\",\n    name: \"Team\",\n    description: \"For growing teams that ship every week.\",\n    price: { monthly: 49, yearly: 39 },\n    featured: true,\n    cta: { label: \"Start free trial\", href: \"/signup?plan=team\" },\n    featuresLabel: \"Everything in Starter, plus:\",\n    features: [{ label: \"Shared workspaces\", icon: <UsersThreeIcon weight=\"fill\" /> }],\n  },\n]\n\nexport function Pricing() {\n  return (\n    <PricingTiers\n      title=\"Simple, predictable pricing\"\n      description={<>Every plan starts with a <b>14-day free trial</b>.</>}\n      tiers={tiers}\n      enterprise={{\n        name: \"Enterprise\",\n        description: \"Custom contracts and dedicated support.\",\n        cta: { label: \"Contact sales\", href: \"/contact\" },\n        features: [{ label: <><b>Unlimited</b> projects</> }],\n      }}\n      onBillingChange={(billing) => console.log(billing)}\n    />\n  )\n}",
