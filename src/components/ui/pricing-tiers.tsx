@@ -202,7 +202,9 @@ const PANEL_SHADOW =
 // three-column layout for narrow containers, and @5xl+ is the full desktop spec.
 const PANEL_SPACING = "px-9 pb-9 pt-8 @2xl:px-5 @2xl:pb-5 @2xl:pt-5 @5xl:px-9 @5xl:pb-9 @5xl:pt-8";
 const BODY_SPACING = "px-9 pb-9 @2xl:px-5 @2xl:pb-5 @5xl:px-9 @5xl:pb-9";
-const COLUMN_WIDTH = "mx-auto w-full max-w-[360px] px-4 @2xl:max-w-[calc(1128px+2rem)]";
+const COLUMN_WIDTH = "mx-auto w-full max-w-[360px] px-4 @2xl:max-w-[calc(var(--pricing-tiers-width)+2rem)]";
+const CARD_WIDTH = 360;
+const CARD_GAP = 24;
 
 const DISPLAY_FONT = "font-(family-name:--pricing-tiers-display)";
 const MONO_LABEL =
@@ -311,12 +313,19 @@ export function PricingTiers({
   periodLabel = "/ Month",
   animateIn = true,
   className,
+  style,
   ...props
 }: PricingTiersProps) {
   const [internalBilling, setInternalBilling] = React.useState<PricingTiersBilling>(defaultBilling);
   const activeBilling = billing ?? internalBilling;
   const hasNumericPrice = tiers.some((tier) => typeof tier.price !== "string");
   const formatter = React.useMemo(() => new Intl.NumberFormat(locale), [locale]);
+  // Three tiers is the reference layout. Fewer sit side by side, four make a 2x2 grid.
+  const columns = tiers.length === 4 ? 2 : Math.min(Math.max(tiers.length, 1), 3);
+  const layoutVars = {
+    "--pricing-tiers-columns": columns,
+    "--pricing-tiers-width": `${columns * CARD_WIDTH + (columns - 1) * CARD_GAP}px`,
+  } as React.CSSProperties;
 
   const selectBilling = (next: PricingTiersBilling) => {
     if (next === activeBilling) return;
@@ -333,6 +342,7 @@ export function PricingTiers({
           "[--pricing-tiers-mono:'Geist_Mono',var(--font-geist-mono,'Geist_Mono'),ui-monospace,SFMono-Regular,Menlo,monospace]",
           className,
         )}
+        style={{ ...layoutVars, ...style }}
         {...props}
       >
         {badge || title || description ? (
@@ -371,7 +381,12 @@ export function PricingTiers({
           </div>
         ) : null}
 
-        <div className={cn("grid grid-cols-1 gap-4 @2xl:grid-cols-3 @2xl:gap-2.5 @5xl:gap-6", COLUMN_WIDTH)}>
+        <div
+          className={cn(
+            "grid grid-cols-1 gap-4 @2xl:grid-cols-[repeat(var(--pricing-tiers-columns),minmax(0,360px))] @2xl:justify-center @2xl:gap-2.5 @5xl:gap-6",
+            COLUMN_WIDTH,
+          )}
+        >
           {tiers.map((tier, index) => (
             <TierCard
               key={tier.id}
@@ -640,7 +655,7 @@ function PricingTiersButton({ action, variant, className }: PricingTiersButtonPr
     </span>
   );
 
-  if (action.href) {
+  if (action.href !== undefined) {
     return (
       <a href={action.href} onClick={action.onClick} className={classes}>
         {label}

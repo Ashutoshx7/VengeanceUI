@@ -163,7 +163,7 @@ export function Pricing() {
       "Wrap part of a feature label in <b> or <strong> to emphasise it, e.g. <><b>30 day</b> build retention</>.",
       "Prices are per month for each billing cycle. Pass a string such as \"Custom\" for a tier without a fixed price.",
       "The billing switch is a keyboard-accessible radio group (arrow keys, Home, End). Motion follows the user's reduced-motion preference.",
-      "The layout follows its container with container queries: a single column when narrow, a compact three-column layout from 42rem, and the full desktop spacing from 64rem.",
+      "The layout follows its container with container queries: a single column when narrow, one column per tier from 42rem (up to three, four tiers make a 2x2 grid), and the full desktop spacing from 64rem. Cards cap at 360px and centre, and the enterprise row matches their width.",
       "The design is light only and paints its own white background. Override it with className.",
     ],
     usageCode: `"use client"
