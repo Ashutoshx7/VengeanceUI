@@ -210,27 +210,34 @@ const DISPLAY_FONT = "font-(family-name:--pricing-tiers-display)";
 const MONO_LABEL =
   "font-(family-name:--pricing-tiers-mono) text-[11px]/4 font-medium tracking-[0.33px] uppercase";
 
+// In dark mode the plain tiers take the reference's own dark-surface treatment
+// (translucent fill, inset highlights) and the featured tier is lifted a step.
 const TONES = {
   light: {
-    card: "bg-[#373737]/4",
-    panel: cn("bg-white/88", PANEL_SHADOW),
-    name: "text-[#141414]",
-    muted: "text-[#656565]",
-    price: "text-[#141414]",
-    divider: "text-[#161616]/12",
-    icon: "text-[#a4a4a4]",
-    feature: "text-[#656565] [&_b]:text-[#141414] [&_strong]:text-[#141414]",
+    card: "bg-[#373737]/4 dark:bg-white/[0.035]",
+    panel: cn(
+      "bg-white/88",
+      PANEL_SHADOW,
+      "dark:bg-white/5 dark:shadow-[inset_0_4px_8px_0_rgba(255,255,255,0.03),inset_0_2px_4px_0_rgba(255,255,255,0.03),inset_0_1px_1px_0_rgba(255,255,255,0.04),inset_0_0.5px_0.5px_0_rgba(255,255,255,0.06)]",
+    ),
+    name: "text-[#141414] dark:text-[#ededed]",
+    muted: "text-[#656565] dark:text-[#8f8f8f]",
+    price: "text-[#141414] dark:text-[#ededed]",
+    divider: "text-[#161616]/12 dark:text-white/10",
+    icon: "text-[#a4a4a4] dark:text-[#5c5c5c]",
+    feature:
+      "text-[#656565] [&_b]:text-[#141414] [&_strong]:text-[#141414] dark:text-[#8f8f8f] dark:[&_b]:text-[#ededed] dark:[&_strong]:text-[#ededed]",
   },
   dark: {
-    card: "bg-[#141414]",
+    card: "bg-[#141414] dark:bg-[#1f1f1f] dark:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.09),0_24px_48px_-24px_rgba(0,0,0,0.8)]",
     panel:
-      "bg-white/8 shadow-[inset_0_4px_8px_0_rgba(255,255,255,0.04),inset_0_2px_4px_0_rgba(255,255,255,0.04),inset_0_1px_1px_0_rgba(255,255,255,0.04),inset_0_0.5px_0.5px_0_rgba(255,255,255,0.06)]",
-    name: "text-white/88",
+      "bg-white/8 shadow-[inset_0_4px_8px_0_rgba(255,255,255,0.04),inset_0_2px_4px_0_rgba(255,255,255,0.04),inset_0_1px_1px_0_rgba(255,255,255,0.04),inset_0_0.5px_0.5px_0_rgba(255,255,255,0.06)] dark:bg-white/9",
+    name: "text-white/88 dark:text-white/92",
     muted: "text-[#a4a4a4]",
-    price: "text-white/88",
+    price: "text-white/88 dark:text-white/92",
     divider: "text-white/12",
-    icon: "text-[#707070]",
-    feature: "text-[#999999] [&_b]:text-white/88 [&_strong]:text-white/88",
+    icon: "text-[#707070] dark:text-[#7a7a7a]",
+    feature: "text-[#999999] [&_b]:text-white/88 [&_strong]:text-white/88 dark:text-[#a4a4a4] dark:[&_b]:text-white/92 dark:[&_strong]:text-white/92",
   },
 } as const;
 
@@ -250,6 +257,12 @@ const ACTION_VARIANTS: Record<ActionVariant, string> = {
     "shadow-[0_8px_8px_-3px_rgba(0,0,0,0.04),0_3px_3px_-1.5px_rgba(0,0,0,0.04),0_2px_2px_-1px_rgba(0,0,0,0.03),0_1px_1px_-0.5px_rgba(0,0,0,0.03),0_0.5px_0.5px_0_rgba(0,0,0,0.03),0_0_0_1px_rgba(0,0,0,0.04)]",
     "hover:shadow-[0_16px_16px_-8px_rgba(0,0,0,0.08),0_3px_3px_-1.5px_rgba(0,0,0,0.04),0_2px_2px_-1px_rgba(0,0,0,0.03),0_1px_1px_-0.5px_rgba(0,0,0,0.03),0_0.5px_0.5px_0_rgba(0,0,0,0.03),0_0_0_1px_rgba(0,0,0,0.04)]",
     "active:shadow-[0_8px_8px_-3px_rgba(0,0,0,0.02),0_3px_3px_-1.5px_rgba(0,0,0,0.02),0_2px_2px_-1px_rgba(0,0,0,0.02),0_1px_1px_-0.5px_rgba(0,0,0,0.02),0_0.5px_0.5px_0_rgba(0,0,0,0.03),0_0_0_1px_rgba(0,0,0,0.03)]",
+    // Dark mode uses the reference's dark-surface button: translucent fill, lit from inside.
+    "dark:bg-white/4 dark:text-[#ededed]",
+    "dark:shadow-[inset_0_-4px_12px_-4px_rgba(255,255,255,0.08),inset_0_1px_3px_0_rgba(255,255,255,0.06),inset_0_0.5px_0.5px_0_rgba(255,255,255,0.12),0_8px_8px_-3px_rgba(9,1,20,0.06),0_3px_3px_-1.5px_rgba(8,1,20,0.06),0_2px_2px_-1px_rgba(8,1,20,0.04),0_1px_1px_-0.5px_rgba(8,1,20,0.03)]",
+    "dark:hover:bg-white/10 dark:hover:shadow-[inset_0_-4px_12px_-4px_rgba(255,255,255,0.08),inset_0_1px_3px_0_rgba(255,255,255,0.06),inset_0_0.5px_0.5px_0_rgba(255,255,255,0.12),0_8px_8px_-3px_rgba(9,1,20,0.06),0_3px_3px_-1.5px_rgba(8,1,20,0.06),0_2px_2px_-1px_rgba(8,1,20,0.04),0_1px_1px_-0.5px_rgba(8,1,20,0.03)]",
+    "dark:active:bg-white/2 dark:active:shadow-[inset_0_4px_8px_0_rgba(18,7,43,0.16),inset_0_3px_6px_0_rgba(18,7,43,0.06),inset_0_0.5px_0.5px_0_rgba(18,7,43,0.12),0_8px_8px_-3px_rgba(9,1,20,0.06),0_3px_3px_-1.5px_rgba(8,1,20,0.06)]",
+    "dark:before:pointer-events-none dark:before:absolute dark:before:inset-0 dark:before:-z-10 dark:before:rounded-[inherit] dark:before:bg-linear-to-b dark:before:from-white/16 dark:before:to-white/8 dark:active:before:opacity-0",
   ),
   primary: cn(
     "bg-[#0335fc] bg-linear-to-b from-white/12 to-white/6",
@@ -266,6 +279,11 @@ const ACTION_VARIANTS: Record<ActionVariant, string> = {
     "active:bg-[#292929] active:shadow-[inset_0_4px_8px_0_rgba(0,0,0,0.2),inset_0_3px_6px_0_rgba(0,0,0,0.15),inset_0_0.5px_0.5px_0_rgba(0,0,0,0.1),0_8px_8px_-3px_rgba(0,0,0,0.1),0_3px_3px_-1.5px_rgba(0,0,0,0.1),0_2px_2px_-1px_rgba(0,0,0,0.08)]",
     ACTION_SHEEN,
     "before:from-white/10 before:to-white/5 before:opacity-0 hover:before:opacity-100 active:before:opacity-0",
+    // Inverts to a light pill on dark surfaces, like the light tiers' buttons do in light mode.
+    "dark:bg-[#ededed]",
+    "dark:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.7),inset_0_-1px_0_0_rgba(0,0,0,0.08),0_8px_8px_-3px_rgba(0,0,0,0.3),0_3px_3px_-1.5px_rgba(0,0,0,0.25),0_1px_1px_-0.5px_rgba(0,0,0,0.2)]",
+    "dark:active:bg-[#dedede] dark:active:shadow-[inset_0_2px_4px_0_rgba(0,0,0,0.14),0_1px_1px_-0.5px_rgba(0,0,0,0.2)]",
+    "dark:before:from-white/70 dark:before:to-white/0",
   ),
 };
 
@@ -337,7 +355,7 @@ export function PricingTiers({
     <MotionConfig reducedMotion="user">
       <section
         className={cn(
-          "@container relative isolate w-full bg-white py-14 text-[#141414] @5xl:py-[120px]",
+          "@container relative isolate w-full bg-white py-14 text-[#141414] @5xl:py-[120px] dark:bg-[#0a0a0a] dark:text-[#ededed]",
           "[--pricing-tiers-display:'Aeonik_Pro',var(--font-geist-sans,'Geist'),ui-sans-serif,system-ui,sans-serif]",
           "[--pricing-tiers-mono:'Geist_Mono',var(--font-geist-mono,'Geist_Mono'),ui-monospace,SFMono-Regular,Menlo,monospace]",
           className,
@@ -348,14 +366,14 @@ export function PricingTiers({
         {badge || title || description ? (
           <div className="flex flex-col items-center text-center">
             {badge ? (
-              <div className={cn("mb-3 rounded-full bg-[#373737]/4 px-3.5 py-1 text-[#656565]", MONO_LABEL)}>
+              <div className={cn("mb-3 rounded-full bg-[#373737]/4 px-3.5 py-1 text-[#656565] dark:bg-white/6 dark:text-[#8f8f8f]", MONO_LABEL)}>
                 {badge}
               </div>
             ) : null}
             {title ? (
               <h2
                 className={cn(
-                  "mb-9 px-4 text-[42px]/[46px] font-medium tracking-[-0.66px] text-[#141414] @3xl:text-[64px]/[72px] @3xl:tracking-[-0.96px] @5xl:mb-14",
+                  "mb-9 px-4 text-[42px]/[46px] font-medium tracking-[-0.66px] text-[#141414] @3xl:text-[64px]/[72px] @3xl:tracking-[-0.96px] @5xl:mb-14 dark:text-[#ededed]",
                   DISPLAY_FONT,
                 )}
               >
@@ -363,7 +381,7 @@ export function PricingTiers({
               </h2>
             ) : null}
             {description ? (
-              <p className="mb-9 max-w-[628px] px-3.5 text-base/[26px] text-[#656565] @3xl:mb-[72px] [&_b]:font-bold [&_b]:text-[#141414] [&_strong]:font-bold [&_strong]:text-[#141414]">
+              <p className="mb-9 max-w-[628px] px-3.5 text-base/[26px] text-[#656565] @3xl:mb-[72px] [&_b]:font-bold [&_b]:text-[#141414] [&_strong]:font-bold [&_strong]:text-[#141414] dark:text-[#8f8f8f] dark:[&_b]:text-[#ededed] dark:[&_strong]:text-[#ededed]">
                 {description}
               </p>
             ) : null}
@@ -455,13 +473,14 @@ function BillingSwitch({ value, onChange, labels, discountLabel }: BillingSwitch
       role="radiogroup"
       aria-label="Billing period"
       onKeyDown={onKeyDown}
-      className="relative flex w-full max-w-[326px] rounded-[10px] bg-[#373737]/4 p-[3px]"
+      className="relative flex w-full max-w-[326px] rounded-[10px] bg-[#373737]/4 p-[3px] dark:bg-white/6"
     >
       <span
         aria-hidden
         className={cn(
           "absolute left-[3px] top-[3px] h-[calc(100%-6px)] w-[calc(50%-3px)] rounded-[6px] bg-white",
           "shadow-[0_1px_1px_-0.5px_rgba(0,0,0,0.03),0_3px_3px_-1.5px_rgba(0,0,0,0.02),0_6px_6px_-3px_rgba(0,0,0,0.04),0_12px_12px_-3px_rgba(0,0,0,0.06)]",
+          "dark:bg-[#262626] dark:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.07),0_1px_1px_-0.5px_rgba(0,0,0,0.3),0_3px_3px_-1.5px_rgba(0,0,0,0.25),0_6px_6px_-3px_rgba(0,0,0,0.3),0_12px_12px_-3px_rgba(0,0,0,0.35)]",
           "transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] motion-reduce:transition-none",
           value === "yearly" && "translate-x-full",
         )}
@@ -481,12 +500,14 @@ function BillingSwitch({ value, onChange, labels, discountLabel }: BillingSwitch
             onClick={() => onChange(cycle)}
             className={cn(
               "relative min-w-0 flex-1 cursor-pointer rounded-xl px-3 py-2.5 text-center text-sm/[21px] outline-none transition-colors duration-300 ease-[cubic-bezier(0.6,0.6,0,1)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0335fc]",
-              active ? "font-medium text-[#141414]" : "text-[#656565] hover:text-[#141414]",
+              active
+                ? "font-medium text-[#141414] dark:text-[#ededed]"
+                : "text-[#656565] hover:text-[#141414] dark:text-[#8f8f8f] dark:hover:text-[#ededed]",
             )}
           >
             {labels[cycle]}
             {cycle === "yearly" && discountLabel != null ? (
-              <span className="ml-1 rounded-full bg-[#e1ecff] px-2 py-1 text-xs/[18px] font-medium text-[#0335fc]">
+              <span className="ml-1 rounded-full bg-[#e1ecff] px-2 py-1 text-xs/[18px] font-medium text-[#0335fc] dark:bg-[#0335fc]/22 dark:text-[#8ea6ff]">
                 {discountLabel}
               </span>
             ) : null}
@@ -582,7 +603,8 @@ function EnterpriseRow({ enterprise, stacked }: EnterpriseRowProps) {
   return (
     <div
       className={cn(
-        "flex flex-col gap-4 rounded-[20px] bg-[#373737]/4 p-1",
+        "flex flex-col gap-4 rounded-[20px] p-1",
+        styles.card,
         !stacked && "@2xl:flex-row @2xl:gap-2.5 @5xl:gap-6",
       )}
     >
@@ -672,6 +694,7 @@ function PricingTiersButton({ action, variant, className }: PricingTiersButtonPr
       className={cn(
         "flex items-center justify-center gap-1",
         variant !== "light" && "bg-linear-to-b from-white to-white/80 bg-clip-text text-transparent",
+        variant === "gray" && "dark:bg-none dark:text-[#141414]",
       )}
     >
       {action.label}
