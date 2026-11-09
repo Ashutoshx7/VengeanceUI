@@ -164,7 +164,7 @@ export function Pricing() {
       "Prices are per month for each billing cycle. Pass a string such as \"Custom\" for a tier without a fixed price.",
       "The billing switch is a keyboard-accessible radio group (arrow keys, Home, End). Motion follows the user's reduced-motion preference.",
       "The layout follows its container with container queries: a single column when narrow, one column per tier from 42rem (up to three, four tiers make a 2x2 grid), and the full desktop spacing from 64rem. Cards cap at 360px and centre, and the enterprise row matches their width.",
-      "The design is light only and paints its own white background. Override it with className.",
+      "Adapts to light and dark themes through the dark class on a parent element. In dark mode the plain tiers use translucent, inset-lit surfaces, the featured tier is lifted a step, and the enterprise button flips to a light pill. The section paints its own background (white or #0a0a0a); override it with className.",
     ],
     usageCode: `"use client"
 
