@@ -3,7 +3,8 @@
   "name": "toggle",
   "type": "registry:ui",
   "dependencies": [
-    "@radix-ui/react-toggle"
+    "@radix-ui/react-toggle",
+    "class-variance-authority@^0.7.1"
   ],
   "files": [
     {

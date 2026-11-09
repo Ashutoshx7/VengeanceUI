@@ -5,7 +5,8 @@
   "title": "Features Block 9",
   "description": "Shadcn/ui website features block",
   "dependencies": [
-    "dotted-map"
+    "dotted-map",
+    "recharts@^3.10.1"
   ],
   "registryDependencies": [
     "card",
@@ -25,4 +26,3 @@
     }
   ]
 }
-
