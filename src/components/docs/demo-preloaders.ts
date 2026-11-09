@@ -86,6 +86,7 @@ const DEMO_PRELOADERS: Record<string, () => Promise<unknown>> = {
   "research-bento-grid": () => import("@/components/docs/research-bento-grid-demo"),
   "team-reveal-grid": () => import("@/components/docs/team-reveal-grid-demo"),
   "pricing-section": () => import("@/components/docs/pricing-section-demo"),
+  "pricing-tiers": () => import("@/components/docs/pricing-tiers-demo"),
   "why-us-bento": () => import("@/components/docs/why-us-bento-demo"),
 };
 
