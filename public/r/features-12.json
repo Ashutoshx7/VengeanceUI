@@ -9,7 +9,6 @@
   ],
   "registryDependencies": [
     "accordion",
-    "https://magicui.design/r/border-beam",
     "https://www.vengenceui.com/r/border-beam.json"
   ],
   "files": [
