@@ -355,7 +355,9 @@ export function PricingTiers({
     <MotionConfig reducedMotion="user">
       <section
         className={cn(
-          "@container relative isolate w-full bg-white py-14 text-[#141414] @5xl:py-[120px] dark:bg-[#0a0a0a] dark:text-[#ededed]",
+          "@container relative isolate w-full py-14 text-[#141414] @5xl:py-[120px] dark:text-[#ededed]",
+          // Through a variable, so a bg-* class in className replaces the surface in both themes.
+          "bg-[color:var(--pricing-tiers-bg)] [--pricing-tiers-bg:#ffffff] dark:[--pricing-tiers-bg:#0a0a0a]",
           "[--pricing-tiers-display:'Aeonik_Pro',var(--font-geist-sans,'Geist'),ui-sans-serif,system-ui,sans-serif]",
           "[--pricing-tiers-mono:'Geist_Mono',var(--font-geist-mono,'Geist_Mono'),ui-monospace,SFMono-Regular,Menlo,monospace]",
           className,
