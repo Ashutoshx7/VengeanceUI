@@ -3,7 +3,12 @@
   "name": "staggered-grid",
   "type": "registry:ui",
   "dependencies": [
-    "gsap"
+    "gsap",
+    "imagesloaded@^5.0.0",
+    "react-icons@^5.7.0"
+  ],
+  "devDependencies": [
+    "@types/imagesloaded@^4.1.7"
   ],
   "files": [
     {

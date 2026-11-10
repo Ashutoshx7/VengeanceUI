@@ -3,7 +3,8 @@
   "name": "resizable",
   "type": "registry:ui",
   "dependencies": [
-    "lucide-react"
+    "lucide-react",
+    "react-resizable-panels@^4.14.1"
   ],
   "files": [
     {

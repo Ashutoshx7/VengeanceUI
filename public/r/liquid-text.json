@@ -2,7 +2,12 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "liquid-text",
   "type": "registry:ui",
-  "dependencies": [],
+  "dependencies": [
+    "three@^0.186.1"
+  ],
+  "devDependencies": [
+    "@types/three@^0.186.0"
+  ],
   "files": [
     {
       "path": "components/ui/liquid-text.tsx",

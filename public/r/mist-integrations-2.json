@@ -4,6 +4,9 @@
   "type": "registry:block",
   "title": "Integrations block",
   "description": "Mist Kit Integrations block, variant two",
+  "registryDependencies": [
+    "button"
+  ],
   "files": [
     {
       "path": "../../packages/mist-kit/blocks/integrations/two/index.tsx",
@@ -55,4 +58,3 @@
     }
   ]
 }
-

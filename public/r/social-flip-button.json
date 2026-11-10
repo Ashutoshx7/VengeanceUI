@@ -3,7 +3,8 @@
   "name": "social-flip-button",
   "type": "registry:ui",
   "dependencies": [
-    "framer-motion"
+    "framer-motion",
+    "react-icons@^5.7.0"
   ],
   "files": [
     {

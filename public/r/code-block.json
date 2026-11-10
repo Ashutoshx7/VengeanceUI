@@ -2,7 +2,12 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "code-block",
   "type": "registry:ui",
-  "dependencies": [],
+  "dependencies": [
+    "shiki@^4.4.3"
+  ],
+  "registryDependencies": [
+    "https://www.vengenceui.com/r/copy-button.json"
+  ],
   "files": [
     {
       "path": "components/ui/code-block.tsx",

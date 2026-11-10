@@ -4,6 +4,9 @@
   "type": "registry:block",
   "title": "Content Block 3",
   "description": "Shadcn/ui website content block",
+  "registryDependencies": [
+    "button"
+  ],
   "files": [
     {
       "path": "../../packages/dusk-kit/blocks/content/three/index.tsx",
@@ -13,4 +16,3 @@
     }
   ]
 }
-

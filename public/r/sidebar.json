@@ -4,7 +4,17 @@
   "type": "registry:ui",
   "dependencies": [
     "lucide-react",
-    "@radix-ui/react-slot"
+    "@radix-ui/react-slot",
+    "class-variance-authority@^0.7.1"
+  ],
+  "registryDependencies": [
+    "button",
+    "input",
+    "separator",
+    "sheet",
+    "skeleton",
+    "tooltip",
+    "use-mobile"
   ],
   "files": [
     {

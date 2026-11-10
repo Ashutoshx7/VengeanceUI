@@ -8,6 +8,9 @@
     "three",
     "framer-motion"
   ],
+  "devDependencies": [
+    "@types/three@^0.186.0"
+  ],
   "files": [
     {
       "path": "components/ui/scroll-dissolve-reveal.tsx",
