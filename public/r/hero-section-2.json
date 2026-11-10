@@ -27,6 +27,8 @@
       "type": "registry:component",
       "target": "components/header.tsx"
     }
+  ],
+  "dependencies": [
+    "motion@^13.4.4"
   ]
 }
-

@@ -7,6 +7,9 @@
     "@react-three/fiber",
     "@react-three/drei"
   ],
+  "devDependencies": [
+    "@types/three@^0.186.0"
+  ],
   "files": [
     {
       "path": "components/ui/model-viewer.tsx",

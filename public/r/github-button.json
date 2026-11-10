@@ -2,7 +2,12 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "github-button",
   "type": "registry:ui",
-  "dependencies": [],
+  "dependencies": [
+    "react-icons@^5.7.0"
+  ],
+  "registryDependencies": [
+    "https://www.vengenceui.com/r/liquid-gradient.json"
+  ],
   "files": [
     {
       "path": "components/ui/github-button.tsx",

@@ -3,7 +3,8 @@
   "name": "agent-bento-grid",
   "type": "registry:ui",
   "dependencies": [
-    "framer-motion"
+    "framer-motion",
+    "@phosphor-icons/react@^2.1.10"
   ],
   "files": [
     {

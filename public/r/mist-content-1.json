@@ -6,7 +6,8 @@
   "description": "Mist Kit Content block, variant one",
   "registryDependencies": [
     "toggle",
-    "toggle-group"
+    "toggle-group",
+    "button"
   ],
   "files": [
     {
@@ -17,4 +18,3 @@
     }
   ]
 }
-
