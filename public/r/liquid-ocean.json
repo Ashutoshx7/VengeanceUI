@@ -6,6 +6,9 @@
     "@react-three/fiber@^9.8.1",
     "three@^0.186.1"
   ],
+  "devDependencies": [
+    "@types/three@^0.186.0"
+  ],
   "files": [
     {
       "path": "components/ui/liquid-ocean.tsx",
