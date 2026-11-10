@@ -17,7 +17,7 @@ const IMPLIED = new Set([
 
 // Packages that ship no type declarations; a strict TypeScript consumer needs
 // the matching @types package declared as a devDependency.
-const NEEDS_TYPES = { three: "@types/three" };
+const NEEDS_TYPES = { three: "@types/three", imagesloaded: "@types/imagesloaded" };
 
 const packageName = (specifier) =>
   specifier.startsWith("node:")
@@ -73,3 +73,47 @@ test("every published registry item declares the packages its payload imports", 
   assert.deepEqual(undeclared, []);
 });
 
+// Items whose local imports point at files no registry item publishes yet.
+// Each needs a real fix (publish the file or rewrite the import), not just a
+// registryDependencies entry. Remove an item from here once it is fixed.
+const KNOWN_LOCAL_GAPS = new Set([
+  "component-showcase", // docs-site internals (component-docs-sections, fullscreen-preview)
+  "expandable-bento-grid", // @/hooks/use-outside-click is not published
+  "hero-section-3", // imports @/components/motion-primitives/*, installs to components/ui
+  "notch-navbar", // @/assets/logo/logo-icon and @/components/theme-toggle are not published
+]);
+
+const localImports = (content) => {
+  const found = new Set();
+  for (const match of content.matchAll(/(?:\bfrom\s+|\bimport\s+)["']((?:@\/|\.\/|\.\.\/)[^"']+)["']/g)) {
+    if (match[1] !== "@/lib/utils") found.add(match[1]);
+  }
+  return found;
+};
+
+const baseName = (file) => path.basename(file).replace(/\.[^.]+$/, "");
+
+test("every local import in a registry payload is installed by the item or its registryDependencies", () => {
+  const items = readdirSync(registryDir)
+    .filter((name) => name.endsWith(".json") && name !== "registry.json" && name !== "mist-registry.json")
+    .sort();
+
+  const missing = [];
+  for (const item of items) {
+    const json = JSON.parse(readFileSync(path.join(registryDir, item), "utf8"));
+    if (Array.isArray(json) || KNOWN_LOCAL_GAPS.has(json.name)) continue;
+    const provided = new Set();
+    for (const file of json.files ?? []) {
+      const target = file.target ?? file.path ?? "";
+      provided.add(baseName(target));
+      if (baseName(target) === "index") provided.add(path.basename(path.dirname(target)));
+    }
+    for (const dep of json.registryDependencies ?? []) provided.add(baseName(dep.replace(/\/$/, "")));
+    for (const file of json.files ?? []) {
+      for (const specifier of localImports(file.content ?? "")) {
+        if (!provided.has(baseName(specifier))) missing.push(`${json.name ?? item}: imports "${specifier}" but nothing installs it`);
+      }
+    }
+  }
+  assert.deepEqual(missing, []);
+});

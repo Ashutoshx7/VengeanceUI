@@ -6,6 +6,9 @@
     "@radix-ui/react-toggle-group",
     "class-variance-authority@^0.7.1"
   ],
+  "registryDependencies": [
+    "toggle"
+  ],
   "files": [
     {
       "path": "components/ui/toggle-group.tsx",

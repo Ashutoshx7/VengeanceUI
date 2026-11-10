@@ -5,6 +5,11 @@
   "dependencies": [
     "class-variance-authority@^0.7.1"
   ],
+  "registryDependencies": [
+    "button",
+    "input",
+    "textarea"
+  ],
   "files": [
     {
       "path": "components/ui/input-group.tsx",

@@ -5,6 +5,10 @@
   "dependencies": [
     "class-variance-authority@^0.7.1"
   ],
+  "registryDependencies": [
+    "label",
+    "separator"
+  ],
   "files": [
     {
       "path": "components/ui/field.tsx",

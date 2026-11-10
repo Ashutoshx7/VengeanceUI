@@ -6,6 +6,9 @@
     "@radix-ui/react-slot",
     "class-variance-authority@^0.7.1"
   ],
+  "registryDependencies": [
+    "separator"
+  ],
   "files": [
     {
       "path": "components/ui/button-group.tsx",

@@ -7,7 +7,8 @@
   "registryDependencies": [
     "card",
     "toggle",
-    "toggle-group"
+    "toggle-group",
+    "button"
   ],
   "files": [
     {
@@ -18,4 +19,3 @@
     }
   ]
 }
-
