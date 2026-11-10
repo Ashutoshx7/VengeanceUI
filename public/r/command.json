@@ -6,6 +6,9 @@
     "lucide-react",
     "cmdk"
   ],
+  "registryDependencies": [
+    "dialog"
+  ],
   "files": [
     {
       "path": "components/ui/command.tsx",

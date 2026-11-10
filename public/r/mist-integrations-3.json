@@ -4,6 +4,9 @@
   "type": "registry:block",
   "title": "Integrations block",
   "description": "Mist Kit Integrations block, variant three",
+  "registryDependencies": [
+    "card"
+  ],
   "files": [
     {
       "path": "../../packages/mist-kit/blocks/integrations/three/index.tsx",
@@ -55,4 +58,3 @@
     }
   ]
 }
-

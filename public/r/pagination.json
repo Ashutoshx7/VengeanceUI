@@ -5,6 +5,9 @@
   "dependencies": [
     "lucide-react"
   ],
+  "registryDependencies": [
+    "button"
+  ],
   "files": [
     {
       "path": "components/ui/pagination.tsx",
