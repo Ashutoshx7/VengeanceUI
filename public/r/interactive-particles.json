@@ -6,6 +6,9 @@
     "three",
     "gsap"
   ],
+  "devDependencies": [
+    "@types/three@^0.186.0"
+  ],
   "files": [
     {
       "path": "components/ui/interactive-particles.tsx",

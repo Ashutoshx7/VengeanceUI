@@ -15,8 +15,14 @@ const IMPLIED = new Set([
   "fs", "path", "os", "util", "crypto", "stream", "child_process",
 ]);
 
+// Packages that ship no type declarations; a strict TypeScript consumer needs
+// the matching @types package declared as a devDependency.
+const NEEDS_TYPES = { three: "@types/three" };
+
 const packageName = (specifier) =>
-  specifier.startsWith("@")
+  specifier.startsWith("node:")
+    ? specifier.slice("node:".length).split("/")[0]
+    : specifier.startsWith("@")
     ? specifier.split("/").slice(0, 2).join("/")
     : specifier.split("/")[0];
 
@@ -33,7 +39,9 @@ const declaredName = (dep) => {
 
 const importedPackages = (content) => {
   const found = new Set();
-  for (const match of content.matchAll(/from\s+["']([^"']+)["']/g)) {
+  // `from "x"`, side-effect `import "x"`, dynamic `import("x")` and `require("x")`.
+  const pattern = /(?:\bfrom\s+|\bimport\s*\(\s*|\bimport\s+|\brequire\s*\(\s*)["']([^"'\s]+)["']/g;
+  for (const match of content.matchAll(pattern)) {
     const specifier = match[1];
     if (specifier.startsWith("@/") || specifier.startsWith("./") || specifier.startsWith("../")) continue;
     found.add(packageName(specifier));
@@ -51,8 +59,12 @@ test("every published registry item declares the packages its payload imports", 
   for (const item of items) {
     const json = JSON.parse(readFileSync(path.join(registryDir, item), "utf8"));
     const declared = new Set((json.dependencies ?? []).map(declaredName));
+    const declaredDev = new Set((json.devDependencies ?? []).map(declaredName));
     for (const file of json.files ?? []) {
       for (const pkg of importedPackages(file.content ?? "")) {
+        if (NEEDS_TYPES[pkg] && !declaredDev.has(NEEDS_TYPES[pkg])) {
+          undeclared.push(`${json.name ?? item}: imports "${pkg}" but devDependencies lacks ${NEEDS_TYPES[pkg]}`);
+        }
         if (IMPLIED.has(pkg) || declared.has(pkg)) continue;
         undeclared.push(`${json.name ?? item}: imports "${pkg}" but dependencies is [${(json.dependencies ?? []).join(", ")}]`);
       }
