@@ -2,7 +2,9 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "chart",
   "type": "registry:ui",
-  "dependencies": [],
+  "dependencies": [
+    "recharts@^3.10.1"
+  ],
   "files": [
     {
       "path": "components/ui/chart.tsx",

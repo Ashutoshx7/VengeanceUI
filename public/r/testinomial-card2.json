@@ -2,7 +2,9 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "testinomial-card2",
   "type": "registry:ui",
-  "dependencies": [],
+  "dependencies": [
+    "react-icons@^5.7.0"
+  ],
   "files": [
     {
       "path": "components/ui/testinomial-card2.tsx",

@@ -5,6 +5,9 @@
   "dependencies": [
     "three"
   ],
+  "devDependencies": [
+    "@types/three@^0.186.0"
+  ],
   "files": [
     {
       "path": "components/ui/wave-grid-background.tsx",

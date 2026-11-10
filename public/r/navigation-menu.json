@@ -4,7 +4,8 @@
   "type": "registry:ui",
   "dependencies": [
     "lucide-react",
-    "@radix-ui/react-navigation-menu"
+    "@radix-ui/react-navigation-menu",
+    "class-variance-authority@^0.7.1"
   ],
   "files": [
     {

@@ -6,6 +6,9 @@
     "lucide-react",
     "embla-carousel-react"
   ],
+  "registryDependencies": [
+    "button"
+  ],
   "files": [
     {
       "path": "components/ui/carousel.tsx",
