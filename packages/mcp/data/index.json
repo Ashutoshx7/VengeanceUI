@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-21T13:21:23.993Z",
+  "generatedAt": "2026-11-21T13:49:11.496Z",
   "registryBaseUrl": "https://raw.githubusercontent.com/Ashutoshx7/VengeanceUI/main/public/r",
   "categories": [
     {
@@ -1204,9 +1204,9 @@
       "includeUtils": true,
       "manualNotes": [
         "This is a client component. The pixel field is drawn on a canvas, so it needs no animation library.",
-        "The dissolve spreads from the point the user tapped. Keyboard activation (Enter or Space) and the controlled revealed prop dissolve from the centre.",
+        "The dissolve spreads from the point the user tapped. Keyboard activation (Enter or Space), and a controlled revealed change that does not follow a tap straight away, dissolve from the centre.",
         "Sealed content is invisible and hidden from assistive tech, but it is still in the page source. Use it for spoilers and contact details, not secrets.",
-        "Pixel colours follow light and dark mode. Override them with the --tap-reveal-1, --tap-reveal-2, --tap-reveal-3, --tap-reveal-twinkle and --tap-reveal-flash CSS variables, e.g. className=\"[--tap-reveal-flash:#f43f5e]\". The gaps between cells use the card background, or --tap-reveal-base when the background is transparent.",
+        "Pixel colours follow light and dark mode. Override them with the --tap-reveal-1, --tap-reveal-2, --tap-reveal-3, --tap-reveal-twinkle and --tap-reveal-flash CSS variables. Set the dark value too so the override also applies in dark mode, e.g. className=\"[--tap-reveal-flash:#f43f5e] dark:[--tap-reveal-flash:#f43f5e]\". The gaps between cells use the card background, or --tap-reveal-base when the background is transparent.",
         "With reduced motion the idle shimmer stops and the content appears without the dissolve."
       ],
       "usageCode": "\"use client\"\n\nimport { TapReveal } from \"@/components/ui/tap-reveal\"\n\nexport function ContactCard() {\n  return (\n    <TapReveal className=\"max-w-sm\" onRevealedChange={(revealed) => console.log(revealed)}>\n      <p className=\"font-mono text-xs uppercase tracking-widest text-zinc-500\">Email</p>\n      <p className=\"mt-2 font-mono text-base font-medium\">hello@example.dev</p>\n    </TapReveal>\n  )\n}",
@@ -1227,13 +1227,13 @@
           "prop": "cellSize",
           "type": "number",
           "defaultValue": "8",
-          "description": "Size of one pixel cell in CSS pixels, including its 1px gap."
+          "description": "Size of one pixel cell in CSS pixels, including its 1px gap. Very large cards use bigger cells so the field stays under 40,000 cells."
         },
         {
           "prop": "duration",
           "type": "number",
           "defaultValue": "650",
-          "description": "Length of the dissolve in milliseconds."
+          "description": "Length of the dissolve in milliseconds. Values that are not finite fall back to 650."
         },
         {
           "prop": "shimmer",

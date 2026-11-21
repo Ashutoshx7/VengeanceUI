@@ -260,9 +260,9 @@ export function Pricing() {
     includeUtils: true,
     manualNotes: [
       "This is a client component. The pixel field is drawn on a canvas, so it needs no animation library.",
-      "The dissolve spreads from the point the user tapped. Keyboard activation (Enter or Space) and the controlled revealed prop dissolve from the centre.",
+      "The dissolve spreads from the point the user tapped. Keyboard activation (Enter or Space), and a controlled revealed change that does not follow a tap straight away, dissolve from the centre.",
       "Sealed content is invisible and hidden from assistive tech, but it is still in the page source. Use it for spoilers and contact details, not secrets.",
-      "Pixel colours follow light and dark mode. Override them with the --tap-reveal-1, --tap-reveal-2, --tap-reveal-3, --tap-reveal-twinkle and --tap-reveal-flash CSS variables, e.g. className=\"[--tap-reveal-flash:#f43f5e]\". The gaps between cells use the card background, or --tap-reveal-base when the background is transparent.",
+      "Pixel colours follow light and dark mode. Override them with the --tap-reveal-1, --tap-reveal-2, --tap-reveal-3, --tap-reveal-twinkle and --tap-reveal-flash CSS variables. Set the dark value too so the override also applies in dark mode, e.g. className=\"[--tap-reveal-flash:#f43f5e] dark:[--tap-reveal-flash:#f43f5e]\". The gaps between cells use the card background, or --tap-reveal-base when the background is transparent.",
       "With reduced motion the idle shimmer stops and the content appears without the dissolve.",
     ],
     usageCode: `"use client"
@@ -280,8 +280,8 @@ export function ContactCard() {
     props: [
       { prop: "children", type: "ReactNode", defaultValue: "-", description: "Content hidden behind the pixel field." },
       { prop: "label", type: "ReactNode", defaultValue: "'Tap to reveal'", description: "Text in the chip over the sealed field. A string label is also the accessible name." },
-      { prop: "cellSize", type: "number", defaultValue: "8", description: "Size of one pixel cell in CSS pixels, including its 1px gap." },
-      { prop: "duration", type: "number", defaultValue: "650", description: "Length of the dissolve in milliseconds." },
+      { prop: "cellSize", type: "number", defaultValue: "8", description: "Size of one pixel cell in CSS pixels, including its 1px gap. Very large cards use bigger cells so the field stays under 40,000 cells." },
+      { prop: "duration", type: "number", defaultValue: "650", description: "Length of the dissolve in milliseconds. Values that are not finite fall back to 650." },
       { prop: "shimmer", type: "boolean", defaultValue: "true", description: "Lets a few cells brighten and settle while the field is sealed." },
       { prop: "revealed", type: "boolean", defaultValue: "-", description: "Controlled revealed state." },
       { prop: "defaultRevealed", type: "boolean", defaultValue: "false", description: "Initial revealed state when uncontrolled." },
