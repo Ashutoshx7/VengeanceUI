@@ -43,6 +43,11 @@ interface Field {
   seal: () => void;
 }
 
+// Very large cards get bigger cells so painting and sorting stay bounded.
+const MAX_CELLS = 40_000;
+// A tap only sets the dissolve origin for a reveal that follows it straight away.
+const ORIGIN_TTL_MS = 250;
+
 const FALLBACK: Palette = {
   base: "#ffffff",
   shades: ["#f4f4f5", "#efeff1", "#e4e4e7"],
@@ -107,7 +112,7 @@ export function TapReveal({
   const rootRef = React.useRef<HTMLDivElement>(null);
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
   const fieldRef = React.useRef<Field | null>(null);
-  const originRef = React.useRef<Point | null>(null);
+  const originRef = React.useRef<{ point: Point; at: number } | null>(null);
   const [internalRevealed, setInternalRevealed] = React.useState(defaultRevealed);
   const isRevealed = revealed ?? internalRevealed;
   const revealedRef = React.useRef(isRevealed);
@@ -124,8 +129,10 @@ export function TapReveal({
     const ctx = canvas?.getContext("2d");
     if (!root || !canvas || !ctx) return;
 
-    const cell = Math.max(2, Math.round(cellSize));
-    const gap = cell >= 4 ? 1 : 0;
+    const requestedCell = Math.max(2, Math.round(Number.isFinite(cellSize) ? cellSize : 8));
+    const dissolveMs = Number.isFinite(duration) ? Math.max(0, duration) : 650;
+    let cell = requestedCell;
+    let gap = 1;
     const seed = hashString(id);
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const darkScheme = window.matchMedia("(prefers-color-scheme: dark)");
@@ -198,6 +205,8 @@ export function TapReveal({
       canvas.width = Math.round(width * dpr);
       canvas.height = Math.round(height * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      cell = Math.max(requestedCell, Math.ceil(Math.sqrt((width * height) / MAX_CELLS)));
+      gap = cell >= 4 ? 1 : 0;
       cols = Math.ceil(width / cell);
       rows = Math.ceil(height / cell);
       if (state === "sealed") paintAll();
@@ -214,7 +223,7 @@ export function TapReveal({
       if (state !== "sealed") return;
       state = "revealing";
       twinkles.clear();
-      if (reduceMotion.matches || duration <= 0) {
+      if (reduceMotion.matches || dissolveMs <= 0) {
         finish();
         return;
       }
@@ -227,9 +236,9 @@ export function TapReveal({
         Math.hypot(ox, height - oy),
         Math.hypot(width - ox, height - oy),
       ) || 1;
-      const flash = Math.min(70, duration * 0.12);
-      const jitter = duration * 0.2;
-      const spread = Math.max(0, duration - flash - jitter);
+      const flash = Math.min(70, dissolveMs * 0.12);
+      const jitter = dissolveMs * 0.2;
+      const spread = Math.max(0, dissolveMs - flash - jitter);
       const count = cols * rows;
       const start = new Float32Array(count);
       const order = new Uint32Array(count);
@@ -283,12 +292,18 @@ export function TapReveal({
       if (visible) startShimmer();
     });
     visibilityObserver.observe(root);
-    // Follow class or data-theme switches (next-themes) and the OS scheme.
+    // Follow theme switches on <html>, <body> or the card itself (class, style, data-theme) and the OS scheme.
     const onThemeChange = () => repaint();
     const themeObserver = new MutationObserver(onThemeChange);
-    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["class", "style", "data-theme"] });
+    for (const target of [document.documentElement, document.body, root]) {
+      themeObserver.observe(target, { attributes: true, attributeFilter: ["class", "style", "data-theme"] });
+    }
     darkScheme.addEventListener("change", onThemeChange);
-    reduceMotion.addEventListener("change", startShimmer);
+    const onMotionChange = () => {
+      if (reduceMotion.matches && state === "revealing") finish();
+      startShimmer();
+    };
+    reduceMotion.addEventListener("change", onMotionChange);
 
     return () => {
       fieldRef.current = null;
@@ -298,31 +313,42 @@ export function TapReveal({
       visibilityObserver.disconnect();
       themeObserver.disconnect();
       darkScheme.removeEventListener("change", onThemeChange);
-      reduceMotion.removeEventListener("change", startShimmer);
+      reduceMotion.removeEventListener("change", onMotionChange);
     };
   }, [id, cellSize, duration, shimmer]);
 
   React.useEffect(() => {
     revealedRef.current = isRevealed;
+    const pending = originRef.current;
+    originRef.current = null;
     const field = fieldRef.current;
     if (!field) return;
-    if (isRevealed) field.reveal(originRef.current);
+    // A stale tap (e.g. a controlled parent that revealed later) dissolves from the centre.
+    if (isRevealed) field.reveal(pending && performance.now() - pending.at < ORIGIN_TTL_MS ? pending.point : null);
     else field.seal();
-    originRef.current = null;
   }, [isRevealed]);
 
   // A null origin dissolves from the centre.
   const revealFrom = (origin: Point | null) => {
-    originRef.current = origin;
+    originRef.current = origin ? { point: origin, at: performance.now() } : null;
     setRevealed(true);
   };
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
     onClick?.(event);
     if (event.defaultPrevented || isRevealed) return;
-    const rect = event.currentTarget.getBoundingClientRect();
     // detail is 0 for clicks synthesised from the keyboard.
-    revealFrom(event.detail === 0 ? null : { x: event.clientX - rect.left, y: event.clientY - rect.top });
+    if (event.detail === 0) return revealFrom(null);
+    // The bounding rect includes CSS transforms such as scale() and the border; the canvas
+    // uses the card's untransformed padding box, so map the tap into that space.
+    const el = event.currentTarget;
+    const rect = el.getBoundingClientRect();
+    const scaleX = el.offsetWidth ? rect.width / el.offsetWidth : 1;
+    const scaleY = el.offsetHeight ? rect.height / el.offsetHeight : 1;
+    revealFrom({
+      x: (event.clientX - rect.left) / scaleX - el.clientLeft,
+      y: (event.clientY - rect.top) / scaleY - el.clientTop,
+    });
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -360,6 +386,24 @@ export function TapReveal({
         className,
       )}
     >
+      {/* Before the content in the DOM so Tab goes card, hide button, then any controls inside the content. */}
+      {hideable && (
+        <button
+          type="button"
+          aria-label={hideLabel}
+          tabIndex={isRevealed ? 0 : -1}
+          onClick={handleHide}
+          className={cn(
+            "absolute right-2.5 top-2.5 z-[4] grid size-8 place-items-center rounded-md text-zinc-500 transition-[opacity,visibility,background-color,color] duration-200 hover:bg-zinc-100 hover:text-zinc-950 focus-visible:outline-2 focus-visible:outline-zinc-950 motion-reduce:transition-none dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-white dark:focus-visible:outline-white",
+            // Fade in after the dissolve, but keep hover colour changes instant (delays follow the transition list above).
+            // Once sealed it stops taking taps straight away, even while it fades out.
+            isRevealed ? "visible opacity-100 [transition-delay:300ms,300ms,0ms,0ms]" : "pointer-events-none invisible opacity-0",
+          )}
+        >
+          <EyeOff className="size-4" strokeWidth={1.75} />
+        </button>
+      )}
+
       {/* Hidden from view and assistive tech until revealed. The text is still in the page source, so do not use this for secrets. */}
       <div className={cn("relative z-[1] min-w-0 p-5", !isRevealed && "invisible", contentClassName)}>{children}</div>
 
@@ -381,22 +425,6 @@ export function TapReveal({
           {label}
         </span>
       </div>
-
-      {hideable && (
-        <button
-          type="button"
-          aria-label={hideLabel}
-          tabIndex={isRevealed ? 0 : -1}
-          onClick={handleHide}
-          className={cn(
-            "absolute right-2.5 top-2.5 z-[4] grid size-8 place-items-center rounded-md text-zinc-500 transition-[opacity,visibility,background-color,color] duration-200 hover:bg-zinc-100 hover:text-zinc-950 focus-visible:outline-2 focus-visible:outline-zinc-950 motion-reduce:transition-none dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-white dark:focus-visible:outline-white",
-            // Fade in after the dissolve, but keep hover colour changes instant (delays follow the transition list above).
-            isRevealed ? "visible opacity-100 [transition-delay:300ms,300ms,0ms,0ms]" : "invisible opacity-0",
-          )}
-        >
-          <EyeOff className="size-4" strokeWidth={1.75} />
-        </button>
-      )}
     </div>
   );
 }

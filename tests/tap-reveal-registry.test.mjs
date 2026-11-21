@@ -8,9 +8,13 @@ import ts from "typescript";
 const root = fileURLToPath(new URL("../", import.meta.url));
 const registry = JSON.parse(await readFile(path.join(root, "public/r/tap-reveal.json"), "utf8"));
 const source = registry.files.find((file) => file.target === "components/ui/tap-reveal.tsx");
+// Windows checkouts may convert the source to CRLF; the published payload is always LF.
+const lf = (text) => text.replace(/\r\n/g, "\n");
+// TypeScript asks for files with forward slashes on every platform.
+const slash = (name) => name.replace(/\\/g, "/");
 
 test("tap reveal registry publishes current source and discovery metadata", async () => {
-  assert.equal(source.content, await readFile(path.join(root, "src/components/ui/tap-reveal.tsx"), "utf8"));
+  assert.equal(lf(source.content), lf(await readFile(path.join(root, "src/components/ui/tap-reveal.tsx"), "utf8")));
   assert.equal(registry.type, "registry:ui");
   const aggregate = JSON.parse(await readFile(path.join(root, "public/r/registry.json"), "utf8"));
   const entry = aggregate.find((item) => item.name === "tap-reveal");
@@ -35,7 +39,7 @@ test("every package the component imports is a registry dependency", () => {
 });
 
 test("installable tap reveal typechecks as a standalone consumer component", () => {
-  const fileName = path.join(root, ".registry-typecheck/components/ui/tap-reveal.tsx");
+  const fileName = slash(path.join(root, ".registry-typecheck/components/ui/tap-reveal.tsx"));
   const config = ts.readConfigFile(path.join(root, "tsconfig.json"), ts.sys.readFile);
   assert.equal(config.error, undefined);
   const parsed = ts.parseJsonConfigFileContent(config.config, ts.sys, root);
@@ -44,9 +48,9 @@ test("installable tap reveal typechecks as a standalone consumer component", () 
   const options = { ...parsed.options, noEmit: true, incremental: false };
   const host = ts.createCompilerHost(options);
   const { fileExists, readFile: readSource, getSourceFile } = host;
-  host.fileExists = (name) => name === fileName || fileExists(name);
-  host.readFile = (name) => name === fileName ? source.content : readSource(name);
-  host.getSourceFile = (name, languageVersion, onError, shouldCreateNewSourceFile) => name === fileName
+  host.fileExists = (name) => slash(name) === fileName || fileExists(name);
+  host.readFile = (name) => slash(name) === fileName ? source.content : readSource(name);
+  host.getSourceFile = (name, languageVersion, onError, shouldCreateNewSourceFile) => slash(name) === fileName
     ? ts.createSourceFile(name, source.content, languageVersion, true)
     : getSourceFile(name, languageVersion, onError, shouldCreateNewSourceFile);
   const program = ts.createProgram([fileName], options, host);
