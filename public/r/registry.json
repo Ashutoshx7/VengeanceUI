@@ -1302,5 +1302,17 @@
     "files": [
       "public/r/pricing-tiers.json"
     ]
+  },
+  {
+    "name": "tap-reveal",
+    "dependencies": [
+      "lucide-react",
+      "clsx",
+      "tailwind-merge"
+    ],
+    "type": "registry:ui",
+    "files": [
+      "public/r/tap-reveal.json"
+    ]
   }
 ]

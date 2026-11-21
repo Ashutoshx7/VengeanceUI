@@ -67,6 +67,7 @@ const DEMO_PRELOADERS: Record<string, () => Promise<unknown>> = {
   "light-lines": () => import("@/components/docs/light-lines"),
   "liquid-ocean": () => import("@/components/docs/liquid-ocean"),
   "share-sheet": () => import("@/components/docs/share-sheet-demo"),
+  "tap-reveal": () => import("@/components/docs/tap-reveal-demo"),
   "model-viewer": () => import("@/components/docs/model-viewer"),
   "twisting-ribbon": () => import("@/components/docs/twisting-ribbon-demo"),
   "aurora-hero": () => import("@/components/docs/aurora-hero-demo"),
