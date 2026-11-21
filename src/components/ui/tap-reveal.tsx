@@ -206,6 +206,8 @@ export function TapReveal({
       canvas.height = Math.round(height * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       cell = Math.max(requestedCell, Math.ceil(Math.sqrt((width * height) / MAX_CELLS)));
+      // The area estimate can undershoot for very narrow or very tall cards, so check the real count.
+      while (Math.ceil(width / cell) * Math.ceil(height / cell) > MAX_CELLS) cell++;
       gap = cell >= 4 ? 1 : 0;
       cols = Math.ceil(width / cell);
       rows = Math.ceil(height / cell);
