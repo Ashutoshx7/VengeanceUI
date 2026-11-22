@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-09T07:21:31.918Z",
+  "generatedAt": "2026-11-21T13:49:11.496Z",
   "registryBaseUrl": "https://raw.githubusercontent.com/Ashutoshx7/VengeanceUI/main/public/r",
   "categories": [
     {
@@ -12,7 +12,7 @@
     },
     {
       "name": "Interactive",
-      "count": 19
+      "count": 20
     },
     {
       "name": "Layout & Cards",
@@ -1183,6 +1183,105 @@
           "type": "(event) => void",
           "defaultValue": "-",
           "description": "Receives sharing intent with channel, URL, and optional message."
+        }
+      ],
+      "additionalPropSections": null
+    },
+    {
+      "name": "Tap Reveal",
+      "slug": "tap-reveal",
+      "componentName": "tap-reveal",
+      "category": "Interactive",
+      "description": "Content hidden behind a shimmering pixel field that dissolves cell by cell from the tap point",
+      "isNew": true,
+      "inCatalog": true,
+      "registryDependencies": [
+        "lucide-react",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "dependencies": "npm install lucide-react clsx tailwind-merge",
+      "includeUtils": true,
+      "manualNotes": [
+        "This is a client component. The pixel field is drawn on a canvas, so it needs no animation library.",
+        "The dissolve spreads from the point the user tapped. Keyboard activation (Enter or Space), and a controlled revealed change that does not follow a tap straight away, dissolve from the centre.",
+        "Sealed content is invisible and hidden from assistive tech, but it is still in the page source. Use it for spoilers and contact details, not secrets.",
+        "Pixel colours follow light and dark mode. Override them with the --tap-reveal-1, --tap-reveal-2, --tap-reveal-3, --tap-reveal-twinkle and --tap-reveal-flash CSS variables. Set the dark value too so the override also applies in dark mode, e.g. className=\"[--tap-reveal-flash:#f43f5e] dark:[--tap-reveal-flash:#f43f5e]\". The gaps between cells use the card background, or --tap-reveal-base when the background is transparent.",
+        "With reduced motion the idle shimmer stops and the content appears without the dissolve."
+      ],
+      "usageCode": "\"use client\"\n\nimport { TapReveal } from \"@/components/ui/tap-reveal\"\n\nexport function ContactCard() {\n  return (\n    <TapReveal className=\"max-w-sm\" onRevealedChange={(revealed) => console.log(revealed)}>\n      <p className=\"font-mono text-xs uppercase tracking-widest text-zinc-500\">Email</p>\n      <p className=\"mt-2 font-mono text-base font-medium\">hello@example.dev</p>\n    </TapReveal>\n  )\n}",
+      "props": [
+        {
+          "prop": "children",
+          "type": "ReactNode",
+          "defaultValue": "-",
+          "description": "Content hidden behind the pixel field."
+        },
+        {
+          "prop": "label",
+          "type": "ReactNode",
+          "defaultValue": "'Tap to reveal'",
+          "description": "Text in the chip over the sealed field. A string label is also the accessible name."
+        },
+        {
+          "prop": "cellSize",
+          "type": "number",
+          "defaultValue": "8",
+          "description": "Size of one pixel cell in CSS pixels, including its 1px gap. Very large cards use bigger cells so the field stays under 40,000 cells."
+        },
+        {
+          "prop": "duration",
+          "type": "number",
+          "defaultValue": "650",
+          "description": "Length of the dissolve in milliseconds. Values that are not finite fall back to 650."
+        },
+        {
+          "prop": "shimmer",
+          "type": "boolean",
+          "defaultValue": "true",
+          "description": "Lets a few cells brighten and settle while the field is sealed."
+        },
+        {
+          "prop": "revealed",
+          "type": "boolean",
+          "defaultValue": "-",
+          "description": "Controlled revealed state."
+        },
+        {
+          "prop": "defaultRevealed",
+          "type": "boolean",
+          "defaultValue": "false",
+          "description": "Initial revealed state when uncontrolled."
+        },
+        {
+          "prop": "onRevealedChange",
+          "type": "(revealed: boolean) => void",
+          "defaultValue": "-",
+          "description": "Called when the content is revealed or sealed again."
+        },
+        {
+          "prop": "hideable",
+          "type": "boolean",
+          "defaultValue": "true",
+          "description": "Shows a button in the corner that seals the content again."
+        },
+        {
+          "prop": "hideLabel",
+          "type": "string",
+          "defaultValue": "'Hide again'",
+          "description": "Accessible name of the hide button."
+        },
+        {
+          "prop": "contentClassName",
+          "type": "string",
+          "defaultValue": "-",
+          "description": "Classes for the wrapper around children, merged with cn. It has p-5 by default."
+        },
+        {
+          "prop": "className",
+          "type": "string",
+          "defaultValue": "-",
+          "description": "Additional classes for the card, merged with cn."
         }
       ],
       "additionalPropSections": null
@@ -6693,6 +6792,19 @@
       "slug": "pricing-tiers",
       "category": "Layout & Cards",
       "description": "Monochrome three-tier pricing with a dark featured card, mono labels, and an enterprise row"
+    },
+    {
+      "name": "tap-reveal",
+      "type": "registry:ui",
+      "dependencies": [
+        "lucide-react",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "inCatalog": true,
+      "slug": "tap-reveal",
+      "category": "Interactive",
+      "description": "Content hidden behind a shimmering pixel field that dissolves cell by cell from the tap point"
     }
   ],
   "lookups": {
@@ -6719,6 +6831,7 @@
       "image-collage": "image-collage",
       "interactive-book": "interactive-book",
       "share-sheet": "share-sheet",
+      "tap-reveal": "tap-reveal",
       "model-viewer": "model-viewer",
       "image-trail": "image-trail",
       "perspective-carousel": "perspective-carousel",
@@ -6800,6 +6913,7 @@
       "image-collage": "image-collage",
       "interactive-book": "interactive-book",
       "share-sheet": "share-sheet",
+      "tap-reveal": "tap-reveal",
       "model-viewer": "model-viewer",
       "image-trail": "image-trail",
       "perspective-carousel": "perspective-carousel",
